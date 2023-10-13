@@ -1,3 +1,6 @@
+## Estórias de usuário 
+Cada número da estória de usuário está relacionado ao número do caso de uso.
+
 1) Eu como usuário, quero criar um novo projeto para organizar minhas tarefas e objetivos relacionados a uma área específica de interesse.
 
 2) Eu como usuário, preciso editar os detalhes do meu projeto (como nome, descrição ou prazo) para refletir as mudanças ou refinamentos nos meus objetivos.

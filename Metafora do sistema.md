@@ -1,5 +1,4 @@
-
-**Metáfora do Sistema: O Jardim de Projetos**
+## **Metáfora do Sistema: O Jardim de Projetos**
 
 Imagine que o nosso software é um jardim planejado. Cada projeto é uma planta que você, usuário, decide cultivar. Algumas são grandes árvores que levam tempo para crescer, enquanto outras são flores que brotam rapidamente.
 
