@@ -2,7 +2,7 @@
 Cada número de caso de uso está relacionado ao número da estória de usuário .
 
 1) **Criar Projeto**
-    - **Pré-condições**: Usuário deve estar autenticado no sistema.
+    - **Pré-condições**: Sistema está operacional e disponível para a criação de novos projetos.
     - **Passos Principais**:
         1. Usuário acessa a seção de criação de projeto.
         2. Usuário fornece o nome do projeto, descrição e outros detalhes relevantes.
