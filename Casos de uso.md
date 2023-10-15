@@ -1,5 +1,5 @@
 ## Casos de uso
-Cada número de caso de uso está relacionado ao número da estória de usuário .
+
 
 1) **Criar Projeto**
     - **Pré-condições**: Sistema está operacional e disponível para a criação de novos projetos.
