@@ -32,7 +32,7 @@
         1. Usuário acessa o projeto.
         2. Usuário adiciona, edita ou exclui tarefas conforme necessário.
     - **Pós-condições**: As tarefas dentro do projeto são atualizadas.
-    - **Exceções**: Caso o usuário deixe o campo obrigatorio "Nome da Tarefa" a tarefa não será atualizado ou criada e o usuário será notificado. Caso o usuário preencher o campo "Nome do Tarefa" com o nome de uma tarefa já existente, do mesmo projeto, será notificado que a tarefa não pode ser criada. 
+    - **Exceções**: Caso o usuário deixe em branco o campo obrigatorio "Nome da Tarefa" a tarefa não será atualizado ou criada e o usuário será notificado. Caso o usuário preencha o campo "Nome do Tarefa" com o nome de uma tarefa já existente, no mesmo projeto, será notificado que a tarefa não pode ser criada. 
 
 
 4) **Etiquetar Tarefas**
