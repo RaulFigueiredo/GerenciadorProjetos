@@ -81,8 +81,8 @@
     - **Objetivo**: Notificar o usuário de tarefas que estão proximas do prazo ou que foram marcadas como prioridades, ajudando o usuario a não se perder em seu planejamento. 
     - **Pré-condições**: Usuário tem tarefas próximas do prazo ou marcadas como urgentes.
     - **Passos Principais**:
-        	1. Sistema identifica tarefas que se enquadram nos critérios.
-		2. Sistema envia notificação ao usuário.
+	  1. Sistema identifica tarefas que se enquadram nos critérios.
+	  2. Sistema envia notificação ao usuário.
     - **Pós-condições**: Usuário é notificado sobre tarefas pendentes ou urgentes
 
 10) **Fazer Backup das Ações do Usuário**
