@@ -4,7 +4,7 @@
 1) **Criar Projeto**
     - **Ator**: Usuário do sistema.
     - **Objetivo**: Possibilitar que o usuário crie um novo projeto. 
-    - **Pré-condições**: Sistema está operacional e disponível para a criação de novos projetos.
+    - **Pré-condições**: Sistema está operacional.
     - **Passos Principais**:
         1. Usuário acessa a seção de criação de projeto.
         2. Usuário fornece o nome do projeto, descrição e outros detalhes relevantes.
