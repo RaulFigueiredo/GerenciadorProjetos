@@ -90,9 +90,9 @@
     - **Objetivo**: Permitir que o usuário salve todo seus projetos para que posteriormente possa importar esses projetos novamente sem perda de tudo que registrou. 
     - **Pré-condições**: Usuário realizou ações no gerenciador de tarefas que deseja registrar em backup.
     - **Passos Principais**:
-	1. Usuário acessa a opção "Criar Backup" na plataforma.
-	2. Sistema registra todas as ações do usuário e cria um arquivo compactado contendo todos os dados.
-	3. Sistema fornece ao usuário uma opção para baixar o arquivo de backup.
+		1. Usuário acessa a opção "Criar Backup" na plataforma.
+		2. Sistema registra todas as ações do usuário e cria um arquivo compactado contendo todos os dados.
+		3. Sistema fornece ao usuário uma opção para baixar o arquivo de backup.
     - **Pós-condições**:
-	1. Usuário tem em mãos um arquivo de backup contendo todas as suas ações.
-	2. Usuário pode transferir esse arquivo para outro computador e importá-lo no gerenciador de tarefas para continuar seu trabalho de onde parou.
+		1. Usuário tem em mãos um arquivo de backup contendo todas as suas ações.
+		2. Usuário pode transferir esse arquivo para outro computador e importá-lo no gerenciador de tarefas para continuar seu trabalho de onde parou.
