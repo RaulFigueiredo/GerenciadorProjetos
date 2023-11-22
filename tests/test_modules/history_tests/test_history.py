@@ -27,10 +27,7 @@ Usage:
 
 import unittest
 from datetime import datetime
-from src import HistorySingleton
-from src import Project
-from src import Task
-from src import User
+from src import HistorySingleton, Project, Task, User
 
 
 class TestHistory(unittest.TestCase):
