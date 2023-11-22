@@ -5,6 +5,7 @@ from src import User
 class TestUser(unittest.TestCase):
 
     def setUp(self):
+        User._instance = None
         self.user = User("Test User")
 
     def test_initialization(self):
@@ -66,6 +67,15 @@ class TestUser(unittest.TestCase):
         self.user.remove_project(mock_project1)
         self.user.remove_project(mock_project2)
         self.assertEqual(self.user.projects, [])
+
+    def test_singleton_instance(self):
+        User._instance = None
+        user1 = User("Primeiro Usuário")
+        user2 = User("Segundo Usuário")
+
+        self.assertIs(user1, user2)
+        self.assertEqual(user1.name, user2.name)
+
 
 if __name__ == '__main__':
     unittest.main()
