@@ -7,3 +7,7 @@ __pycache__
     rm -rf .cache
     rm -rf .eggs
     rm -
+
+# mock files
+mock_list_project.py
+mock_page_main.py
