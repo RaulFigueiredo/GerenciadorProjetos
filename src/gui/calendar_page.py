@@ -1,12 +1,47 @@
-from src import CalendarDisplay, TaskDetails, MonthView, MonthYearNavigation
+"""
+This module provides the main structure for a calendar application using tkinter.
+It includes the CalendarPage class for displaying the calendar with tasks
+"""
 
 from datetime import date
 import tkinter as tk
+from src import CalendarDisplay, TaskDetails, MonthView, MonthYearNavigation
+from typing import Callable as function
 
 class CalendarPage:
-    def __init__(self, master=None, on_close=None):
-        self.interface = CalendarDisplay(master, on_close=on_close)
+    """
+    A class for creating and managing a calendar page in the application.
 
+    This class is responsible for the overall management of the calendar interface. 
+    It includes functionalities for displaying the calendar, navigating through months 
+    and years, and handling interactions with task details.
+
+    Attributes:
+        interface (CalendarDisplay): The main calendar display interface.
+        tasks_dict (dict): A dictionary storing tasks with their details,
+        used for populating the calendar with tasks.
+        task_details (TaskDetails): The task details component of the calendar,
+        used for displaying and managing task information.
+        month_year_navigation (MonthYearNavigation): The navigation component for
+        changing months and years, allowing user interaction for calendar navigation.
+
+    Methods:
+        update_calendar(month, year): Updates the calendar display based on the
+        specified month and year, refreshing the task view.
+        run(): Starts the main event loop for the calendar interface,
+        keeping the application window active.
+    """
+
+    def __init__(self, master: tk.Widget = None, on_close: function = None) -> None:
+        """
+        Initialize the CalendarPage
+
+        Args:
+            master (tk.Widget, optional): The master widget. Defaults to None.
+            on_close (function, optional): Callback function to execute when
+            the calendar page closes. Defaults to None.
+        """
+        self.interface = CalendarDisplay(master, on_close=on_close)
 
         self.tasks_dict = {
             '2023-08-25': [('Atualizar dados', 'lightblue', 'TAG1', 'Descrição 3', 'Projeto A')],  
@@ -29,8 +64,6 @@ class CalendarPage:
             self.interface.close_button
         )
 
-        self.month_view = MonthView(self.interface.calendar_frame,
-                                    self.tasks_dict, self.task_details)
         self.month_year_navigation = MonthYearNavigation(
             self.interface.navigation_frame,
             self.interface.button_back,
@@ -40,11 +73,25 @@ class CalendarPage:
         )
         self.update_calendar(date.today().month, date.today().year)
 
-    def update_calendar(self, month: int, year: int):
-        self.month_view.generate_view(month, year)
+    def update_calendar(self, month: int, year: int) -> None:
+        """
+        Update the calendar display based on the specified month and year.
+
+        Args:
+            month (int): The month to display.
+            year (int): The year to display.
+        """
+        month_year_tuple = (month, year)  # Criando a tupla com month e year
+        self.month_view = MonthView(self.interface.calendar_frame,
+                                    self.tasks_dict, self.task_details, month_year_tuple)
+
+        self.month_view.generate_view()
 
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Run the main event loop for the calendar interface.
+        """
         self.interface.window.mainloop()
 
 class StartPage:
@@ -55,7 +102,8 @@ class StartPage:
         self.window = tk.Tk()
         self.window.title("Página Inicial")
 
-        self.start_button = tk.Button(self.window, text="Abrir Calendário", command=self.open_calendar)
+        self.start_button = tk.Button(self.window, text="Abrir Calendário",
+                                      command=self.open_calendar)
         self.start_button.pack(pady=20)
 
     def open_calendar(self):
