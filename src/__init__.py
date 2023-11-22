@@ -1,1 +1,1 @@
-from .logic import *
+from src.logic import *
