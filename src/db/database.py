@@ -22,7 +22,6 @@ class Database:
             # Create the database connection string
             connection_string = f'mysql+pymysql://{db_user}:{db_pass}@{db_host}/{db_name}'
 
-            # Set up your database engine here
             engine = create_engine(connection_string)
             cls._instance.session_factory = sessionmaker(bind=engine)
         return cls._instance
