@@ -9,9 +9,10 @@ class FormMediator:
         self.fields[field_name] = field
 
     def notify(self, sender, event, data=None):
-        if event == "change":
-            # Lógica para mudança de campo, se necessário
-            pass
+        if event == "update" and data is not None:
+            if self.validate_fields(data):
+                self.submit_action(data)
+
         elif event == "submit" and data is not None:
             if self.validate_fields(data):
                 self.submit_action(data)
@@ -20,6 +21,7 @@ class FormMediator:
         data = {field_name: field.get_value() for field_name, field in self.fields.items()}
         if self.validate_fields(data):
             self.submit_action(data)
+            
 
     def validate_fields(self, data):
         # Exemplo de validação: verificar se o campo Nome não está vazio

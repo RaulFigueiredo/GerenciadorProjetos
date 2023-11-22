@@ -14,7 +14,10 @@ class EntryField:
 
     def get_value(self):
         return self.entry.get().strip()
-
+    
+    def set_value(self, value):
+        self.entry.delete(0, tk.END)  
+        self.entry.insert(0, value)   
 
 class DateField:
     def __init__(self, parent, label, width, padding, mediator):
@@ -30,6 +33,8 @@ class DateField:
     def get_value(self):
         return self.date.get()
 
+    def set_value(self, value):
+        self.date.set_date(value)  
 
 class LabelCombobox:
     def __init__(self, parent, label, labels, width, padding, mediator):
@@ -45,6 +50,8 @@ class LabelCombobox:
     def get_value(self):
         return self.combobox.get()
 
+    def set_value(self, value):
+        self.combobox.set(value)
 
 class DescriptionText:
     def __init__(self, parent, label, height, width, padding, mediator):
@@ -58,3 +65,7 @@ class DescriptionText:
 
     def get_value(self):
         return self.text.get("1.0", "end").strip()
+    
+    def set_value(self, value):
+        self.text.delete("1.0", tk.END)  # Limpa todo o texto existente
+        self.text.insert("1.0", value)   # Insere o novo texto no início
