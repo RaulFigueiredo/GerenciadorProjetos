@@ -1,3 +1,17 @@
+"""
+    This file contains the classes and methods used to create
+    the interface for the history of completed tasks.
+
+    Classes:
+        HistoryInterface(ABC): Abstract Base Class
+        HistorySingleton(HistoryInterface): Interface of the history of completed tasks,
+        used to create a singleton instance of the class.
+
+    Methods:
+        add_completed_task(self, project: Item) -> None: Adds a completed task to the list
+        tasks_completed(self) -> List[Item]: List of completed tasks
+"""
+
 from abc import ABC, abstractmethod
 from typing import List
 from src.logic.items.item_interface import IItem
