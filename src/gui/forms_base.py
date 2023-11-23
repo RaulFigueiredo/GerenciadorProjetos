@@ -58,7 +58,7 @@ class DescriptionText:
         self.mediator = mediator
         self.frame = ttk.Frame(parent)
         self.frame.pack(side="top", fill="x", **padding)
-        tk.Label(self.frame, text=label).pack(side="top", **padding)
+        tk.Label(self.frame, text=label, font=("Arial", 12, "bold")).pack(side="top", **padding)
 
         self.text = tk.Text(self.frame, height=height, width=width)
         self.text.pack(side="bottom", **padding)
@@ -67,5 +67,5 @@ class DescriptionText:
         return self.text.get("1.0", "end").strip()
     
     def set_value(self, value):
-        self.text.delete("1.0", tk.END)  # Limpa todo o texto existente
-        self.text.insert("1.0", value)   # Insere o novo texto no início
+        self.text.delete("1.0", tk.END) 
+        self.text.insert("1.0", value)   

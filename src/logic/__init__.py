@@ -10,7 +10,10 @@ from .users.user_interface import IUser
 
 from .execeptions.exceptions_items import  ItemNameBlank,\
                                             ItemNameAlreadyExists,\
-                                            UnknownItem
+                                            UnknownItem,\
+                                            NonChangeableProperty,\
+                                            ItemDontHaveThisAttribute
+
                                             
 
 from src.logic.calendar.date_utilities import DateUtilities

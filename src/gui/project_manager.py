@@ -15,13 +15,13 @@ class ProjectDisplayManager:
 
     def open_project_page(self, project):
         if self.top_window and self.top_window.winfo_exists():
-            if not messagebox.askyesno("Confirmar", "Fechar a janela de projetos atual?"):
+            if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
             self.close_top_window()
 
         self.top_window = tk.Toplevel(self.parent)
         self.top_window.title("Detalhes do Projeto")
-        self.top_window.geometry("425x550+400+50")
+        self.top_window.geometry("425x620+400+50")
         self.top_window.protocol("WM_DELETE_WINDOW", self.close_top_window)
         project_page = ProjectPage(master=self.top_window, controller=self.parent, project=project)
         project_page.pack()
@@ -34,7 +34,7 @@ class ProjectDisplayManager:
 
         self.top_window = tk.Toplevel(self.parent)
         self.top_window.title("Criar Novo Projeto")
-        self.top_window.geometry("425x550+400+50")  # Tamanho definido como exemplo
+        self.top_window.geometry("425x620+400+50")  # Tamanho definido como exemplo
         labels_mock = ["Urgente", "Alta Prioridade", "Média Prioridade", "Baixa Prioridade"]
 
         create_project_page = CreateProjectPage(master=self.top_window, mediator=FormMediator(self.submit_project), labels=labels_mock)
@@ -46,11 +46,11 @@ class ProjectDisplayManager:
 
         self.top_window = tk.Toplevel(self.parent)
         self.top_window.title("Editar Projeto")
-        self.top_window.geometry("425x550+400+50")  # Tamanho definido como exemplo
+        self.top_window.geometry("425x480+400+50")  # Tamanho definido como exemplo
         self.project = project
         labels_mock = ["Urgente", "Alta Prioridade", "Média Prioridade", "Baixa Prioridade"]
 
-        update_project_page = UpdateProjectPage(project=self.project, master=self.top_window, 
+        update_project_page = UpdateProjectPage(project=self.project, master=self.top_window, controller=self.parent,
                                                 mediator=FormMediator(self.update_project), labels=labels_mock)
         update_project_page.pack()
 
