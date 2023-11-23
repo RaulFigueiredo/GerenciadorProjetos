@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from .calendar_page import CalendarPage
 from src.gui.project_manager import ProjectDisplayManager
+from src.gui.task_manager   import TaskDisplayManager
+from src.gui.dashboard import DashboardPage
 from src.gui.task_manager import TaskDisplayManager
 from src.gui.history_page import HistoryManagerApp
 
@@ -106,10 +108,13 @@ class HomePage(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.history_page = HistoryManagerApp(master=self, on_close=self.show_home_page, controller=self, user = self.user)
         self.calendar_page = None
+        self.dashboard_page = None
 
     def show_home_page(self):
         if self.calendar_page:
             self.calendar_page.interface.grid_forget()
+        if self.dashboard_page:
+            self.dashboard_page.grid_forget()
         self.history_page.grid_forget()
         self.top_bar.grid(row=0, column=0, sticky='ew')
         self.project_list.grid(row=1, column=0, sticky='nsew')
@@ -121,6 +126,13 @@ class HomePage(tk.Frame):
             self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page)
         self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
 
+    def show_dashboard_page(self):
+        self.project_list.grid_forget()
+        self.top_bar.grid_forget()
+        if not self.dashboard_page:
+            self.dashboard_page = DashboardPage(master=self, on_close=self.show_home_page)
+        self.dashboard_page.grid(row=1, column=0)
+
     def show_history_page(self):
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
@@ -131,5 +143,7 @@ class HomePage(tk.Frame):
         print(f"Navigating to {destination}")
         if destination == 'calendario':
             self.show_calendar_page()
+        elif destination == 'dashboard':
+            self.show_dashboard_page()
         if destination == 'historico':
             self.show_history_page()
