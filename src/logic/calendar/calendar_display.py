@@ -9,77 +9,77 @@ through months and interact with tasks.
 import tkinter as tk
 from typing import Callable as function
 
-class CalendarDisplay():
+class CalendarDisplay(tk.Frame):
     """
-    A class for creating and managing the main window of a calendar application.
-
+    A class representing a calendar display using Tkinter.
+    
+    This class is responsible for creating the graphical interface of the calendar, including
+    navigation between months, monthly view, and task details.
+    
     Attributes:
-        window (tk.Tk): The main window of the application.
-        navigation_frame (tk.Frame): Frame for navigation controls.
-        button_back (tk.Button): Button to navigate to the previous month.
-        label_month_year (tk.Label): Label displaying the current month and year.
-        button_forward (tk.Button): Button to navigate to the next month.
-        back_button (tk.Button): Button to go back from the current view.
-        calendar_frame (tk.Frame): Frame for displaying the calendar view.
-        details_frame (tk.Frame): Frame for showing task details.
-        details_text (tk.Text): Text widget for displaying task details.
-        details_scroll (tk.Scrollbar): Scrollbar for the details text widget.
-        close_button (tk.Button): Button to close the task details section.
-
+        master (tk.Tk): The main window of the Tkinter application.
+        on_close (Callable): Function to be called when the calendar is closed.
+        navigation_frame (tk.Frame): Frame for navigation buttons.
+        button_back (tk.Button): Button to move to the previous month.
+        label_month_year (tk.Label): Label to display the current month and year.
+        button_forward (tk.Button): Button to move to the next month.
+        back_button (tk.Button): Button to return to the previous screen.
+        calendar_frame (tk.Frame): Frame for the monthly calendar view.
+        details_frame (tk.Frame): Frame for task details.
+        details_text (tk.Text): Text field for task details.
+        details_scroll (tk.Scrollbar): Scrollbar for the task details text field.
+        close_button (tk.Button): Button to close the task details.
+    
     Methods:
-        close_calendar(): Closes the calendar window and executes
-        the on_close callback, if provided.
-        create_navigation_frame(): Creates and configures the navigation frame.
-        create_month_view(): Creates and configures the month view frame.
-        create_task_details(): Creates and configures the task details frame.
+        __init__(self, master=None, on_close: Callable = None): Constructor of the class.
+        close_calendar(self): Closes the calendar.
+        create_navigation_frame(self): Creates the navigation frame.
+        create_month_view(self): Creates the monthly view.
+        create_task_details(self): Creates the task details.
     """
 
-    def __init__(self, master: tk.Tk = None, on_close: function = None) -> None:
-        """
-        Initialize the CalendarDisplay window.
-
+    def __init__(self, master=None, on_close: function = None):
+        """Initializes the CalendarDisplay.
+        
         Args:
-            master (tk.Tk, optional): The master widget. Defaults to a new tk.Tk() if None.
-            on_close (function, optional): A callback function to execute when the window is closed.
+            master (tk.Tk): The main window of the Tkinter application.
+            on_close (Callable): Function to be called when the calendar is closed.
         """
-        self.window = master if master else tk.Tk()
+        super().__init__(master)
+        print(master)
+        self.config(bg='lightblue')
         self.on_close = on_close
-        self.window.title("Calendário")
+        
+        self.grid_columnconfigure(0, weight=1)  # Ajusta as colunas para expandir
+        self.grid_rowconfigure(0, weight=1)    
 
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-
-        window_width = int(screen_width * 0.8)
-        window_height = int(screen_height * 0.8)
-
-        position_x = 100
-        position_y = 100
-
-        self.window.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
-
-        self.window.grid_columnconfigure(0, weight=1)
-        self.window.grid_columnconfigure(1, weight=0)
-        self.window.grid_rowconfigure(0, weight=1)
-        self.window.config(bg='lightblue')
+        # Configurações de layout do Frame
+        self.config(bg='lightblue')
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=0)
+        self.grid_rowconfigure(0, weight=1)
 
         self.create_navigation_frame()
         self.create_month_view()
         self.create_task_details()
 
+
     def close_calendar(self) -> None:
         """
         Close the calendar window and execute the on_close callback if provided.
         """
-        self.window.destroy()
+        self.master.destroy()  # Destruir a janela principal
+        
         if self.on_close:
             self.on_close()
+        
+
 
     def create_navigation_frame(self) -> None:
         """
         Create and configure the navigation frame within the main window.
         """
-
-        self.navigation_frame = tk.Frame(self.window)
+        self.navigation_frame = tk.Frame(self)  # Referência ao próprio Frame
         self.navigation_frame.grid(row=0, column=0, sticky='nsew')
         self.navigation_frame.grid_columnconfigure(1, weight=1)
 
@@ -92,23 +92,24 @@ class CalendarDisplay():
         self.button_forward = tk.Button(self.navigation_frame, text=">")
         self.button_forward.grid(column=2, row=0)
         self.back_button = tk.Button(self.navigation_frame, text="Voltar",
-                                     command=self.close_calendar)
+                                     command=self.on_close)
         self.back_button.grid(column=0, row=1, sticky="w")
 
     def create_month_view(self) -> None:
         """
         Create and configure the month view frame within the main window.
         """
-        self.calendar_frame = tk.Frame(self.window)
+
+        self.calendar_frame = tk.Frame(self)  # Referência ao próprio Frame
         self.calendar_frame.grid(row=1, column=0, sticky='nsew')
 
     def create_task_details(self) -> None:
         """
         Create and configure the task details frame within the main window.
         """
-
-        self.details_frame = tk.Frame(self.window, bg='white')
+        self.details_frame = tk.Frame(self, bg='white')  # Referência ao próprio Frame
         self.details_frame.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
+
 
         self.details_text = tk.Text(self.details_frame, wrap='word', height=40, width=30)
         self.details_scroll = tk.Scrollbar(self.details_frame, command=self.details_text.yview)
