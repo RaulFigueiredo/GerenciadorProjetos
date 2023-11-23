@@ -1,7 +1,7 @@
-from src.logic.items.item_interface import IItem
-from typing import List
+from typing import List, Any
 from datetime import date
-
+from src.logic.items.item_interface import IItem
+from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
         
 class Task(IItem):
     def __init__(self,  project: IItem, name: str, priority: str = None, end_date: date = None, 
@@ -50,7 +50,7 @@ class Task(IItem):
             subtask.delete()
         self._project.remove_task(self)
     """ 
-    # step 6
+    # refactor
     def delete(self) -> None:
         for subtask in self._subtasks[:]:
             subtask.delete()
@@ -94,30 +94,40 @@ class Task(IItem):
             self._status = status
     """
     
-    # step 4
-    def update(self, name = None, priority = None, end_date = None,
-            notification_date = None, description = None, status= None) -> None:
-        if name:
-            self._name = name
-        if priority:
-            self._priority = priority
-        if end_date:
-            self._end_date = end_date
-        if notification_date:
-            self._notification_date = notification_date
-        if description:
-            self._description = description
-        if status:
-            self._status = status
+    # refactor
+    def update(self, **kwargs: Any) -> None:
+        project = kwargs.get("project", None)
+        creation_date = kwargs.get("creation_date", None)
+        subtasks = kwargs.get("subtasks", None)
+
+        if project or creation_date or subtasks:
+            raise NonChangeableProperty('You requested an update for a non-changeable property.')
+            
+        for key, value in kwargs.items():
+            attr_name = f"_{key}"
+            if hasattr(self, attr_name):
+                setattr(self, attr_name, value)
+            else:
+                raise ItemDontHaveThisAttribute(f"Task nao tem o atributo {key}.")
         # atualizar no banco de dados        
 
-    def add_subtask(self, subtask: IItem) -> None:
+    def add_subtask(self, subtask: IItem) -> None: 
         self._subtasks.append(subtask)
         # adicionar no banco de dados 
 
     def remove_subtask(self, subtask: IItem) -> None:
         self._subtasks.remove(subtask)
         # remover do banco de dados
+
+    def conclusion(self) -> None:
+        self._status = True
+        self._conclusion_date = date.today()
+        # atualizar no banco de dados
+
+    def unconclusion(self) -> None:
+        self._status = False
+        self._conclusion_date = None
+        # atualizar no banco de dados
 
     @property
     def subtasks(self) -> List[IItem]:
@@ -158,3 +168,4 @@ class Task(IItem):
     @property
     def notification_date(self) -> date:
         return self._notification_date
+    

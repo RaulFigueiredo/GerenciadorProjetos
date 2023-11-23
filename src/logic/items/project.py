@@ -1,7 +1,8 @@
 from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
+from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute,NonChangeableProperty
 from datetime import date
-from typing import List
+from typing import List, Any
 
 
 class Project(IItem):
@@ -27,21 +28,20 @@ class Project(IItem):
         self._user.remove_project(self)
         # remover do banco de dados
 
-    def update(self, name: str = None, label: IItem = None, end_date: date = None,
-                description: str = None, status: bool = None, conclusion_date: date = None) -> None:
-          if name:
-                self._name = name
-          if label:
-                self._label = label
-          if end_date:
-                self._end_date = end_date
-          if description:
-                self._description = description
-          if status:
-                self._status = status
-          if conclusion_date:
-                self._conclusion_date = conclusion_date
-          # atualizar no banco de dados
+    def update(self, **kwargs: Any) -> None:
+        user = kwargs.get("user")
+        creation_date = kwargs.get("creation_date")
+        tasks = kwargs.get("tasks")
+        if user or creation_date or tasks:
+            raise NonChangeableProperty("You requested an update for a non-changeable property.")
+
+        for key, value in kwargs.items():
+            attr_name = f"_{key}"
+            if hasattr(self, attr_name):
+                setattr(self, attr_name, value)
+            else:
+                raise ItemDontHaveThisAttribute(f"Projeto nao tem o atributo {key}.")
+        # atualizar no banco de dados      
 
     def add_task(self, task: IItem) -> None:
         self._tasks.append(task)
@@ -50,6 +50,16 @@ class Project(IItem):
     def remove_task(self, task: IItem) -> None:
         self._tasks.remove(task)
         # remover do banco de dados
+
+    def conclusion(self) -> None:
+        self._status = True
+        self._conclusion_date = date.today()
+        # atualizar no banco de dados
+
+    def unconclusion(self) -> None:
+        self._status = False
+        self._conclusion_date = None
+        # atualizar no banco de dados
 
     @property
     def tasks(self) -> List[IItem]:
