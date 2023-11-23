@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 from datetime import date
-from src import Project 
+from src import Project, ItemDontHaveThisAttribute, NonChangeableProperty
 
 class TestProject(unittest.TestCase):
 
@@ -96,7 +96,39 @@ class TestProject(unittest.TestCase):
         self.assertNotIn(mock_task1, self.project._tasks)
         self.assertNotIn(mock_task2, self.project._tasks)
 
+    def test_update_valid_attributes(self):
+        project = Project(user = self.user, name="Project Name", label="High")
+        project.update(name="Updated Name", label="Low", end_date = date(2023, 12, 13))
 
+        self.assertEqual(project.name, "Updated Name")
+        self.assertEqual(project.label, "Low")
+        self.assertEqual(project.end_date, date(2023, 12, 13))
+
+    def test_update_all_attributes(self):
+        project = Project(user = self.user, name="Project Name", label="High")
+        project.update(name="Updated Name", label="Low", end_date = date(2023, 12, 13),
+                    description = "Updated Description", status = True)
+
+        self.assertEqual(project.name, "Updated Name")
+        self.assertEqual(project.label, "Low")
+        self.assertEqual(project.end_date, date(2023, 12, 13))
+        self.assertEqual(project.description, "Updated Description")
+        self.assertTrue(project.status)
+
+    def test_update_non_changeable(self):
+        with self.assertRaises(NonChangeableProperty):
+            self.project.update(user=Mock())
+        with self.assertRaises(NonChangeableProperty):
+            self.project.update(creation_date=date(2021, 1, 1))
+        with self.assertRaises(NonChangeableProperty):
+            self.project.update(name="Updated Name", label="Low", end_date = date(2023, 12, 13),
+                                creation_date=date(2021, 1, 1))
+        with self.assertRaises(NonChangeableProperty):
+            self.project.update(user=Mock(), name="Updated Name", label="Low", end_date = date(2023, 12, 13))
+    
+    def test_update_invalid_attributes(self):
+        with self.assertRaises(ItemDontHaveThisAttribute):
+            self.project.update(invalid_attribute="Invalid Attribute")
 
 if __name__ == "__main__":
     unittest.main()
