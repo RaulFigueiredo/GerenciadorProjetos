@@ -6,6 +6,9 @@ from src.gui.task_manager   import TaskDisplayManager
 from src.logic.items.project import Project
 from src.logic.items.task import Task
 from src.logic.users.user import User
+from src.logic.items.label import Label
+
+from src.gui.history_page import HistoryManagerApp
 
 import tkinter as tk
 
@@ -25,8 +28,8 @@ class MainWindow(tk.Tk):
         Project(name="Projeto Exemplo4", user=self.user,description='asd' )
 
         Task(name="Tarefa Exemplo1", project=pj_1,description='asd' )
-        Task(name="Tarefa Exemplo2", project=pj_1,description='asd' )
-
+        t = Task(name="Tarefa Exemplo2", project=pj_1,description='asd' )
+        t.conclusion()
         # O gerenciador de telas
         self.project_manager = ProjectDisplayManager(self, self.user)
         self.task_manager = TaskDisplayManager(self)
@@ -41,11 +44,15 @@ class MainWindow(tk.Tk):
         self.create_pages()
 
     def create_pages(self):
-        for Page in (MainPage, ThirdPage ):
+        page = HistoryManagerApp(master=self.container, controller=self,user = self.user)
+        self.pages[HistoryManagerApp] = page
+        page.grid(row=0, column=0, sticky="nsew")
+
+        for Page in (MainPage, ThirdPage):
             page = Page(master=self.container, controller=self)
             self.pages[Page] = page
             page.grid(row=0, column=0, sticky="nsew")
-        
+
     def show_main_page(self):
         self.show_page(MainPage)
 
@@ -54,6 +61,9 @@ class MainWindow(tk.Tk):
 
     def show_third_page(self):
         self.show_page(ThirdPage)
+
+    def show_history_page(self):
+        self.show_page(HistoryManagerApp)
 
     def show_page(self, page_class):
         page = self.pages[page_class]
@@ -68,12 +78,16 @@ class MainWindow(tk.Tk):
     def update_main_page(self):
         main_page = self.pages[MainPage]
         main_page.create_project_buttons()
-    
+
     def update_project_page(self, project):
         project_page = self.pages[ProjectPage]
         project_page.update_project(project)
         self.project_manager.close_top_window()
 
+    def refresh_and_go_history_page(self):
+        history_page = self.pages[HistoryManagerApp]
+        history_page.display_completed_tasks()
+        self.show_page(HistoryManagerApp)
 
 
 def main():

@@ -21,7 +21,7 @@ class MainPage(tk.Frame):
         
         # Botão de Retorno
         back_button = ttk.Button(self, text="Voltar", command=self.controller.show_third_page)
-        back_button.pack(pady=20) 
+        back_button.pack(pady=20)
 
 
     def create_project_buttons(self):
