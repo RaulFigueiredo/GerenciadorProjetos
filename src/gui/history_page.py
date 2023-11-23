@@ -19,12 +19,12 @@ from src.logic.users.user import User
 class HistoryManagerApp(tk.Frame):
     """ This class will be used to create a Tkinter interface to display completed tasks.
     """
-    def __init__(self, master, controller, user) -> None:
+    def __init__(self, master, controller, on_close, user) -> None:
         super().__init__(master)
         self.user = user
         self.controller = controller
         self.history = HistorySingleton()
-
+        self.on_close = on_close
         self.create_widgets()
 
     def create_widgets(self) -> None:
@@ -35,7 +35,7 @@ class HistoryManagerApp(tk.Frame):
         #self.call_add_completed_task(self.call_list_of_projects(self.user))
         self.display_completed_tasks()
 
-        back_button = ttk.Button(self, text="Back", command=self.controller.show_third_page)
+        back_button = ttk.Button(self, text="Back", command=self.on_close)
         back_button.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
 
     def display_completed_tasks(self) -> None:
