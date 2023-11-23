@@ -65,7 +65,8 @@ class Authentication:
         Project(name="Projeto Exemplo 3", user=self.user,description='Esse é um projeto de exemplo (3)')
 
         Task(name="Tarefa Exemplo 1", project=pj_1,description='Essa é uma tarefa de exemplo (1)' )
-        Task(name="Tarefa Exemplo 2", project=pj_1,description='Essa é uma tarefa de exemplo (2)' )
+        t = Task(name="Tarefa Exemplo 2", project=pj_1,description='Essa é uma tarefa de exemplo (2)' )
+        t.conclusion()
         self.homepage_frame = HomePage(parent, self.user)
 
         parent.grid_rowconfigure(0, weight=1)
