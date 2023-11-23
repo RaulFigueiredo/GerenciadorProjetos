@@ -8,6 +8,9 @@ class ProjectPage(tk.Frame):
         self.controller = controller
         self.project = project
         self.create_widgets()
+        # Bind the close event
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
+
 
     def create_widgets(self):
         self.grid_columnconfigure(0, weight=0)
@@ -112,4 +115,11 @@ class ProjectPage(tk.Frame):
     def unconclusion_project(self):
         self.project.unconclusion()
         self.controller.update_main_page()
+        self.controller.project_manager.close_top_window()
+
+    def on_close(self):
+        # Call the update method
+        self.controller.update_main_page()
+
+        # Close the window
         self.controller.project_manager.close_top_window()
