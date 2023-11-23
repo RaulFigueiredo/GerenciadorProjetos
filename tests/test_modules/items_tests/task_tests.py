@@ -1,5 +1,5 @@
 import unittest
-from src.logic import Task
+from src.logic import Task, ItemDontHaveThisAttribute, NonChangeableProperty
 from unittest.mock import Mock
 from datetime import date
 
@@ -114,7 +114,21 @@ class TestTask(unittest.TestCase):
         self.assertEqual(task.description, "Updated Description")
         self.assertTrue(task.status)
 
-
+    def test_update_invalid_attributes(self):
+        task = Task(project = self.project, name="Task Name", priority="High")
+        with self.assertRaises(ItemDontHaveThisAttribute):
+            task.update(invalid_attribute="Invalid Attribute")
+    
+    def test_update_non_changeable_attributes(self):
+        task = Task(project = self.project, name="Task Name", priority="High")
+        with self.assertRaises(NonChangeableProperty):
+            task.update(creation_date = date(2023, 11, 13))
+        with self.assertRaises(NonChangeableProperty):
+            task.update(project = Mock())
+        with self.assertRaises(NonChangeableProperty):
+            task.update(subtasks = [Mock()])
+        with self.assertRaises(NonChangeableProperty):
+            task.update(project = Mock(), subtasks = [], name = "Updated Name")
 
 
 if __name__ == "__main__":
