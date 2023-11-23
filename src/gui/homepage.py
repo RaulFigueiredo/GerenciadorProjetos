@@ -118,8 +118,6 @@ class HomePage(tk.Frame):
         if not self.calendar_page:
             self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page)
         self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
-        self.grid_rowconfigure(1, weight=1)
-        self.grid_columnconfigure(0, weight=1)
 
     def navigate(self, destination):
         print(f"Navigating to {destination}")
