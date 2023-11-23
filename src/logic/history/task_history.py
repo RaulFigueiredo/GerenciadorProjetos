@@ -45,6 +45,7 @@ class HistorySingleton(HistoryInterface):
             for each_task in each_project.tasks:
                 if each_task.status:
                     self._instance.tasks_list.append(each_task)
+                    self._instance.tasks_list = list(set(self._instance.tasks_list))
 
     def tasks_completed(self) -> List[IItem]:
         """ This method will be used to return the list of completed tasks
