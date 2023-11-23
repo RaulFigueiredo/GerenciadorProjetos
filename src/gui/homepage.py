@@ -61,7 +61,6 @@ class ProjectList(tk.Frame):
                                 )
         open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
-
     def show_project_page(self, project):
         self.project_manager.open_project_page(project)
 
@@ -105,5 +104,24 @@ class HomePage(tk.Frame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+        self.calendar_page = None
+
+    def show_home_page(self):
+        if self.calendar_page:
+            self.calendar_page.interface.grid_forget()
+        self.top_bar.grid(row=0, column=0, sticky='ew')
+        self.project_list.grid(row=1, column=0, sticky='nsew')
+
+    def show_calendar_page(self):
+        self.project_list.grid_forget()
+        self.top_bar.grid_forget()
+        if not self.calendar_page:
+            self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page)
+        self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
     def navigate(self, destination):
         print(f"Navigating to {destination}")
+        if destination == 'calendario':
+            self.show_calendar_page()
