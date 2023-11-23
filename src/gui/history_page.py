@@ -13,43 +13,46 @@ Usage:
 """
 import tkinter as tk
 from src.logic.history.task_history import HistorySingleton
+from tkinter import ttk
 from src.logic.users.user import User
 
-class HistoryManagerApp:
+class HistoryManagerApp(tk.Frame):
     """ This class will be used to create a Tkinter interface to display completed tasks.
     """
-    def __init__(self, root_window: tk.Tk, user: User, previous_window: tk.Tk) -> None:
-        self.root_window = root_window
+    def __init__(self, master, controller, user) -> None:
+        super().__init__(master)
         self.user = user
-        self.previous_window = previous_window
-
-        self.root_window.title("History of Completed Tasks")
-        self.root_window.geometry("600x400")
-
+        self.controller = controller
         self.history = HistorySingleton()
-        self.call_add_completed_task(self.call_list_of_projects(self.user))
+
+        self.create_widgets()
+
+    def create_widgets(self) -> None:
+        self.grid_columnconfigure(0, weight=0)
+        self.grid_rowconfigure(6, weight=1)
+
+        #self.history = HistorySingleton()
+        #self.call_add_completed_task(self.call_list_of_projects(self.user))
         self.display_completed_tasks()
 
-        back_button = tk.Button(self.root_window, text="Close", command=self.go_back)
-        back_button.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
+        back_button = ttk.Button(self, text="Back", command=self.controller.show_third_page)
+        back_button.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
 
     def display_completed_tasks(self) -> None:
         """ This method will be used to display completed tasks.
         """
-        history_label = tk.Label(self.root_window,text="Completed Tasks",font=("Arial", 14, "bold"))
+        self.call_add_completed_task(self.user.projects)
+
+        history_label = tk.Label(self,text="Completed Tasks",font=("Arial", 14, "bold"))
         history_label.grid(row=1, column=1, columnspan=2, pady=10, sticky="ns")
 
         completed_tasks = self.history.tasks_completed()
 
-        for idx, task in enumerate(completed_tasks, start=2):
+        # itereting over the list of completed tasks and displaying them
+        for index, task in enumerate(completed_tasks):
             task_info = self.get_task_info(task)
-            task_label = tk.Label(
-                self.root_window,
-                  text=task_info,
-                    bg=task.project.label.color,
-                      relief="groove"
-            )
-            task_label.grid(row=idx, column=0, columnspan=2, sticky="ns", padx=10, pady=5)
+            task_label = tk.Label(self, text=task_info, font=("Arial", 12))
+            task_label.grid(row=index+2, column=1, columnspan=2, sticky="ns")
 
     def get_task_info(self, task: object) -> str:
         """ This method will be used to get the task information.
@@ -66,8 +69,8 @@ class HistoryManagerApp:
     def go_back(self) -> None:
         """ This method will be used to go back to the previous window.
         """
-        self.previous_window.deiconify()
-        self.root_window.destroy()
+        self.controller.deiconify()
+        self.destroy()
 
     def call_list_of_projects(self, user: User) -> list:
         """ This method will be used to call the list of projects.
