@@ -1,9 +1,11 @@
-from gui.mock_page import MainPage
-from gui.project_page import ProjectPage
-from gui.third_page import ThirdPage
+from src.gui.mock_page import MainPage
+from src.gui.project_page import ProjectPage
+from src.gui.third_page import ThirdPage
 from src.gui.project_manager import ProjectDisplayManager
 from src.gui.task_manager   import TaskDisplayManager
-from logic import Project, User,Task
+from src.logic.items.project import Project
+from src.logic.items.task import Task
+from src.logic.users.user import User
 
 import tkinter as tk
 

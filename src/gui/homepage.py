@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from .calendar_page import CalendarPage
+from src.gui.calendar_page import CalendarPage
 
 class TopBar(tk.Frame):
     def __init__(self, parent, on_navigate, bg_color='#5a6e7f', fg_color='white'):

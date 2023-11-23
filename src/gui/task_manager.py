@@ -1,13 +1,13 @@
 from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
-from gui.mediator import FormMediator
-from gui.create_project_page import CreateProjectPage
-from gui.project_page import ProjectPage
-from gui.task_page import TaskPage
+from src.gui.mediator import FormMediator
+from src.gui.create_project_page import CreateProjectPage
+from src.gui.project_page import ProjectPage
+from src.gui.task_page import TaskPage
 from src.gui.updata_task_page import UpdateTaskPage
-from src import ItemFactory
-from gui.create_task_page import CreateTaskPage
+from src.gui.create_task_page import CreateTaskPage
+from src.logic.items.item_factory import ItemFactory
 
 class TaskDisplayManager:
     def __init__(self, parent):
