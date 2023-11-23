@@ -54,6 +54,12 @@ class ProjectList(tk.Frame):
 
         self.mock_projects()
         self.tree.bind("<Double-1>", self.on_double_click)
+        open_create_project_button = tk.Button(
+                                    self,
+                                    text="Criar Projeto",
+                                    command=lambda: self.project_manager.open_create_project_page()
+                                )
+        open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
 
     def show_project_page(self, project):
@@ -96,7 +102,6 @@ class HomePage(tk.Frame):
 
         self.project_list = ProjectList(self, self.user)
         self.project_list.grid(row=1, column=0, sticky='nsew')
-
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
