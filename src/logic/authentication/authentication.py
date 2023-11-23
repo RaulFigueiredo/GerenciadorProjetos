@@ -15,9 +15,10 @@ class LoginLogic:
         Returns:
         bool: True if login is successful, False otherwise.
         """
+        if username == "admin" and password == "admin":
+            return True
         print(f"Attempting/ to log in with username: {username} and password: {password}")
-        # Add login validation logic here
-        return True
+        return False
 
 
 class RegisterLogic:
