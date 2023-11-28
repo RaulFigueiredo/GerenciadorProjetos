@@ -1,11 +1,71 @@
+"""
+This module provides the `Task` class, an implementation of the `IItem`
+interface. It is designed for managing tasks within a project management
+context. The module offers functionalities to create, update, delete, and
+track tasks, including their subtasks. Tasks have attributes like priority,
+end date, and description, and maintain a completion status.
+
+Classes:
+    Task: Represents a task within a project, with methods for its lifecycle
+    and properties.
+
+Exceptions:
+    ItemDontHaveThisAttribute: Exception for attribute errors in tasks.
+    NonChangeableProperty: Exception for unmodifiable task properties.
+"""
+
 from typing import List, Any
 from datetime import date
 from src.logic.items.item_interface import IItem
-from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
-        
+from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
+                                                    NonChangeableProperty
+
 class Task(IItem):
-    def __init__(self,  project: IItem, name: str, priority: str = None, end_date: date = None, 
+    """
+    Represents a task in a project management system.
+
+    This class provides methods to create, delete, update, and manage tasks. Tasks can
+    have attributes like priority, end dates, notifications, list of subtasks, descriptions,
+    and a status indicating completion.
+
+    Attributes:
+        _project (IItem): The project to which this task belongs.
+        _name (str): The name of the task.
+        _priority (str, optional): The priority of the task. Defaults to None.
+        _end_date (date, optional): The date the task is expected to end. Defaults to None.
+        _notification_date (date, optional): The date for sending a notification about the task.
+                                             Defaults to None.
+        _description (str, optional): A description of the task. Defaults to None.
+        _creation_date (date): The date the task was created.
+        _conclusion_date (date, optional): The date the task was concluded. Defaults to None.
+        _status (bool): The status of the task, where False indicates incomplete and
+                        Trueindicates complete.
+        _subtasks (List[IItem]): A list of subtasks under this task.
+
+    Methods:
+        delete: Deletes the task and its subtasks from the project.
+        update: Updates the task's attributes except for project, creation_date, and subtasks.
+        add_subtask: Adds a subtask to the task.
+        remove_subtask: Removes a subtask from the task.
+        conclusion: Marks the task as concluded.
+        unconclusion: Reverts the task to an unconcluded state.
+        Various property getters for accessing task attributes.
+    """
+
+    def __init__(self,  project: IItem, name: str, priority: str = None, end_date: date = None,
                  notification_date: date = None, description: str = None) -> None:
+        """
+        Initializes a new Task object with given parameters.
+
+        Parameters:
+            project (IItem): The project to which this task belongs.
+            name (str): The name of the task.
+            priority (str, optional): The priority of the task. Defaults to None.
+            end_date (date, optional): The anticipated end date of the task. The default is None.
+            notification_date (date, optional): The date for sending a notification about the task.
+                                                Defaults to None.
+            description (str, optional): A description of the task. Defaults to None.
+        """
         self._project = project
         self._name = name
         self._priority = priority
@@ -19,7 +79,7 @@ class Task(IItem):
 
         self._project.add_task(self)
 
-    """ 
+    """
     - step 1 
     def delete(self):
         pass
@@ -52,6 +112,9 @@ class Task(IItem):
     """ 
     # refactor
     def delete(self) -> None:
+        """
+        Deletes the task and its subtasks from the project.
+        """
         for subtask in self._subtasks[:]:
             subtask.delete()
         self._project.remove_task(self)
@@ -93,79 +156,124 @@ class Task(IItem):
         if status:
             self._status = status
     """
-    
+
     # refactor
     def update(self, **kwargs: Any) -> None:
+        """
+        Updates the task's attributes.
+
+        This method updates the task's attrion-changeable
+        and attempting to update them will raise an excepbutes based on the provided keyword
+        arguments. Some properties like 'project', 'creation_date', and 'subtasks' are ntion.
+
+        Parameters:
+            kwargs (Any): Keyword arguments representing the attributes to update.
+
+        Raises:
+            NonChangeableProperty: If an attempt is made to update a non-changeable property.
+            ItemDontHaveThisAttribute: If an attribute to update does not exist in the Task.
+        """
         project = kwargs.get("project", None)
         creation_date = kwargs.get("creation_date", None)
         subtasks = kwargs.get("subtasks", None)
 
         if project or creation_date or subtasks:
             raise NonChangeableProperty('You requested an update for a non-changeable property.')
-            
+
         for key, value in kwargs.items():
             attr_name = f"_{key}"
             if hasattr(self, attr_name):
                 setattr(self, attr_name, value)
             else:
-                raise ItemDontHaveThisAttribute(f"Task nao tem o atributo {key}.")
-        # atualizar no banco de dados        
+                raise ItemDontHaveThisAttribute(f"Task does not have the attribute {key}.")
+        # atualizar no banco de dados
 
-    def add_subtask(self, subtask: IItem) -> None: 
+    def add_subtask(self, subtask: IItem) -> None:
+        """
+        Adds a subtask to this task.
+
+        Args:
+            subtask (IItem): The subtask to be added.
+        """
         self._subtasks.append(subtask)
-        # adicionar no banco de dados 
+        # adicionar no banco de dados
 
     def remove_subtask(self, subtask: IItem) -> None:
+        """
+        Removes a subtask from this task.
+
+        Args:
+            subtask (IItem): The subtask to be removed.
+        """
         self._subtasks.remove(subtask)
         # remover do banco de dados
 
     def conclusion(self) -> None:
+        """
+        Marks the task as concluded.
+
+        Sets the task's status to True and records the conclusion date.
+        """
         self._status = True
         self._conclusion_date = date.today()
         # atualizar no banco de dados
 
     def unconclusion(self) -> None:
+        """
+        Reverts the task to an unconcluded state.
+
+        Sets the task's status to False and resets the conclusion date.
+        """
         self._status = False
         self._conclusion_date = None
         # atualizar no banco de dados
 
     @property
     def subtasks(self) -> List[IItem]:
+        """List[IItem]: The list of subtasks associated with this task."""
         return self._subtasks
 
     @property
     def name(self) -> str:
+        """str: The name of the task."""
         return self._name
-    
+
     @property
     def priority(self) -> str:
+        """str: The priority of the task."""
         return self._priority
-    
+
     @property
     def end_date(self) -> date:
+        """date: The date marked as the end of the task."""
         return self._end_date
-    
+
     @property
     def creation_date(self) -> date:
+        """date: The date when the task was created."""
         return self._creation_date
-    
+
     @property
     def conclusion_date(self) -> date:
+        """date: The date when the task was concluded."""
         return self._conclusion_date
-    
+
     @property
     def description(self) -> str:
+        """str: A description of the task."""
         return self._description
-    
+
     @property
     def status(self) -> bool:
+        """bool: The completion status of the task."""
         return self._status
 
     @property
     def project(self) -> IItem:
+        """IItem: The project associated with this task."""
         return self._project
-    
+
     @property
     def notification_date(self) -> date:
+        """date: The date when a notification for this task should be sent."""
         return self._notification_date
-    
