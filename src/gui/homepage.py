@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 from .calendar_page import CalendarPage
-from src.gui.project_manager import ProjectDisplayManager
-from src.gui.task_manager   import TaskDisplayManager
+from src.gui.project.project_manager import ProjectDisplayManager
+from src.gui.task.task_manager   import TaskDisplayManager
+from src.gui.subtask.subtask_manager import SubtaskDisplayManager
 from src.gui.dashboard import DashboardPage
-from src.gui.task_manager import TaskDisplayManager
+from src.gui.task.task_manager import TaskDisplayManager
 from src.gui.history_page import HistoryManagerApp
 
 
@@ -40,6 +41,7 @@ class ProjectList(tk.Frame):
         self.project_map = {}
         self.project_manager = ProjectDisplayManager(self, self.user)
         self.task_manager = TaskDisplayManager(self)
+        self.subtask_manager = SubtaskDisplayManager(self)
 
         self.tree = ttk.Treeview(self, show='tree')
         self.tree.grid(row=1, column=0, sticky='nsew')

@@ -93,3 +93,7 @@ class Subtask(IItem):
         """str: The name of the subtask."""
         return self._name
     
+    @property
+    def task(self) -> IItem:
+        """IItem: The parent task of the subtask."""
+        return self._task

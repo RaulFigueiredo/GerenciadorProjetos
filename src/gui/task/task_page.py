@@ -47,11 +47,24 @@ class TaskPage(tk.Frame):
         description_text.config(state="disabled")
 
         # Subtarefas, se houver
-        tk.Label(self, text="Subtarefas:").grid(row=4, column=0, sticky="w", padx=10, pady=(10, 0))
-        subtasks_listbox = tk.Listbox(self, height=7, width=1)
-        subtasks_listbox.grid(row=5, column=0, sticky="ew", padx=15)
+        subtasks_frame = ttk.Frame(self)
+        subtasks_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=(10, 0))
+        subtasks_frame.grid_columnconfigure(1, weight=1)
+
+        subtasks_label = tk.Label(subtasks_frame, text="Subtarefas:")
+        subtasks_label.grid(row=0, column=0, sticky="w")
+
+        add_task_button = ttk.Button(subtasks_frame, text="+", width=2, command=lambda: self.controller.parent.subtask_manager.open_create_subtask_page(self.task))
+        add_task_button.grid(row=0, column=1, sticky="w")
+        
+        self.subtasks_listbox = tk.Listbox(self, height=7, width=1)
+        self.subtasks_listbox.grid(row=5, column=0, sticky="ew", padx=15)
+        
         for subtask in self.task.subtasks:
-            subtasks_listbox.insert(tk.END, subtask.name)
+            self.subtasks_listbox.insert(tk.END, subtask.name)
+
+        self.subtasks_listbox.bind("<Double-1>", self.on_double_click)
+
 
         # Botões de Ação
         back_button = ttk.Button(self, text="Voltar", command=self.controller.close_top_window)
@@ -82,6 +95,9 @@ class TaskPage(tk.Frame):
         self.task.delete()
 
     def conclusion_task(self):
+        print(self.controller)
+        print('*'*100)
+        print(dir(self.controller))
         self.task.conclusion()
         self.controller.refrash_project_page(self.task.project)
         self.controller.close_top_window()
@@ -90,3 +106,10 @@ class TaskPage(tk.Frame):
         self.task.unconclusion()
         self.controller.refrash_project_page(self.task.project)
         self.controller.close_top_window()
+
+    def on_double_click(self, event):
+        selection = self.subtasks_listbox.curselection()
+        if selection:
+            index = selection[0]
+            subtask = self.task.subtasks[index]
+            self.controller.parent.subtask_manager.open_subtask_page(subtask)
