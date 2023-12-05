@@ -59,6 +59,6 @@ class UpdateTaskPage(tk.Frame):
             "notification_date": self.notification_date_field.get_value(),
             "description": self.description_text.get_value()
         }
-        self.mediator.notify(self, "update", task_data)
+        self.mediator.notify(self, "submit", task_data)
         self.master.destroy()
 

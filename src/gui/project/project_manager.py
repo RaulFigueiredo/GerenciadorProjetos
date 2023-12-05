@@ -2,9 +2,9 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.create_project_page import CreateProjectPage
-from src.gui.project_page import ProjectPage
-from src.gui.update_project_page import UpdateProjectPage
+from src.gui.project.create_project_page import CreateProjectPage
+from src.gui.project.project_page import ProjectPage
+from src.gui.project.update_project_page import UpdateProjectPage
 from src.logic.items.item_factory import ItemFactory
 
 class ProjectDisplayManager:

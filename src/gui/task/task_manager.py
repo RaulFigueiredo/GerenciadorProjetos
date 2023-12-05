@@ -2,11 +2,11 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.create_project_page import CreateProjectPage
-from src.gui.project_page import ProjectPage
-from src.gui.task_page import TaskPage
-from src.gui.updata_task_page import UpdateTaskPage
-from src.gui.create_task_page import CreateTaskPage
+from src.gui.project.create_project_page import CreateProjectPage
+from src.gui.project.project_page import ProjectPage
+from src.gui.task.task_page import TaskPage
+from src.gui.task.updata_task_page import UpdateTaskPage
+from src.gui.task.create_task_page import CreateTaskPage
 from src.logic.items.item_factory import ItemFactory
 
 class TaskDisplayManager:
@@ -21,6 +21,7 @@ class TaskDisplayManager:
         self.top_window = tk.Toplevel(self.parent)
         self.top_window.title("Detalhes da Tarefa")
         self.top_window.geometry("425x620+480+100")
+        # passar self.parent como controller facilita minha vida
         task_page = TaskPage(master=self.top_window, controller=self, task=task)
         task_page.pack()
 
