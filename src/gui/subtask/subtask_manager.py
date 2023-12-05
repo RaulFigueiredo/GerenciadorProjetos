@@ -2,13 +2,8 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.project.create_project_page import CreateProjectPage
-from src.gui.project.project_page import ProjectPage
-from src.gui.task.task_page import TaskPage
-from src.gui.task.updata_task_page import UpdateTaskPage
-from src.gui.task.create_task_page import CreateTaskPage
 from src.logic.items.item_factory import ItemFactory
-from src.gui.subtask.create_subtask_page import CreateSubtaskPage
+from src.gui.subtask.subtask_create_page import SubtaskCreatePage
 from src.gui.subtask.subtask_page import SubtaskPage
 from src.gui.subtask.updata_subtask_page import UpdateSubtaskPage
 
@@ -50,15 +45,13 @@ class SubtaskDisplayManager:
         self.top_window.title("Criar Nova Tarefa")
         self.top_window.geometry("425x200+520+140")
         self.task = task
-        create_task_page = CreateSubtaskPage(master=self.top_window,mediator=FormMediator(self.submit_subtask))
+        create_task_page = SubtaskCreatePage(master=self.top_window,mediator=FormMediator(self.submit_subtask))
         create_task_page.pack()
-
 
     def update_subtask(self, project_data):
         self.subtask.update(**project_data)
         self.refrash_project_page(self.task)
         print("Task:", project_data)
-
 
     def refrash_project_page(self, task):
         self.parent.task_manager.top_window.destroy()
@@ -68,7 +61,6 @@ class SubtaskDisplayManager:
         if self.top_window:
             self.top_window.destroy()
             self.top_window = None
-
     
     def submit_subtask(self, task_data):
         ItemFactory.create_item('subtask', task=self.task, **task_data)

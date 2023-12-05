@@ -2,12 +2,14 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.project.create_project_page import CreateProjectPage
-from src.gui.project.project_page import ProjectPage
 from src.gui.task.task_page import TaskPage
 from src.gui.task.updata_task_page import UpdateTaskPage
-from src.gui.task.create_task_page import CreateTaskPage
+from src.gui.task.task_create_page import TaskCreatePage
 from src.logic.items.item_factory import ItemFactory
+from src.logic.execeptions.exceptions_items import ItemNameBlank,\
+                                                    ItemNameAlreadyExists
+#PENSAR SE TENHO Q COLOCAR O ERRO ITEM DESCONHECIDO
+
 
 class TaskDisplayManager:
     def __init__(self, parent):
@@ -48,15 +50,13 @@ class TaskDisplayManager:
         self.top_window.title("Criar Nova Tarefa")
         self.top_window.geometry("425x620+480+100")
         self.project = project
-        create_task_page = CreateTaskPage(master=self.top_window, mediator=FormMediator(self.submit_task))
+        create_task_page = TaskCreatePage(master=self.top_window, mediator=FormMediator(self.submit_task))
         create_task_page.pack()
-
 
     def update_task(self, project_data):
         self.task.update(**project_data)
         self.refrash_project_page(self.task.project)
         print("Task:", project_data)
-
 
     def refrash_project_page(self, project):
         self.parent.project_manager.top_window.destroy()
@@ -66,10 +66,17 @@ class TaskDisplayManager:
         if self.top_window:
             self.top_window.destroy()
             self.top_window = None
-
     
     def submit_task(self, project_data):
-        ItemFactory.create_item('task', project=self.project, **project_data)
-        self.refrash_project_page(self.project)
-        self.close_top_window()
-        print("Projeto submetido:", project_data)
+        try:
+            ItemFactory.create_item('task', project=self.project, **project_data)
+            self.refrash_project_page(self.project)
+            self.close_top_window()
+            print("Tarefa submetido:", project_data)
+        except ItemNameBlank as e:
+            if not messagebox.showerror("Erro", e):
+                return
+        except ItemNameAlreadyExists as e:
+            if not messagebox.showerror("Erro", e):
+                return
+        

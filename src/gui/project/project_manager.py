@@ -2,7 +2,7 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.project.create_project_page import CreateProjectPage
+from src.gui.project.project_create_page import ProjectCreatePage
 from src.gui.project.project_page import ProjectPage
 from src.gui.project.update_project_page import UpdateProjectPage
 from src.logic.items.item_factory import ItemFactory
@@ -37,7 +37,7 @@ class ProjectDisplayManager:
         self.top_window.geometry("425x620+400+50")  # Tamanho definido como exemplo
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        create_project_page = CreateProjectPage(master=self.top_window, mediator=FormMediator(self.submit_project), labels=labels_mock)
+        create_project_page = ProjectCreatePage(master=self.top_window, mediator=FormMediator(self.submit_project), labels=labels_mock)
         create_project_page.pack()
 
     def open_update_project_page(self,project):
