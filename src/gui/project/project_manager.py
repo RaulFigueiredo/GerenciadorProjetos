@@ -4,7 +4,7 @@ from tkinter import ttk
 from src.gui.mediator import FormMediator
 from src.gui.project.project_create_page import ProjectCreatePage
 from src.gui.project.project_page import ProjectPage
-from src.gui.project.update_project_page import UpdateProjectPage
+from src.gui.project.project_update_page import ProjectUpdatePage
 from src.logic.items.item_factory import ItemFactory
 
 class ProjectDisplayManager:
@@ -50,7 +50,7 @@ class ProjectDisplayManager:
         self.project = project
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        update_project_page = UpdateProjectPage(project=self.project, master=self.top_window, controller=self.parent,
+        update_project_page = ProjectUpdatePage(project=self.project, master=self.top_window, controller=self.parent,
                                                 mediator=FormMediator(self.update_project), labels=labels_mock)
         update_project_page.pack()
 

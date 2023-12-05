@@ -5,7 +5,7 @@ from src.gui.mediator import FormMediator
 from src.logic.items.item_factory import ItemFactory
 from src.gui.subtask.subtask_create_page import SubtaskCreatePage
 from src.gui.subtask.subtask_page import SubtaskPage
-from src.gui.subtask.updata_subtask_page import UpdateSubtaskPage
+from src.gui.subtask.subtask_updata_page import SubtaskUpdatePage
 
 class SubtaskDisplayManager:
     def __init__(self, parent):
@@ -31,7 +31,7 @@ class SubtaskDisplayManager:
         self.top_window.geometry("425x200+520+140")
         self.subtask = subtask
 
-        update_subtask_page = UpdateSubtaskPage(subtask=self.subtask, master=self.top_window, controller=self.parent,
+        update_subtask_page = SubtaskUpdatePage(subtask=self.subtask, master=self.top_window, controller=self.parent,
                                                 mediator=FormMediator(self.update_subtask))
         update_subtask_page.pack()
 

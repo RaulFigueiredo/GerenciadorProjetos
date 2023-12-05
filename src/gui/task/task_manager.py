@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
 from src.gui.task.task_page import TaskPage
-from src.gui.task.updata_task_page import UpdateTaskPage
+from src.gui.task.updata_task_page import TaskUpdatePage
 from src.gui.task.task_create_page import TaskCreatePage
 from src.logic.items.item_factory import ItemFactory
 from src.logic.execeptions.exceptions_items import ItemNameBlank,\
@@ -36,7 +36,7 @@ class TaskDisplayManager:
         self.top_window.geometry("425x480+480+100")
         self.task = task
 
-        update_task_page = UpdateTaskPage(task=self.task, master=self.top_window, controller=self.parent,
+        update_task_page = TaskUpdatePage(task=self.task, master=self.top_window, controller=self.parent,
                                                 mediator=FormMediator(self.update_task))
         update_task_page.pack()
 

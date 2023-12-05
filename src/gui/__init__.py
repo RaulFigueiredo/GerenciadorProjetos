@@ -7,4 +7,3 @@ from src.gui.third_page import ThirdPage
 from .forms_base import LabelCombobox,EntryField,LabelCombobox,DescriptionText,DateField
 from .mediator import FormMediator
 from .project.project_manager import ProjectDisplayManager
-from .project.update_project_page import UpdateProjectPage

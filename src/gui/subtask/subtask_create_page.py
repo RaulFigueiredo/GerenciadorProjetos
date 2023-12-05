@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk  
 from tkinter import messagebox
 from src.gui.forms_base import EntryField
-from src.gui.CRUD_base.base_create_page import BaseCreatePage
+from src.gui.base_CRUD.base_create_page import BaseCreatePage
 
 class SubtaskCreatePage(BaseCreatePage):
     def __init__(self, master, mediator):
@@ -24,5 +24,5 @@ class SubtaskCreatePage(BaseCreatePage):
         data = {
             "name": self.name_field.get_value(),
         }
-        
+
         return data
