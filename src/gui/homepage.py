@@ -88,6 +88,7 @@ class ProjectList(tk.Frame):
             self.project_map[project.name] = project
             for task in project.tasks:
                 self.tree.insert(project_id, tk.END, text=task.name)
+                
     def update_main_page(self):
         self.tree.delete(*self.tree.get_children())
         self.mock_projects()

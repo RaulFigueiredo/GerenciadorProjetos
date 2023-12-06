@@ -3,9 +3,9 @@ from tkinter import ttk
 from tkinter import messagebox
 
 class BasePage(tk.Frame):
-    def __init__(self, master, controller, manager, item):
+    def __init__(self, master, home, manager, item):
         super().__init__(master)
-        self.controller = controller
+        self.home = home
         self.manager = manager
         self.item = item
 

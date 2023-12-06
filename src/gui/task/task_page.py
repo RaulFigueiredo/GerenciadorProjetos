@@ -3,8 +3,8 @@ from tkinter import ttk
 from src.gui.base_CRUD.base_page import BasePage
 
 class TaskPage(BasePage):
-    def __init__(self, master, controller, manager, task):
-        super().__init__(master, controller, manager, task)
+    def __init__(self, master, home, manager, task):
+        super().__init__(master, home, manager, task)
         self.create_widgets()
 
     def create_widgets(self):
@@ -53,7 +53,7 @@ class TaskPage(BasePage):
         subtasks_label = tk.Label(subtasks_frame, text="Subtarefas:")
         subtasks_label.grid(row=0, column=0, sticky="w")
 
-        add_task_button = ttk.Button(subtasks_frame, text="+", width=2, command=lambda: self.controller.subtask_manager.open_create_page(self.item))
+        add_task_button = ttk.Button(subtasks_frame, text="+", width=2, command=lambda: self.home.subtask_manager.open_create_page(self.item))
         add_task_button.grid(row=0, column=1, sticky="w")
         
         self.subtasks_listbox = tk.Listbox(self, height=7, width=1)
@@ -66,10 +66,9 @@ class TaskPage(BasePage):
 
         self.get_buttons(row=7)
 
-
     def on_double_click(self, event):
         selection = self.subtasks_listbox.curselection()
         if selection:
             index = selection[0]
             subtask = self.item.subtasks[index]
-            self.controller.subtask_manager.open_page(subtask,self.item)
+            self.home.subtask_manager.open_page(subtask,self.item)

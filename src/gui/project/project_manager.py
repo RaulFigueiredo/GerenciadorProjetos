@@ -6,69 +6,65 @@ from src.gui.project.project_create_page import ProjectCreatePage
 from src.gui.project.project_page import ProjectPage
 from src.gui.project.project_update_page import ProjectUpdatePage
 from src.logic.items.item_factory import ItemFactory
+from src.gui.base_CRUD.base_manager import BaseDisplayManager
 
-class ProjectDisplayManager:
-    def __init__(self, parent, user):
-        self.parent = parent
+class ProjectDisplayManager(BaseDisplayManager):
+    def __init__(self, home, user):
+        super().__init__(home)
         self.user = user
-        self.top_window = None
 
-    def open_page(self, project):
+    def open_page(self, item):
+        # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.top_window = tk.Toplevel(self.parent)
+        # conf window
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Detalhes do Projeto")
         self.top_window.geometry("425x620+400+50")
-        self.top_window.protocol("WM_DELETE_WINDOW", self.close_top_window)
-        project_page = ProjectPage(master=self.top_window, controller=self.parent, manager=self, project=project)
+    
+        project_page = ProjectPage(master=self.top_window, home=self.home, manager=self, project=item)
         project_page.pack()
 
     def open_create_page(self):
+        # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.top_window = tk.Toplevel(self.parent)
+        # conf window
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Novo Projeto")
-        self.top_window.geometry("425x620+400+50")  # Tamanho definido como exemplo
+        self.top_window.geometry("425x620+400+50")  
+        
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        create_project_page = ProjectCreatePage(master=self.top_window, mediator=FormMediator(self.submit_project), labels=labels_mock)
+        parent = self.user
+        create_project_page = ProjectCreatePage(master=self.top_window,
+                                                mediator=FormMediator(self.submit_item),
+                                                parent= parent,
+                                                labels=labels_mock)
         create_project_page.pack()
 
-    def open_update_page(self,project):
+    def open_update_page(self,item):
+        # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.top_window = tk.Toplevel(self.parent)
+        # conf window
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Projeto")
-        self.top_window.geometry("425x480+400+50")  # Tamanho definido como exemplo
-        self.project = project
+        self.top_window.geometry("425x480+400+50") 
+
+        self.item  = item
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        update_project_page = ProjectUpdatePage(project=self.project, master=self.top_window, controller=self.parent,
-                                                mediator=FormMediator(self.update_project), labels=labels_mock)
+        update_project_page = ProjectUpdatePage(project=self.item, master=self.top_window, home=self.home,
+                                                mediator=FormMediator(self.update_item), labels=labels_mock)
         update_project_page.pack()
 
-    def close_top_window(self):
-        if self.top_window:
-            self.top_window.destroy()
-            self.top_window = None
-
-    def submit_project(self, project_data):
-        ItemFactory.create_item('project', user=self.user, **project_data)
-        self.parent.update_main_page()
-        self.close_top_window()
-        print("Projeto submetido:", project_data)
-
-    def update_project(self, project_data):
-        self.project.update(**project_data)
-        self.parent.update_main_page()
-        print("Projeto submetido:", project_data)
-
     def refresh_parent_page(self):
-        self.parent.update_main_page()
+        self.home.update_main_page()

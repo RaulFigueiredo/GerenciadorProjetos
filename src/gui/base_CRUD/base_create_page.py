@@ -1,9 +1,10 @@
 import tkinter as tk
 
 class BaseCreatePage(tk.Frame):
-    def __init__(self, master, mediator):
+    def __init__(self, master, mediator, parent):
         super().__init__(master)
         self.mediator = mediator
+        self.parent = parent
 
     def get_buttons(self):
         # Criacao de um frame adicional para os botoes
@@ -20,7 +21,7 @@ class BaseCreatePage(tk.Frame):
 
     def submit(self):
         data = self.prepare_data()
-        self.mediator.submit(data)
+        self.mediator.create(data)
         self.close_window()
 
     def close_window(self):

@@ -3,8 +3,8 @@ from src.gui.forms_base import EntryField, LabelCombobox, DescriptionText, DateF
 from src.gui.base_CRUD.base_create_page import BaseCreatePage
 
 class ProjectCreatePage(BaseCreatePage):
-    def __init__(self, master, mediator, labels):
-        super().__init__(master,mediator)
+    def __init__(self, master, mediator, parent, labels):
+        super().__init__(master,mediator, parent)
         self.labels = labels  
         self.create_widgets()
 
@@ -24,6 +24,8 @@ class ProjectCreatePage(BaseCreatePage):
     
     def prepare_data(self):
         data = {
+            "item_type": "project",
+            "user": self.parent,
             "name": self.name_field.get_value(),
             "label": self.label_combobox.get_value(),
             "end_date": self.date_field.get_value(),

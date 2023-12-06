@@ -9,76 +9,57 @@ from src.logic.items.item_factory import ItemFactory
 from src.logic.execeptions.exceptions_items import ItemNameBlank,\
                                                     ItemNameAlreadyExists
 #PENSAR SE TENHO Q COLOCAR O ERRO ITEM DESCONHECIDO
+from src.gui.base_CRUD.base_manager import BaseDisplayManager
 
 
-class TaskDisplayManager:
-    def __init__(self, controller):
-        self.controller = controller
+class TaskDisplayManager(BaseDisplayManager):
+    def __init__(self, home):
+        self.home = home
         self.top_window = None
 
-    def open_page(self, task, project):
-        self.project = project
+    def open_page(self, item, parent):
+        self.parent = parent
         if self.top_window and self.top_window.winfo_exists():
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.top_window = tk.Toplevel(self.controller)
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Detalhes da Tarefa")
         self.top_window.geometry("425x620+480+100")
-        # passar self.controller como controller facilita minha vida
-        task_page = TaskPage(master=self.top_window, controller=self.controller, manager=self,task=task)
+        # passar self.home como home facilita minha vida
+        task_page = TaskPage(master=self.top_window, home=self.home, manager=self,task=item)
         task_page.pack()
 
-    def open_update_page(self,task):
+    def open_update_page(self,item):
         if self.top_window and self.top_window.winfo_exists():
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.top_window = tk.Toplevel(self.controller)
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Tarefa")
         self.top_window.geometry("425x480+480+100")
-        self.task = task
+        self.item = item
 
-        update_task_page = TaskUpdatePage(task=self.task, master=self.top_window, controller=self.controller,
+        update_task_page = TaskUpdatePage(task=self.item, master=self.top_window, home=self.home,
                                                 mediator=FormMediator(self.update_item))
         update_task_page.pack()
 
-    def open_create_page(self, project):
+    def open_create_page(self, parent):
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
-            self.close_top_window()
+            self.top_window.destroy()
 
-        self.project = project
-        self.top_window = tk.Toplevel(self.controller)
+        self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Nova Tarefa")
         self.top_window.geometry("425x620+480+100")
-        create_task_page = TaskCreatePage(master=self.top_window, mediator=FormMediator(self.create_item))
+
+        self.parent = parent
+        create_task_page = TaskCreatePage(master=self.top_window,
+                                          mediator=FormMediator(self.submit_item),
+                                          parent = self.parent)
         create_task_page.pack()
 
-    def update_item(self, project_data):
-        self.task.update(**project_data)
-        self.refresh_parent_page()
-        print("Task:", project_data)
-
     def refresh_parent_page(self):
-        self.controller.project_manager.top_window.destroy()
-        self.controller.project_manager.open_page(self.project)
-        self.controller.project_manager.refresh_parent_page()
+        self.home.project_manager.top_window.destroy()
+        self.home.project_manager.open_page(self.parent)
+        self.home.project_manager.refresh_parent_page()
 
-    def close_top_window(self):
-        if self.top_window:
-            self.top_window.destroy()
-            self.top_window = None
-    
-    def create_item(self, project_data):
-        try:
-            ItemFactory.create_item('task', project=self.project, **project_data)
-            self.refresh_parent_page()
-            self.close_top_window()
-            print("Tarefa submetido:", project_data)
-        except ItemNameBlank as e:
-            if not messagebox.showerror("Erro", e):
-                return
-        except ItemNameAlreadyExists as e:
-            if not messagebox.showerror("Erro", e):
-                return
-        

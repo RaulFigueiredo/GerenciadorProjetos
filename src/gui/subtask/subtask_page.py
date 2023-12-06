@@ -3,8 +3,8 @@ from tkinter import ttk
 from src.gui.base_CRUD.base_page import BasePage
 
 class SubtaskPage(BasePage):
-    def __init__(self, master, controller, manager, subtask):
-        super().__init__(master, controller, manager, subtask)
+    def __init__(self, master, home, manager, subtask):
+        super().__init__(master, home, manager, subtask)
         self.create_widgets()
 
     def create_widgets(self):

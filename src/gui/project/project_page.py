@@ -3,8 +3,8 @@ from tkinter import ttk
 from src.gui.base_CRUD.base_page import BasePage
 
 class ProjectPage(BasePage):
-    def __init__(self, master, controller, manager ,project):
-        super().__init__(master, controller, manager, project)
+    def __init__(self, master, home, manager ,project):
+        super().__init__(master, home, manager, project)
         self.create_widgets()
 
     def create_widgets(self):
@@ -51,7 +51,7 @@ class ProjectPage(BasePage):
         tasks_label = tk.Label(tasks_frame, text="Tarefas:")
         tasks_label.grid(row=0, column=0, sticky="w")
 
-        add_task_button = ttk.Button(tasks_frame, text="+", width=2, command=lambda: self.controller.task_manager.open_create_page(self.item))
+        add_task_button = ttk.Button(tasks_frame, text="+", width=2, command=lambda: self.home.task_manager.open_create_page(self.item))
         add_task_button.grid(row=0, column=1, sticky="w")
 
         self.tasks_listbox = tk.Listbox(self, height=7, width=1)
@@ -69,5 +69,5 @@ class ProjectPage(BasePage):
         if selection:
             index = selection[0]
             task = self.item.tasks[index]
-            self.controller.task_manager.open_page(task, project = self.item)
+            self.home.task_manager.open_page(task, parent = self.item)
             
