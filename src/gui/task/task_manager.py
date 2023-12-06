@@ -12,65 +12,67 @@ from src.logic.execeptions.exceptions_items import ItemNameBlank,\
 
 
 class TaskDisplayManager:
-    def __init__(self, parent):
-        self.parent = parent
+    def __init__(self, controller):
+        self.controller = controller
         self.top_window = None
 
-    def open_task_page(self, task):
+    def open_page(self, task, project):
+        self.project = project
         if self.top_window and self.top_window.winfo_exists():
             self.close_top_window()
 
-        self.top_window = tk.Toplevel(self.parent)
+        self.top_window = tk.Toplevel(self.controller)
         self.top_window.title("Detalhes da Tarefa")
         self.top_window.geometry("425x620+480+100")
-        # passar self.parent como controller facilita minha vida
-        task_page = TaskPage(master=self.top_window, controller=self, task=task)
+        # passar self.controller como controller facilita minha vida
+        task_page = TaskPage(master=self.top_window, controller=self.controller, manager=self,task=task)
         task_page.pack()
 
-    def open_update_task_page(self,task):
+    def open_update_page(self,task):
         if self.top_window and self.top_window.winfo_exists():
             self.close_top_window()
 
-        self.top_window = tk.Toplevel(self.parent)
+        self.top_window = tk.Toplevel(self.controller)
         self.top_window.title("Editar Tarefa")
         self.top_window.geometry("425x480+480+100")
         self.task = task
 
-        update_task_page = TaskUpdatePage(task=self.task, master=self.top_window, controller=self.parent,
-                                                mediator=FormMediator(self.update_task))
+        update_task_page = TaskUpdatePage(task=self.task, master=self.top_window, controller=self.controller,
+                                                mediator=FormMediator(self.update_item))
         update_task_page.pack()
 
-    def open_create_task_page(self, project):
+    def open_create_page(self, project):
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
             self.close_top_window()
 
-        self.top_window = tk.Toplevel(self.parent)
+        self.project = project
+        self.top_window = tk.Toplevel(self.controller)
         self.top_window.title("Criar Nova Tarefa")
         self.top_window.geometry("425x620+480+100")
-        self.project = project
-        create_task_page = TaskCreatePage(master=self.top_window, mediator=FormMediator(self.submit_task))
+        create_task_page = TaskCreatePage(master=self.top_window, mediator=FormMediator(self.create_item))
         create_task_page.pack()
 
-    def update_task(self, project_data):
+    def update_item(self, project_data):
         self.task.update(**project_data)
-        self.refrash_project_page(self.task.project)
+        self.refresh_parent_page()
         print("Task:", project_data)
 
-    def refrash_project_page(self, project):
-        self.parent.project_manager.top_window.destroy()
-        self.parent.project_manager.open_project_page(project)
+    def refresh_parent_page(self):
+        self.controller.project_manager.top_window.destroy()
+        self.controller.project_manager.open_page(self.project)
+        self.controller.project_manager.refresh_parent_page()
 
     def close_top_window(self):
         if self.top_window:
             self.top_window.destroy()
             self.top_window = None
     
-    def submit_task(self, project_data):
+    def create_item(self, project_data):
         try:
             ItemFactory.create_item('task', project=self.project, **project_data)
-            self.refrash_project_page(self.project)
+            self.refresh_parent_page()
             self.close_top_window()
             print("Tarefa submetido:", project_data)
         except ItemNameBlank as e:

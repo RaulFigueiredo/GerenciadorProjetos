@@ -17,7 +17,7 @@ class BaseUpdatePage(tk.Frame):
         submit_button.grid(row=0, column=1, padx=5)
 
         # Botão para fechar a janela
-        #close_button = tk.Button(button_frame, text="Sair", command=lambda: self.controler.task_manager.open_task_page(self.task))
+        #close_button = tk.Button(button_frame, text="Sair", command=lambda: self.controler.task_manager.open_page(self.task))
         close_button = tk.Button(button_frame, text="Sair",  command=self.master.destroy)
         close_button.grid(row=0, column=0, padx=5)
 

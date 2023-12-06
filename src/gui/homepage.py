@@ -62,12 +62,12 @@ class ProjectList(tk.Frame):
         open_create_project_button = tk.Button(
                                     self,
                                     text="Criar Projeto",
-                                    command=lambda: self.project_manager.open_create_project_page()
+                                    command=lambda: self.project_manager.open_create_page()
                                 )
         open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
     def show_project_page(self, project):
-        self.project_manager.open_project_page(project)
+        self.project_manager.open_page(project)
 
     def on_double_click(self, event):
         item_id = self.tree.selection()[0]

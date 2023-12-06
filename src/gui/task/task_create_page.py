@@ -1,9 +1,6 @@
 import tkinter as tk
-from tkinter import ttk  
-from tkinter import messagebox
-from tkcalendar import DateEntry
-from src.gui.base_CRUD.base_create_page import BaseCreatePage
 from src.gui.forms_base import EntryField, LabelCombobox, DescriptionText, DateField
+from src.gui.base_CRUD.base_create_page import BaseCreatePage
 
 class TaskCreatePage(BaseCreatePage):
     def __init__(self, master, mediator):

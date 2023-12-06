@@ -1,7 +1,4 @@
 import tkinter as tk
-from tkinter import ttk  
-from tkinter import messagebox
-from tkcalendar import DateEntry
 from src.gui.forms_base import EntryField, LabelCombobox, DescriptionText, DateField
 from src.gui.base_CRUD.base_updata_page import BaseUpdatePage
 
