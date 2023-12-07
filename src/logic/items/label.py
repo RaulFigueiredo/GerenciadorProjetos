@@ -92,8 +92,16 @@ class Label(IItem):
     def name(self) -> str:
         """str: The name of the label."""
         return self._name
+    
+    @name.setter
+    def name(self, value: str):
+        self._name = value
 
     @property
     def color(self) -> str:
         """str: The color of the label."""
         return self._color
+
+    @color.setter
+    def color(self, value: str):
+        self._color = value
