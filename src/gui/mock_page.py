@@ -15,7 +15,7 @@ class MainPage(tk.Frame):
         open_create_project_button = tk.Button(
                                         self,
                                         text="Criar Projeto",
-                                        command=lambda: self.controller.project_manager.open_create_project_page()
+                                        command=lambda: self.controller.project_manager.open_create_page()
                                     )
         open_create_project_button.pack(pady=20)
         
@@ -36,5 +36,5 @@ class MainPage(tk.Frame):
             button.pack(pady=5)
 
     def open_project(self, project):
-        self.controller.project_manager.open_project_page(project)
+        self.controller.project_manager.open_page(project)
 

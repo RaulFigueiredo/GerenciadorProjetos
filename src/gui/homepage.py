@@ -62,12 +62,12 @@ class ProjectList(tk.Frame):
         open_create_project_button = tk.Button(
                                     self,
                                     text="Criar Projeto",
-                                    command=lambda: self.project_manager.open_create_project_page()
+                                    command=lambda: self.project_manager.open_create_page()
                                 )
         open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
     def show_project_page(self, project):
-        self.project_manager.open_project_page(project)
+        self.project_manager.open_page(project)
 
     def on_double_click(self, event):
         item_id = self.tree.selection()[0]
@@ -80,14 +80,20 @@ class ProjectList(tk.Frame):
 
     def mock_projects(self):
         self.tree.tag_configure('projectname', font=('Arial', 12, 'bold'))
+        self.tree.tag_configure('concluded', foreground='green')
 
         for project in self.user.projects:
             # Use project name or another unique identifier as a tag
-            project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
+            if project.status:
+                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído', open=True, tags=(project.name, 'projectname', 'concluded'))
+            else:
+                project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
 
             self.project_map[project.name] = project
             for task in project.tasks:
-                self.tree.insert(project_id, tk.END, text=task.name)
+                if task.status:
+                    self.tree.insert(project_id, tk.END, text=task.name)
+                
     def update_main_page(self):
         self.tree.delete(*self.tree.get_children())
         self.mock_projects()

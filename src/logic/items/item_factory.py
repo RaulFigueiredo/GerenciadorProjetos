@@ -71,34 +71,35 @@ class ItemFactory:
         """
         name = kwargs.get('name')
         if name is None or name == '':
-            raise ItemNameBlank("Argumento 'nome' é obrigatório e não pode \
-                                ser nulo ou vazio para um Item")
+            erro_str = "Campo 'nome' é obrigatório"
+            raise ItemNameBlank(erro_str)
 
         if item_type == 'project':
             user = kwargs.get('user')
             if name in [project.name for project in user.projects]:
-                raise ItemNameAlreadyExists("Já existe um projeto com esse nome")
+                erro_str = "Já existe um projeto com esse nome"
+                raise ItemNameAlreadyExists(erro_str)
             return Project(**kwargs)
 
         if item_type == 'task':
             project = kwargs.get('project')
             if name in [task.name for task in project.tasks]:
-                raise ItemNameAlreadyExists("Já existe uma tarefa com esse nome \
-                                            nesse projeto")
+                erro_str = "Já existe uma tarefa com esse nome nesse projeto"
+                raise ItemNameAlreadyExists(erro_str)
             return Task(**kwargs)
 
         if item_type == 'subtask':
             task = kwargs.get('task')
             if name in [subtask.name for subtask in task.subtasks]:
-                raise ItemNameAlreadyExists("Já existe uma subtarefa com esse \
-                                            nome nessa tarefa")
+                erro_str = "Já existe uma subtarefa com esse nome nessa tarefa"
+                raise ItemNameAlreadyExists(erro_str)
             return Subtask(**kwargs)
 
         if item_type == 'label':
             user = kwargs.get('user')
             if name in [label.name for label in user.labels]:
-                raise ItemNameAlreadyExists("Já existe uma etiqueta com esse \
-                                            nome")
+                erro_str = "Já existe uma etiqueta com esse nome"
+                raise ItemNameAlreadyExists(erro_str)
             return Label(**kwargs)
 
         raise UnknownItem("Tipo de item desconhecido")

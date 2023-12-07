@@ -31,9 +31,9 @@ class TestLabel(unittest.TestCase):
         self.mock_user.update_label.assert_called_with(self.label)
 
     def test_update_invalid(self):
-
+        new_user = Mock()
         with self.assertRaises(ValueError):
-            self.label.update(task="New Task")
+            self.label.update(user=new_user)
 
 class TestAddLabelDialog(unittest.TestCase):
 

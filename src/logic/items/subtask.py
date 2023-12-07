@@ -14,6 +14,7 @@ Exceptions:
 
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
+from datetime import date
 
 
 class Subtask(IItem):
@@ -43,6 +44,7 @@ class Subtask(IItem):
         self._task = task
         self._name = name
         self._status = False
+        self._conclusion_date = None
 
         self._task.add_subtask(self)
 
@@ -76,11 +78,13 @@ class Subtask(IItem):
     def conclusion(self) -> None:
         """Mark the subtask as completed."""
         self._status = True
+        self._conclusion_date = date.today()
         # atualizar no banco de dados
 
     def unconclusion(self) -> None:
         """Mark the subtask as not completed."""
         self._status = False
+        self._conclusion_date = None
         # atualizar no banco de dados
 
     @property
@@ -97,3 +101,7 @@ class Subtask(IItem):
     def task(self) -> IItem:
         """IItem: The parent task of the subtask."""
         return self._task
+    
+    @property
+    def conclusion_date(self) -> date:
+        return self._conclusion_date
