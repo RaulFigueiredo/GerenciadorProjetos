@@ -42,6 +42,9 @@ class MonthView:
         self.task_details = task_details
         self.month_year = monthyear
 
+        self.screen_width = self.calendar_frame.winfo_screenwidth()
+        self.screen_height = self.calendar_frame.winfo_screenheight()
+
         self.month = self.month_year[0]
         self.year = self.month_year[1]
 
@@ -92,13 +95,15 @@ class MonthView:
                 if start_date <= index <= start_date + number_of_days - 1:
                     day_str = f"{self.year}-{self.month:02d}-{day:02d}"
                     task_info = self.tasks_dict.get(day_str)
+                    day_width = int(self.screen_width * 0.008)
+                    day_height = int(self.screen_height * 0.004)
 
                     day_frame = tk.Frame(self.calendar_frame, bd=1, relief='ridge') 
                     day_frame.grid(row=row + 2, column=column, sticky='nsew', padx=1, pady=1)
                     day_frame.columnconfigure(0, weight=1)
 
-                    text = tk.Text(day_frame, width=15, height=5, padx=5, pady=5,
-                                   borderwidth=0, highlightthickness=0)
+                    text = tk.Text(day_frame, width=day_width, height=day_height, padx=5, pady=5,
+                                borderwidth=0, highlightthickness=0)
                     text.grid(row=1)
                     text.config(state='normal')
                     text.insert('end', "\n")
