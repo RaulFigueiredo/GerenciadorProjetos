@@ -77,10 +77,23 @@ class CalendarPage:
 
 class StartPage:
 
+
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Página Inicial")
-        self.window.geometry("1500x800")  # Ajuste o tamanho conforme necessário
+
+        screen_width = self.window.winfo_screenwidth()
+        screen_height = self.window.winfo_screenheight()
+
+        window_width = int(screen_width * 0.8)
+        window_height = int(screen_height * 0.8)
+
+        x_cordinate = int((screen_width/2) - (window_width/2))
+        y_cordinate = int((screen_height/2) - (window_height/2))
+
+        # Definir a geometria da janela
+        self.window.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
+
         self.create_widgets()
         self.calendar_page = None
 
