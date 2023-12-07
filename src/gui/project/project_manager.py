@@ -23,10 +23,14 @@ class ProjectDisplayManager(BaseDisplayManager):
         # conf window
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Detalhes do Projeto")
-        self.top_window.geometry("425x620+400+50")
     
-        project_page = ProjectPage(master=self.top_window, home=self.home, manager=self, project=item)
-        project_page.pack()
+        project_page = ProjectPage(master=self.top_window, home=self.home, 
+                                   manager=self, project=item)
+        project_page.pack(fill='both', expand=True)
+
+        self.resize_page()
+
+
 
     def open_create_page(self):
         # deixa apenas 1 janela aberta
@@ -35,11 +39,10 @@ class ProjectDisplayManager(BaseDisplayManager):
                 return
             self.top_window.destroy()
 
-        # conf window
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Novo Projeto")
-        self.top_window.geometry("425x620+400+50")  
-        
+        self.top_window.withdraw()
+
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
         parent = self.user
@@ -47,7 +50,9 @@ class ProjectDisplayManager(BaseDisplayManager):
                                                 mediator=FormMediator(self.submit_item),
                                                 parent= parent,
                                                 labels=labels_mock)
-        create_project_page.pack()
+        create_project_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def open_update_page(self,item):
         # deixa apenas 1 janela aberta
@@ -57,14 +62,18 @@ class ProjectDisplayManager(BaseDisplayManager):
         # conf window
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Projeto")
-        self.top_window.geometry("425x480+400+50") 
+        self.top_window.withdraw()
 
         self.item  = item
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        update_project_page = ProjectUpdatePage(project=self.item, master=self.top_window, home=self.home,
+        update_project_page = ProjectUpdatePage(project=self.item,\
+                                                manager=self,\
+                                                master=self.top_window,\
                                                 mediator=FormMediator(self.update_item), labels=labels_mock)
-        update_project_page.pack()
+        update_project_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def refresh_parent_page(self):
         self.home.update_main_page()

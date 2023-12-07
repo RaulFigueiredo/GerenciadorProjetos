@@ -12,6 +12,4 @@ class FormMediator:
         self.submit_action(item_type, data)
 
     def update(self, data): 
-        # se pah vira update(self, sender,data):
-        # quando eu fizer o base_managers.py 
         self.submit_action(data)

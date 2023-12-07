@@ -1,10 +1,10 @@
 import tkinter as tk
 
 class BaseUpdatePage(tk.Frame):
-    def __init__(self, master, mediator, home, item):
+    def __init__(self, master, manager, mediator, item):
         super().__init__(master)
+        self.manager = manager
         self.mediator = mediator
-        self.home = home
         self.item = item
 
     def get_buttons(self):
@@ -18,7 +18,7 @@ class BaseUpdatePage(tk.Frame):
 
         # Botão para fechar a janela
         #close_button = tk.Button(button_frame, text="Sair", command=lambda: self.controller.task_manager.open_page(self.task))
-        close_button = tk.Button(button_frame, text="Sair",  command=self.master.destroy)
+        close_button = tk.Button(button_frame, text="Sair", command=lambda: self.manager.open_page(self.item))
         close_button.grid(row=0, column=0, padx=5)
 
 

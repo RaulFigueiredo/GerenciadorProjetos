@@ -57,7 +57,7 @@ class MainWindow(tk.Tk):
         self.show_page(MainPage)
 
     def show_project_page(self, project):
-        self.project_manager.open_project_page(project)
+        self.project_manager.open_page(project)
 
     def show_third_page(self):
         self.show_page(ThirdPage)

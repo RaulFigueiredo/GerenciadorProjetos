@@ -10,19 +10,31 @@ class BasePage(tk.Frame):
         self.item = item
 
     def get_buttons(self,row=7):
+        button_frame = tk.Frame(self)
+        button_frame.grid(row=row, column=0, sticky="ew", padx=10, pady=10)
+        button_frame.grid_columnconfigure(0, weight=1)
+        button_frame.grid_columnconfigure(1, weight=1)
+        button_frame.grid_columnconfigure(2, weight=1)
 
-        back_button = ttk.Button(self, text="Voltar", command=self.close_window)
-        back_button.grid(row=row, column=0, sticky="w", padx=(10, 5), pady=10)
+        # Botão Voltar no canto esquerdo do Frame
+        back_button = ttk.Button(button_frame, text="Voltar", command=self.close_window)
+        back_button.grid(row=0, column=0, sticky="w")
 
-        delete_button = ttk.Button(self, text="Excluir", command=self.confirm_delete)
-        delete_button.grid(row=row, column=0, padx=(5, 5), pady=10)
-        
+        # Botão Excluir no centro do Frame
+        delete_button = ttk.Button(button_frame, text="Excluir", command=self.confirm_delete)
+        delete_button.grid(row=0, column=1)
+
+        # Botão Editar no canto direito do Frame
         update_button = ttk.Button(
-                                self,
-                                text="Editar",
-                                command=lambda: self.manager.open_update_page(self.item)
-                            )
-        update_button.grid(row=row, column=0, sticky="e", padx=(5, 10), pady=10)
+            button_frame,
+            text="Editar",
+            command=lambda: self.manager.open_update_page(self.item)
+        )
+        update_button.grid(row=0, column=2, sticky="e")
+
+        # Configuração do layout do Frame dos botões para expandir com a janela
+        self.grid_rowconfigure(row, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
         if self.item.status:
             unconclusion_button = ttk.Button(self, text="Reativar", command=self.unconclusion)

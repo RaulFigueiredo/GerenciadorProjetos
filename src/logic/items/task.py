@@ -195,7 +195,7 @@ class Task(IItem):
         Args:
             subtask (IItem): The subtask to be added.
         """
-        self._subtasks.append(subtask)
+        self._subtasks.insert(0, subtask)
         # adicionar no banco de dados
 
     def remove_subtask(self, subtask: IItem) -> None:

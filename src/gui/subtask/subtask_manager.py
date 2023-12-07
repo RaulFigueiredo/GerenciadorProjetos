@@ -11,17 +11,19 @@ class SubtaskDisplayManager(BaseDisplayManager):
         super().__init__(home)
 
     def open_page(self, item, parent):
-        # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
             self.top_window.destroy()
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Detalhes da Subtarefa")
-        self.top_window.geometry("425x200+520+140")
 
         self.parent = parent
-        task_page = SubtaskPage(master=self.top_window, home=self, manager=self,subtask=item)
-        task_page.pack()
+        task_page = SubtaskPage(master=self.top_window, home=self.home, manager=self, subtask=item)
+        
+        # Use pack com fill e expand para preencher a janela
+        task_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def open_update_page(self,item):
         if self.top_window and self.top_window.winfo_exists():
@@ -29,12 +31,13 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Tarefa")
-        self.top_window.geometry("425x200+520+140")
-        self.item = item
 
-        update_subtask_page = SubtaskUpdatePage(subtask=self.item, master=self.top_window, home=self.home,
+        self.item = item
+        update_subtask_page = SubtaskUpdatePage(subtask=self.item, manager=self, master=self.top_window, 
                                                 mediator=FormMediator(self.update_item))
-        update_subtask_page.pack()
+        update_subtask_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def open_create_page(self, parent):
         if self.top_window and self.top_window.winfo_exists():
@@ -44,13 +47,14 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Nova Tarefa")
-        self.top_window.geometry("425x200+520+140")
 
         self.parent = parent
         create_task_page = SubtaskCreatePage(master=self.top_window,
                                              mediator=FormMediator(self.submit_item),
                                              parent = self.parent)
-        create_task_page.pack()
+        create_task_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def refresh_parent_page(self):
         self.home.task_manager.top_window.destroy()

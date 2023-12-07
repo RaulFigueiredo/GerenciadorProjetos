@@ -80,14 +80,19 @@ class ProjectList(tk.Frame):
 
     def mock_projects(self):
         self.tree.tag_configure('projectname', font=('Arial', 12, 'bold'))
+        self.tree.tag_configure('concluded', foreground='green')
 
         for project in self.user.projects:
             # Use project name or another unique identifier as a tag
-            project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
+            if project.status:
+                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído', open=True, tags=(project.name, 'projectname', 'concluded'))
+            else:
+                project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
 
             self.project_map[project.name] = project
             for task in project.tasks:
-                self.tree.insert(project_id, tk.END, text=task.name)
+                if task.status:
+                    self.tree.insert(project_id, tk.END, text=task.name)
                 
     def update_main_page(self):
         self.tree.delete(*self.tree.get_children())

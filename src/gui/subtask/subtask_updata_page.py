@@ -4,8 +4,8 @@ from src.gui.base_CRUD.base_updata_page import BaseUpdatePage
 
 
 class SubtaskUpdatePage(BaseUpdatePage):
-    def __init__(self, master, mediator, home, subtask):
-        super().__init__(master, mediator, home, subtask)
+    def __init__(self, master, manager, mediator, subtask):
+        super().__init__(master, manager, mediator, subtask)
         self.create_widgets()
 
     def create_widgets(self):

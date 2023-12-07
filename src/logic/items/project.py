@@ -122,7 +122,7 @@ class Project(IItem):
         Parameters:
             task (IItem): The task item to be added to the project.
         """
-        self._tasks.append(task)
+        self._tasks.insert(0, task)
         # adicionar no banco de dados
 
     def remove_task(self, task: IItem) -> None:

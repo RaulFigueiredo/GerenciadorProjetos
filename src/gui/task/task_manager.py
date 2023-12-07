@@ -18,16 +18,18 @@ class TaskDisplayManager(BaseDisplayManager):
         self.top_window = None
 
     def open_page(self, item, parent):
-        self.parent = parent
         if self.top_window and self.top_window.winfo_exists():
             self.top_window.destroy()
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Detalhes da Tarefa")
-        self.top_window.geometry("425x620+480+100")
-        # passar self.home como home facilita minha vida
-        task_page = TaskPage(master=self.top_window, home=self.home, manager=self,task=item)
-        task_page.pack()
+
+        self.parent = parent
+        task_page = TaskPage(master=self.top_window, home=self.home, manager=self, task=item)
+        task_page.pack(fill='both', expand=True)
+
+        self.resize_page()
+
 
     def open_update_page(self,item):
         if self.top_window and self.top_window.winfo_exists():
@@ -35,12 +37,14 @@ class TaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Tarefa")
-        self.top_window.geometry("425x480+480+100")
-        self.item = item
+        self.top_window.withdraw()
 
-        update_task_page = TaskUpdatePage(task=self.item, master=self.top_window, home=self.home,
+        self.item = item
+        update_task_page = TaskUpdatePage(task=self.item, manager=self, master=self.top_window, 
                                                 mediator=FormMediator(self.update_item))
-        update_task_page.pack()
+        update_task_page.pack(fill='both', expand=True)
+
+        self.resize_page()
 
     def open_create_page(self, parent):
         if self.top_window and self.top_window.winfo_exists():
@@ -50,13 +54,15 @@ class TaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Nova Tarefa")
-        self.top_window.geometry("425x620+480+100")
+        self.top_window.withdraw()
 
         self.parent = parent
         create_task_page = TaskCreatePage(master=self.top_window,
                                           mediator=FormMediator(self.submit_item),
                                           parent = self.parent)
-        create_task_page.pack()
+        
+        create_task_page.pack(fill='both', expand=True)
+        self.resize_page()
 
     def refresh_parent_page(self):
         self.home.project_manager.top_window.destroy()

@@ -28,6 +28,22 @@ class BaseDisplayManager:
         self.refresh_parent_page()
         print("Atualizado:", data)
 
+    def resize_page(self):
+        # Atualiza a janela para calcular o tamanho necessário com base no conteúdo
+        self.top_window.update_idletasks()
+        self.top_window.minsize(self.top_window.winfo_width(), self.top_window.winfo_height())
+
+        # Centraliza a janela na tela
+        width = self.top_window.winfo_width() 
+        height = self.top_window.winfo_height()
+        x = (self.top_window.winfo_screenwidth() // 2) - (width // 2)
+        y = (self.top_window.winfo_screenheight() // 2) - (height // 2)
+        self.top_window.geometry(f'{width}x{height}+{x}+{y}')
+
+        # Faz a janela abrir na hora certa
+        self.top_window.update_idletasks()
+        self.top_window.deiconify()
+
     def refresh_parent_page(self): ...
 
     def open_page(self, item, parent = None): ...

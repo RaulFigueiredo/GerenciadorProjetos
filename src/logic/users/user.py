@@ -92,7 +92,7 @@ class User(IUser):
         Parameters:
             label (IItem): The label to be added to the user's collection.
         """
-        self._labels.append(label)
+        self._labels.insert(0, label)
         # adicionar no banco de dados
 
     def remove_label(self, label: IItem) -> None:
@@ -112,7 +112,7 @@ class User(IUser):
         Parameters:
             project (IItem): The project to be added to the user's collection.
         """
-        self._projects.append(project)
+        self._projects.insert(0,project)
         # adicionar no banco de dados
 
     def remove_project(self, project: IItem) -> None:
