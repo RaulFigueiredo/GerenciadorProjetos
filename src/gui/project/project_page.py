@@ -8,6 +8,9 @@ class ProjectPage(tk.Frame):
         self.controller = controller
         self.project = project
         self.create_widgets()
+        # Bind the close event
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
+
 
     def create_widgets(self):
         self.grid_columnconfigure(0, weight=0)
@@ -66,17 +69,18 @@ class ProjectPage(tk.Frame):
         self.tasks_listbox.bind("<Double-1>", self.on_double_click)
 
         back_button2 = ttk.Button(self, text="Voltar", command=self.controller.project_manager.close_top_window)
-        back_button2.grid(row=7, column=0, sticky="e", padx=10, pady=10)
+        back_button2.grid(row=7, column=0, sticky="w", padx=(10, 5), pady=10)
 
         delete_button = ttk.Button(self, text="Excluir", command=self.confirm_delete)
-        delete_button.grid(row=7, column=0, sticky="w", padx=10, pady=10)
+        delete_button.grid(row=7, column=0, padx=(5, 5), pady=10)
         
-        open_update_project_button = tk.Button(
+        open_update_project_button = ttk.Button(
                                         self,
                                         text="Editar",
                                         command=lambda: self.controller.project_manager.open_update_project_page(self.project)
                                     )
-        open_update_project_button.grid(row=7, column=0, pady=20)
+        open_update_project_button.grid(row=7, column=0, sticky="e", padx=(5, 10), pady=10)
+
 
         if self.project.status:
             unconclusion_button = ttk.Button(self, text="Reativar", command=self.unconclusion_project)
@@ -111,4 +115,11 @@ class ProjectPage(tk.Frame):
     def unconclusion_project(self):
         self.project.unconclusion()
         self.controller.update_main_page()
+        self.controller.project_manager.close_top_window()
+
+    def on_close(self):
+        # Call the update method
+        self.controller.update_main_page()
+
+        # Close the window
         self.controller.project_manager.close_top_window()

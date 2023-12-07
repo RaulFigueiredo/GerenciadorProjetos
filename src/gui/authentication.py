@@ -1,6 +1,9 @@
 from src.logic.authentication.authentication import LoginLogic, RegisterLogic
 from src.gui.homepage import HomePage
 import tkinter as tk
+from src.logic.items.project import Project
+from src.logic.items.task import Task
+from src.logic.users.user import User
 
 class Login(tk.Frame):
     def __init__(self, parent, on_login, on_show_register):
@@ -56,7 +59,15 @@ class Authentication:
         self.parent = parent
         self.login_frame = Login(parent, self.login_user, self.show_register)
         self.register_frame = Register(parent, self.register_user)
-        self.homepage_frame = HomePage(parent)
+        self.user = User(name="Usuário Exemplo")
+        pj_1 = Project(name="Projeto Exemplo 1", user=self.user,description='Esse é um projeto de exemplo (1)' )
+        Project(name="Projeto Exemplo 2", user=self.user,description='Esse é um projeto de exemplo (2)')
+        Project(name="Projeto Exemplo 3", user=self.user,description='Esse é um projeto de exemplo (3)')
+
+        Task(name="Tarefa Exemplo 1", project=pj_1,description='Essa é uma tarefa de exemplo (1)' )
+        t = Task(name="Tarefa Exemplo 2", project=pj_1,description='Essa é uma tarefa de exemplo (2)' )
+        t.conclusion()
+        self.homepage_frame = HomePage(parent, self.user)
 
         parent.grid_rowconfigure(0, weight=1)
         parent.grid_columnconfigure(0, weight=1)

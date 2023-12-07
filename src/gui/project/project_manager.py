@@ -2,9 +2,9 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from src.gui.mediator import FormMediator
-from src.gui.create_project_page import CreateProjectPage
-from src.gui.project_page import ProjectPage
-from src.gui.update_project_page import UpdateProjectPage
+from src.gui.project.create_project_page import CreateProjectPage
+from src.gui.project.project_page import ProjectPage
+from src.gui.project.update_project_page import UpdateProjectPage
 from src.logic.items.item_factory import ItemFactory
 
 class ProjectDisplayManager:
@@ -35,7 +35,7 @@ class ProjectDisplayManager:
         self.top_window = tk.Toplevel(self.parent)
         self.top_window.title("Criar Novo Projeto")
         self.top_window.geometry("425x620+400+50")  # Tamanho definido como exemplo
-        labels_mock = ["Urgente", "Alta Prioridade", "Média Prioridade", "Baixa Prioridade"]
+        labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
         create_project_page = CreateProjectPage(master=self.top_window, mediator=FormMediator(self.submit_project), labels=labels_mock)
         create_project_page.pack()
@@ -48,7 +48,7 @@ class ProjectDisplayManager:
         self.top_window.title("Editar Projeto")
         self.top_window.geometry("425x480+400+50")  # Tamanho definido como exemplo
         self.project = project
-        labels_mock = ["Urgente", "Alta Prioridade", "Média Prioridade", "Baixa Prioridade"]
+        labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
         update_project_page = UpdateProjectPage(project=self.project, master=self.top_window, controller=self.parent,
                                                 mediator=FormMediator(self.update_project), labels=labels_mock)
