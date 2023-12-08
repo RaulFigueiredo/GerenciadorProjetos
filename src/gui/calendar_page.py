@@ -58,6 +58,10 @@ class CalendarPage:
             self.interface.close_button
         )
 
+       
+        self.task_details.close_details()
+
+
         self.month_year_navigation = MonthYearNavigation(
             self.interface.navigation_frame,
             self.interface.button_back,
@@ -74,49 +78,3 @@ class CalendarPage:
                                     self.tasks_dict, self.task_details, month_year_tuple)
 
         self.month_view.generate_view()
-
-class StartPage:
-
-
-    def __init__(self):
-        self.window = tk.Tk()
-        self.window.title("Página Inicial")
-
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-
-        window_width = int(screen_width * 0.8)
-        window_height = int(screen_height * 0.8)
-
-        x_cordinate = int((screen_width/2) - (window_width/2))
-        y_cordinate = int((screen_height/2) - (window_height/2))
-
-        # Definir a geometria da janela
-        self.window.geometry(f"{window_width}x{window_height}+{x_cordinate}+{y_cordinate}")
-
-        self.create_widgets()
-        self.calendar_page = None
-
-    def create_widgets(self):
-        self.start_button = tk.Button(self.window, text="Abrir Calendário",
-                                      command=self.open_calendar)
-        self.start_button.pack(pady=20)
-
-    def open_calendar(self):
-        self.start_button.pack_forget()
-        if not self.calendar_page:
-            self.calendar_page = CalendarPage(master=self.window, on_close=self.show_start_button)
-        self.calendar_page.interface.pack(fill='both', expand=True)
-
-    def show_start_button(self):
-        if self.calendar_page:
-            self.calendar_page.interface.pack_forget()
-        self.start_button.pack(pady=20)
-
-    def mainloop(self):
-        self.window.mainloop()
-
-
-if __name__ == "__main__":
-    start_page = StartPage()
-    start_page.mainloop()
