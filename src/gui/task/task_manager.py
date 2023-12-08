@@ -37,7 +37,6 @@ class TaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Tarefa")
-        self.top_window.withdraw()
 
         self.item = item
         update_task_page = TaskUpdatePage(task=self.item, manager=self, master=self.top_window, 
@@ -54,7 +53,6 @@ class TaskDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Nova Tarefa")
-        self.top_window.withdraw()
 
         self.parent = parent
         create_task_page = TaskCreatePage(master=self.top_window,

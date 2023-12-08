@@ -41,7 +41,6 @@ class ProjectDisplayManager(BaseDisplayManager):
 
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Novo Projeto")
-        self.top_window.withdraw()
 
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
@@ -62,7 +61,6 @@ class ProjectDisplayManager(BaseDisplayManager):
         # conf window
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Projeto")
-        self.top_window.withdraw()
 
         self.item  = item
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
