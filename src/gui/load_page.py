@@ -2,6 +2,11 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from src.logic.load import Load
+from src.logic.execeptions.exceptions_items import ItemNameBlank,\
+                                                    ItemNameAlreadyExists, \
+                                                    InvalidFileFormat,\
+                                                    InvalidFileEstucture,\
+                                                    FileNotFoundError
 import os
 
 class LoadPage(tk.Frame):
@@ -9,7 +14,7 @@ class LoadPage(tk.Frame):
         super().__init__(master)
         self.controller = controller
         self.user = user
-
+        self.file_path = ''
         self.controller.title("Importação de Projetos")
         self.grid_columnconfigure(0, weight=1)  
         self.grid_columnconfigure(1, weight=1)
@@ -40,11 +45,23 @@ class LoadPage(tk.Frame):
             self.file_path = file_path 
 
     def load_file(self):
-        file_path = self.file_path_label.cget("text")
-        if file_path:
-            Load.json_reader(file_path, self.user) 
-        else:
-            print("Nenhum arquivo selecionado.")
+        try:
+            Load.json_reader(self.user, self.file_path) 
+        except FileNotFoundError as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+        except InvalidFileFormat as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+        except InvalidFileEstucture as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+        except ItemNameBlank as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+        except ItemNameAlreadyExists as e:
+            messagebox.showerror("Aviso", str(e))
+            return
 
 
     def center_window(self, width, height):

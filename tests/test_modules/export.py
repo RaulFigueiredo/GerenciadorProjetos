@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from unittest.mock import patch, mock_open  # Importação correta aqui
+from unittest.mock import patch, MagicMock,mock_open
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import EmptyListProjects,\
                                                    FileNameBlank,\
