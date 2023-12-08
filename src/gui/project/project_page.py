@@ -14,7 +14,7 @@ class ProjectPage(BasePage):
         # Pensar nisso dps 
         self.info_box()
 
-        self.comment_box()
+        self.description_box()
 
         self.task_box()
 
@@ -58,12 +58,12 @@ class ProjectPage(BasePage):
 
             tk.Label(info_frame, text=f"{label} {value}").grid(row=i, column=0, sticky="w")
 
-    def comment_box(self):
-        tk.Label(self, text="Comentários:").grid(row=2, column=0, sticky="w", padx=10, pady=(10, 0))
-        comments_text = tk.Text(self, height=3, width=1, wrap="word")
-        comments_text.grid(row=3, column=0, sticky="ew", padx=15)
-        comments_text.insert(tk.END, self.item.description)
-        comments_text.config(state="disabled")
+    def description_box(self):
+        tk.Label(self, text="Descrição:").grid(row=2, column=0, sticky="w", padx=10, pady=(10, 0))
+        descriptions_text = tk.Text(self, height=3, width=1, wrap="word")
+        descriptions_text.grid(row=3, column=0, sticky="ew", padx=15)
+        descriptions_text.insert(tk.END, self.item.description)
+        descriptions_text.config(state="disabled")
 
     def task_box(self):
         tasks_frame = ttk.Frame(self)

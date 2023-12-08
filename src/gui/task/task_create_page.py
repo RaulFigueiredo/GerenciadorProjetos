@@ -19,7 +19,7 @@ class TaskCreatePage(BaseCreatePage):
         self.name_field = EntryField(self, "Nome:", entry_width, padding, self.mediator)
         self.priority_combobox = LabelCombobox(self, "Prioridade:", priority, entry_width, padding, self.mediator)
         self.end_date_field = DateField(self, "Data de Entrega:", entry_width, padding, self.mediator)
-        self.notification_date_field = DateField(self, "Data da Notificacao:", entry_width, padding, self.mediator)
+        self.notification_date_field = DateField(self, "Data da Notificação:", entry_width, padding, self.mediator)
         self.description_text = DescriptionText(self, "Descrição:", 6, entry_width, padding, self.mediator)
 
         self.get_buttons()

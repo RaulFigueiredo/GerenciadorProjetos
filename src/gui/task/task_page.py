@@ -16,7 +16,7 @@ class TaskPage(BasePage):
 
         self.info_box()
 
-        self.comment_box()
+        self.description_box()
         
         self.subtask_box()
 
@@ -62,7 +62,7 @@ class TaskPage(BasePage):
             tk.Label(info_frame, text=f"{label} {value}").grid(row=i, column=0, sticky="w")
 
 
-    def comment_box(self):
+    def description_box(self):
         # Descrição da Tarefa
         tk.Label(self, text="Descrição:").grid(row=2, column=0, sticky="w", padx=10, pady=(10, 0))
         description_text = tk.Text(self, height=3, width=1, wrap="word")
