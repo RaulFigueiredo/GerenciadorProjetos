@@ -32,8 +32,7 @@ def instance_user(db_user):
         project = Project(user, db_project.name, description=db_project.description)
         db_tasks = db_project.tasks
         for db_task in db_tasks:
-            print(db_task.name, db_task.status)
-            task = Task(project, db_task.name)
+            task = Task(project, db_task.name, description=db_task.descriptions, end_date=db_task.end_date, priority=db_task.priority)
             db_subtasks = db_task.subtasks
             for db_subtask in db_subtasks:
                 subtask = Subtask(task, db_subtask.name)
