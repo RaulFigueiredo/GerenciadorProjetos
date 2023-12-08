@@ -28,13 +28,10 @@ class Export:
 
             projects_data.append(project_info)
 
-        # Cria o diretório se não existir
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        # Caminho completo para o arquivo
         file_path = os.path.join(directory, name_file)
 
-        # Escreve o JSON no arquivo
         with open(file_path, 'w') as json_file:
             json.dump(projects_data, json_file, indent=4)
