@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from src.logic.export import Export
+from src.logic.execeptions.exceptions_items import EmptyListProjects,\
+                                                   FileNameBlank,\
+                                                   DirectoryBlank
 
 class ExportPage(tk.Frame):
     def __init__(self, master, controller, user):
@@ -50,21 +53,23 @@ class ExportPage(tk.Frame):
     def export_projects(self):
         selected_indices = self.project_listbox.curselection()
         selected_projects = [self.user.projects[i] for i in selected_indices]
-
-        if not selected_projects:
-            messagebox.showwarning("Aviso", "Selecione pelo menos um projeto para exportar.")
-            return
-
-        if not self.folder_path.get():
-            messagebox.showwarning("Aviso", "Selecione um diretório para exportar.")
-            return
+        print('DIRETORIO:'+str(self.folder_path.get()))
 
         try:
-            print(selected_projects)
             Export.json_generator(selected_projects, self.file_name_entry.get(), self.folder_path.get())
             messagebox.showinfo("Sucesso", "Projetos exportados com sucesso.")
-        except Exception as e:
-            messagebox.showerror("Erro", str(e))
+
+        except EmptyListProjects as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+
+        except FileNameBlank as e:
+            messagebox.showerror("Aviso", str(e))
+            return
+        
+        except DirectoryBlank as e:
+            messagebox.showerror("Aviso", str(e))
+            return
 
 
     def center_window(self, width, height):

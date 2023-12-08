@@ -2,6 +2,7 @@ from src.gui.mock_page import MainPage
 from src.gui.project.project_page import ProjectPage
 from src.gui.third_page import ThirdPage
 from src.gui.export_page import ExportPage
+from src.gui.load_page import LoadPage
 from src.gui.project.project_manager import ProjectDisplayManager
 from src.gui.task.task_manager   import TaskDisplayManager
 from src.logic.items.project import Project
@@ -61,6 +62,10 @@ class MainWindow(tk.Tk):
         self.pages[ExportPage] = page
         page.grid(row=0, column=0, sticky="nsew")
 
+        page = LoadPage(master=self.container, controller=self, user=user)
+        self.pages[LoadPage] = page
+        page.grid(row=0, column=0, sticky="nsew")
+
         for Page in (MainPage,ThirdPage):
             page = Page(master=self.container, controller=self)
             self.pages[Page] = page
@@ -74,6 +79,9 @@ class MainWindow(tk.Tk):
 
     def show_third_page(self):
         self.show_page(ThirdPage)
+
+    def show_load_page(self):
+        self.show_page(LoadPage)
 
     def show_export_page(self):
         self.show_page(ExportPage)

@@ -17,3 +17,6 @@ class ThirdPage(tk.Frame):
 
         export_button = ttk.Button(self, text="EXPORT", command=self.controller.show_export_page)
         export_button.pack(pady=20)
+
+        load_button = ttk.Button(self, text="LOAD", command=self.controller.show_load_page)
+        load_button.pack(pady=20)
