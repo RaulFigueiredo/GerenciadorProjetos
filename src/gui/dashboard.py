@@ -113,24 +113,15 @@ class Sidebar(tk.Frame):
         self.grid_rowconfigure(5, weight=1)
 
         # Fake data #
-        projects = ['Todos', 'Projeto 1', 'Projeto 2']
-        labels = ['Todos', 'Etiqueta 1', 'Etiqueta 2']
+        options = ['Todos', 'Projeto 1', 'Projeto 2', 'Etiqueta 1', 'Etiqueta 2']
 
-        label1 = GridLabel(self, row=0, col=0, text="Projeto")
-        label1.config(bg="#add8e6")
-        label1.grid_configure(sticky="w", padx=(10, 100), pady=(110, 0))
+        label = GridLabel(self, row=0, col=0, text="Projeto/Etiqueta")
+        label.config(bg="#add8e6")
+        label.grid_configure(sticky="w", padx=(10, 100), pady=(110, 0))
 
-        dropdown1 = GridDropdown(self, row=1, col=0, values=projects)
-        dropdown1.set("Todos")
-        dropdown1.grid_configure(padx=10)
-
-        label2 = GridLabel(self, row=2, col=0, text="Etiqueta")
-        label2.config(bg="#add8e6")
-        label2.grid_configure(sticky="w", padx=(10, 100), pady=(10, 0))
-
-        dropdown2 = GridDropdown(self, row=3, col=0, values=labels)
-        dropdown2.set('Todos')
-        dropdown2.grid_configure(padx=10)
+        dropdown = GridDropdown(self, row=1, col=0, values=options)
+        dropdown.set("Todos")
+        dropdown.grid_configure(padx=10)
 
         filter_button = GridButton(self, row=4, col=0, text="Filtrar", command=lambda: print('filter'))
         filter_button.grid_configure(padx=10, pady=20, sticky="nsew")
