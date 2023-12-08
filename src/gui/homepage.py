@@ -10,7 +10,27 @@ from src.gui.history_page import HistoryManagerApp
 
 
 class TopBar(tk.Frame):
+    """
+    A custom tkinter Frame that serves as a top navigation bar for the application.
+
+    Attributes:
+        parent (tk.Widget): The parent widget of this frame.
+        on_navigate (function): A callback function to handle navigation requests.
+        bg_color (str): Background color for the top bar.
+        fg_color (str): Foreground color for the text in the top bar.
+    """
+
     def __init__(self, parent, on_navigate, bg_color='#5a6e7f', fg_color='white'):
+        """
+        Initialize the TopBar.
+
+        Parameters:
+            parent (tk.Widget): The parent widget of this frame.
+            on_navigate (function): A callback function to handle navigation requests.
+            bg_color (str, optional): Background color for the top bar. Defaults to '#5a6e7f'.
+            fg_color (str, optional): Foreground color for the text in the top bar. Defaults to 'white'.
+        """
+
         super().__init__(parent, bg=bg_color)
         self.grid(row=0, column=0, sticky='ew')
         parent.grid_columnconfigure(0, weight=1)
@@ -28,7 +48,25 @@ class TopBar(tk.Frame):
 
 
 class ProjectList(tk.Frame):
+    """
+    A custom tkinter Frame to display a list of projects.
+
+    Attributes:
+        parent (tk.Widget): The parent widget of this frame.
+        user (User): The user object associated with the project list.
+        bg_color (str): Background color for the project list.
+    """
+
     def __init__(self, parent, user, bg_color='#ffffff'):
+        """
+        Initialize the ProjectList.
+
+        Parameters:
+            parent (tk.Widget): The parent widget of this frame.
+            user (User): The user object associated with the project list.
+            bg_color (str, optional): Background color for the project list. Defaults to '#ffffff'.
+        """
+
         super().__init__(parent, bg=bg_color, bd=1, relief='solid')
         
         self.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
@@ -67,21 +105,40 @@ class ProjectList(tk.Frame):
         open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
     def show_project_page(self, project):
+        """
+        Display the page for a selected project.
+
+        Parameters:
+            project (Project): The project to display.
+        """
+
         self.project_manager.open_page(project)
 
     def on_double_click(self, event):
+        """
+        Handle double-click events on project items.
+
+        Parameters:
+            event: The event object containing details of the double-click event.
+        """
+
         item_id = self.tree.selection()[0]
         project_name = self.tree.item(item_id, 'tags')[0]
         project = self.project_map.get(project_name)
+
         if project:
             self.show_project_page(project)
         else:
             print(f"No project found for the selected item")
 
     def mock_projects(self):
+        """
+        Populate the tree view with mock projects for demonstration purposes.
+        """
+
         self.tree.tag_configure('projectname', font=('Arial', 12, 'bold'))
         self.tree.tag_configure('concluded', foreground='green')
-
+        print(self.user.projects)
         for project in self.user.projects:
             # Use project name or another unique identifier as a tag
             if project.status:
@@ -91,15 +148,35 @@ class ProjectList(tk.Frame):
 
             self.project_map[project.name] = project
             for task in project.tasks:
-                if task.status:
+                if not task.status:
                     self.tree.insert(project_id, tk.END, text=task.name)
                 
     def update_main_page(self):
+        """
+        Update the main page by refreshing the project list.
+        """
+
         self.tree.delete(*self.tree.get_children())
         self.mock_projects()
 
 class HomePage(tk.Frame):
+    """
+    A custom tkinter Frame that serves as the home page of the application.
+
+    Attributes:
+        parent (tk.Widget): The parent widget of this frame.
+        user (User): The user object associated with the home page.
+    """
+
     def __init__(self, parent, user):
+        """
+        Initialize the HomePage.
+
+        Parameters:
+            parent (tk.Widget): The parent widget of this frame.
+            user (User): The user object associated with the home page.
+        """
+
         super().__init__(parent)
         self.grid(row=0, column=0, sticky='nsew')
 
@@ -114,20 +191,29 @@ class HomePage(tk.Frame):
         self.project_list.grid(row=1, column=0, sticky='nsew')
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.history_page = HistoryManagerApp(master=self, on_close=self.show_home_page, controller=self, user = self.user)
+        self.history_page = None
         self.calendar_page = None
         self.dashboard_page = None
 
     def show_home_page(self):
+        """
+        Display the home page layout.
+        """
+
         if self.calendar_page:
             self.calendar_page.interface.grid_forget()
         if self.dashboard_page:
             self.dashboard_page.grid_forget()
-        self.history_page.grid_forget()
+        if self.history_page:
+            self.history_page.grid_forget()
         self.top_bar.grid(row=0, column=0, sticky='ew')
         self.project_list.grid(row=1, column=0, sticky='nsew')
 
     def show_calendar_page(self):
+        """
+        Display the calendar page layout.
+        """
+
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.calendar_page:
@@ -135,6 +221,10 @@ class HomePage(tk.Frame):
         self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
 
     def show_dashboard_page(self):
+        """
+        Display the dashboard page layout.
+        """
+
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.dashboard_page:
@@ -142,12 +232,25 @@ class HomePage(tk.Frame):
         self.dashboard_page.grid(row=1, column=0)
 
     def show_history_page(self):
+        """
+        Display the history page layout.
+        """
+
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
+        if not self.history_page:
+            self.history_page = HistoryManagerApp(master=self, on_close=self.show_home_page, controller=self, user = self.user)
         self.history_page.display_completed_tasks()
         self.history_page.grid(row=1, column=0, sticky='nsew')
 
     def navigate(self, destination):
+        """
+        Navigate to a specified page in the application.
+
+        Parameters:
+            destination (str): The key representing the page to navigate to.
+        """
+
         print(f"Navigating to {destination}")
         if destination == 'calendario':
             self.show_calendar_page()

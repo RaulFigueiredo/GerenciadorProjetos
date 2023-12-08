@@ -11,3 +11,4 @@ __pycache__
 # mock files
 mock_list_project.py
 mock_page_main.py
+.env

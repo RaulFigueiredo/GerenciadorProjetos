@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
@@ -20,20 +20,28 @@ class Database:
             db_name = os.getenv('DB_NAME')
 
             # Create the database connection string
-            connection_string = f'mysql+pymysql://{db_user}:{db_pass}@{db_host}/{db_name}'
+            connection_string = f'mysql+pymysql://{db_user}:{db_pass}@{db_host}:3306/{db_name}'
 
-            engine = create_engine(connection_string)
-            cls._instance.session_factory = sessionmaker(bind=engine)
+            # Store the engine as an attribute of the instance
+            cls._instance.engine = create_engine(connection_string)
+
+            # Create and store the session factory
+            cls._instance.session_factory = sessionmaker(bind=cls._instance.engine)
         return cls._instance
 
-    def get_session(self):
-        return self._instance.session_factory()
+    @classmethod
+    def get_session(cls):
+        return cls._instance.session_factory()
 
-    def load_data(self, model, filter_by=None):
-        pass
+    def execute_raw_sql(self, sql, params=None, is_select=True):
+        with self.get_session() as session:
+            result = session.execute(text(sql), params)
+            if is_select:
+                return result.fetchall()
+            else:
+                session.commit()
+                return result.rowcount
 
-    def update_data(self, model, filter_by, update_values):
-        pass
-
-    def delete_data(self, model, filter_by):
-        pass
+    def commit(self):
+        with self.get_session() as session:
+            session.commit()
