@@ -11,9 +11,8 @@ class Export:
         for project in list_projects:
             project_info = {
                 "project": project.name,
-                "label": project.label,
                 "end_date": project.end_date,
-                "creation_date": project.description,
+                "description": project.description,
                 "tasks": []
             }
 
@@ -22,8 +21,17 @@ class Export:
                     "task": task.name,
                     "priority": task.priority,
                     "end_date": task.end_date,
-                    "notification_date": task.notification_date
+                    "notification_date": task.notification_date,
+                    "description": task.description,
+                    "subtasks": []
                 }
+                
+                for subtask in task.subtasks:
+                    subtask_info = {
+                        "subtask": subtask.name,
+                    }
+                    task_info["subtasks"].append(subtask_info)
+
                 project_info["tasks"].append(task_info)
 
             projects_data.append(project_info)
@@ -31,7 +39,7 @@ class Export:
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-        file_path = os.path.join(directory, name_file)
+        file_path = os.path.join(directory, name_file+'.json')
 
         with open(file_path, 'w') as json_file:
             json.dump(projects_data, json_file, indent=4)

@@ -63,6 +63,7 @@ class ExportPage(tk.Frame):
             print(selected_projects)
             Export.json_generator(selected_projects, self.file_name_entry.get(), self.folder_path.get())
             messagebox.showinfo("Sucesso", "Projetos exportados com sucesso.")
+
         except Exception as e:
             messagebox.showerror("Erro", str(e))
 
