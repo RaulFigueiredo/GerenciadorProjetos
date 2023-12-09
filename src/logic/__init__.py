@@ -23,3 +23,4 @@ from src.logic.calendar.month_year_navigation import MonthYearNavigation
 from src.logic.calendar.task_details import TaskDetails
 
 from .history.task_history import HistorySingleton
+from .notifications.notification import Notification
