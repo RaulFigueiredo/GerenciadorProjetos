@@ -24,7 +24,7 @@ class LoadPage(tk.Toplevel):
         self.instruction_label = tk.Label(self, text="Importe novos projetos", font=("Arial", 20))
         self.instruction_label.grid(row=0, column=0, padx=10, pady=10)
 
-        self.instruction_label = tk.Label(self, text="Escolha um arquivo JSON ou TXT para carregar:", font=("Arial", 20))
+        self.instruction_label = tk.Label(self, text="Escolha um arquivo JSON ou TXT para carregar:", font=("Arial", 12))
         self.instruction_label.grid(row=1, column=0, padx=10, pady=10)
 
         self.choose_file_button = tk.Button(self, text="Escolher Arquivo", command=self.choose_file)
@@ -50,6 +50,8 @@ class LoadPage(tk.Toplevel):
 
         try:
             FileAdapter.read_file(self.user, self.file_path)
+            self.controller.update_main_page()
+            self.destroy()
             messagebox.showinfo("Sucesso", "Arquivo carregado com sucesso!")
         except FileNotFoundError as e:
             messagebox.showerror("Aviso", str(e))

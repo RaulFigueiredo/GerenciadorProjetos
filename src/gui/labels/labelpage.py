@@ -1,7 +1,7 @@
 import tkinter as tk
 from src.gui.labels.label_edit import EditLabelDialog
 from src.gui.labels.label_create import AddLabelDialog
-from src import User, Label
+from src import User, ItemFactory
 from tkinter import messagebox
 from tkinter import ttk
 
@@ -41,9 +41,9 @@ class LabelManager(ttk.Frame):
         self.style = ttk.Style()
         self.style.configure('TButton', font=('Arial', 10), padding=5)
         self.style.configure('TLabel', font=('Arial', 10), padding=5)
-        Label(self.user, name='Work', color='blue')
-        Label(self.user, name='Study', color='green')
-        Label(self.user, name='Leisure', color='red')
+        ItemFactory.create_item(item_type='label', user=self.user, name='Work', color='blue')
+        ItemFactory.create_item(item_type='label', user=self.user, name='Study', color='green')
+        ItemFactory.create_item(item_type='label', user=self.user, name='Leisure', color='red')
 
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
@@ -174,7 +174,7 @@ class LabelManager(ttk.Frame):
                 messagebox.showwarning("Warning", "A label with this name already exists.")
                 return
 
-            Label(self.user, name=name, color=color)
+            ItemFactory.create_item(item_type='label', user=self.user, name=name, color=color)
             self.update_label_list()
 
     def remove_label(self):

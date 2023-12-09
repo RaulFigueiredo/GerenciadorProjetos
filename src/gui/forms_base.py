@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkcalendar import DateEntry
-
+from datetime import datetime
 
 class EntryField:
     def __init__(self, parent, label, width, padding, mediator):
@@ -27,12 +27,14 @@ class DateField:
         tk.Label(self.frame, text=label).pack(side="left", **padding)
 
         self.date = DateEntry(self.frame, width=width - 4, background='darkblue',
-                                    foreground='white', borderwidth=2, state='readonly')
+                                    foreground='white', borderwidth=2, state='readonly',
+                                    date_pattern='dd/mm/yyyy')
         self.date.pack(side="right", **padding)
 
     def get_value(self):
-        return self.date.get()
-
+        date_str = self.date.get()
+        return datetime.strptime(date_str, '%d/%m/%Y').date()  
+    
     def set_value(self, value):
         self.date.set_date(value)  
 
