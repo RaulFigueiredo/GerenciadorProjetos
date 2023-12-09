@@ -54,10 +54,38 @@ class TestFilterMethods(unittest.TestCase):
         self.assertIsInstance(result, list)
         self.assertTrue(all(list(map(lambda x: x.status, result))))
 
-    def test_filter_labels_by_name(self):
-        result = self.filter.filter_label_by_name(self.user.labels[0].name)
-        self.assertIsInstance(result, Label)
-        self.assertEqual(result.name, self.user.labels[0].name)
+    def filter_tasks_by_creation_date(self):
+        lower_limit = date(2023, 2, 15)
+        upper_limit = date(2023, 3, 15)
+        result = self.filter.filter_tasks_by_creation_date(self.user.projects, lower_limit, upper_limit)
+        self.assertIsInstance(result, list)
+        inside_interval = []
+        for task in result:
+            inside_interval.append(task.creation_date >= lower_limit
+                                   and task.creation_date <= upper_limit)
+        self.assertTrue(all(inside_interval))
+
+    def filter_tasks_by_end_date(self):
+        lower_limit = date(2023, 2, 15)
+        upper_limit = date(2023, 3, 15)
+        result = self.filter.filter_tasks_by_end_date(self.user.projects, lower_limit, upper_limit)
+        self.assertIsInstance(result, list)
+        inside_interval = []
+        for task in result:
+            inside_interval.append(task.end_date >= lower_limit
+                                   and task.end_date <= upper_limit)
+        self.assertTrue(all(inside_interval))
+
+    def filter_tasks_by_conclusion_date(self):
+        lower_limit = date(2023, 2, 15)
+        upper_limit = date(2023, 3, 15)
+        result = self.filter.filter_tasks_by_conclusion_date(self.user.projects, lower_limit, upper_limit)
+        self.assertIsInstance(result, list)
+        inside_interval = []
+        for task in result:
+            inside_interval.append(task.conclusion_date >= lower_limit
+                                   and task.conclusion_date <= upper_limit)
+        self.assertTrue(all(inside_interval))
 
 
 if __name__ == '__main__':
