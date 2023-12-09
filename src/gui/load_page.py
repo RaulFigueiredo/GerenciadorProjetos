@@ -9,15 +9,13 @@ from src.logic.execeptions.exceptions_items import ItemNameBlank,\
                                                     FileNotFoundError
 import os
 
-class LoadPage(tk.Frame):
+class LoadPage(tk.Toplevel):
     def __init__(self, master, controller, user):
         super().__init__(master)
         self.controller = controller
         self.user = user
         self.file_path = ''
-        self.controller.title("Importação de Projetos")
-        self.grid_columnconfigure(0, weight=1)  
-        self.grid_columnconfigure(1, weight=1)
+        self.title("Importação de Projetos")
         self.create_widgets()
 
 
@@ -65,10 +63,10 @@ class LoadPage(tk.Frame):
 
 
     def center_window(self, width, height):
-        screen_width = self.controller.winfo_screenwidth()
-        screen_height = self.controller.winfo_screenheight()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
 
         x = int((screen_width / 2) - (width / 2))
         y = int((screen_height / 2) - (height / 2))
 
-        self.controller.geometry(f'{width}x{height}+{x}+{y}')
+        self.geometry(f'{width}x{height}+{x}+{y}')

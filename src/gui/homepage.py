@@ -7,7 +7,8 @@ from src.gui.subtask.subtask_manager import SubtaskDisplayManager
 from src.gui.dashboard import DashboardPage
 from src.gui.task.task_manager import TaskDisplayManager
 from src.gui.history_page import HistoryManagerApp
-
+from src.gui.export_page import ExportPage
+from src.gui.load_page import LoadPage
 
 class TopBar(tk.Frame):
     """
@@ -45,6 +46,8 @@ class TopBar(tk.Frame):
         ttk.Button(self, text='Dashboard', style='TButton', command=lambda: on_navigate('dashboard')).grid(row=0, column=1, padx=5)
         ttk.Button(self, text='Calendário', style='TButton', command=lambda: on_navigate('calendario')).grid(row=0, column=2, padx=5)
         ttk.Button(self, text='Histórico', style='TButton', command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
+        ttk.Button(self, text='Exportar', style='TButton', command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
+        ttk.Button(self, text='Importar', style='TButton', command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
 
 
 class ProjectList(tk.Frame):
@@ -194,6 +197,8 @@ class HomePage(tk.Frame):
         self.history_page = None
         self.calendar_page = None
         self.dashboard_page = None
+        self.export_page = None
+        self.import_page = None
 
     def show_home_page(self):
         """
@@ -243,6 +248,20 @@ class HomePage(tk.Frame):
         self.history_page.display_completed_tasks()
         self.history_page.grid(row=1, column=0, sticky='nsew')
 
+    def show_export_page(self):
+        """
+        Display the export page layout.
+        """
+
+        self.export_page = ExportPage(master=self, controller=self, user = self.user, project_list = self.project_list)
+
+    def show_import_page(self):
+        """
+        Display the export page layout.
+        """
+
+        self.export_page = LoadPage(master=self, controller=self, user = self.user)
+
     def navigate(self, destination):
         """
         Navigate to a specified page in the application.
@@ -254,7 +273,11 @@ class HomePage(tk.Frame):
         print(f"Navigating to {destination}")
         if destination == 'calendario':
             self.show_calendar_page()
-        elif destination == 'dashboard':
+        if destination == 'dashboard':
             self.show_dashboard_page()
         if destination == 'historico':
             self.show_history_page()
+        if destination == 'exportar':
+            self.show_export_page()
+        if destination == 'importar':
+            self.show_import_page()
