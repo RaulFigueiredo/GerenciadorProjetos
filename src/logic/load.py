@@ -10,9 +10,24 @@ from src.logic.execeptions.exceptions_items import ItemNameBlank,\
                                                     InvalidFileEstucture,\
                                                     FileNotFoundError
 
+"""
+This module contains the Load class, which is responsible for reading JSON files and reconstructing project,
+task, and subtask objects from the file content. It includes various checks to ensure the integrity and
+correct format of the data.
+"""
+
 class Load:
+    """ Class responsible for loading project data from a JSON file. """
+
     @staticmethod
     def json_reader(user: IUser,file_path: str) -> None:
+        """
+        Reads a JSON file and loads the data into the application.
+
+        :param user: IUser object representing the current user.
+        :param file_path: Path to the JSON file.
+        :raises FileNotFoundError, InvalidFileFormat, InvalidFileStructure, ItemNameBlank, ItemNameAlreadyExists
+        """
 
         Load.check_file_existence(file_path)
         Load.check_formart(file_path)
@@ -49,56 +64,63 @@ class Load:
                                            
     @staticmethod
     def check_formart(file_path: str):
+        """ Checks if the file has a valid format."""
         _, file_extension = os.path.splitext(file_path)
         if file_extension.lower() != '.json':
-            raise InvalidFileFormat("O arquivo fornecido não é um arquivo JSON.")
+            raise InvalidFileFormat("The provided file is not a JSON file.")
 
+    @staticmethod
     def check_file_existence(file_path: str):
+        """ Checks if the file exists."""
         if not os.path.exists(file_path):
-            raise FileNotFoundError("É necessário selecionar um arquivo.")
+            raise FileNotFoundError("A file must be selected.")
 
     @staticmethod
     def check_file_structure(data: List):
+        """ Checks if the file structure is valid."""
         if not isinstance(data, list):
-            raise InvalidFileEstucture("Estrutura de arquivo inválida")
+            raise InvalidFileEstucture("Invalid file structure")
 
         for project in data:
             if not all(key in project for key in ['project', 'end_date', 'description', 'tasks']):
-                raise InvalidFileEstucture("Formato de projeto inválido.")
+                raise InvalidFileEstucture("Invalid project format.")
 
             if not isinstance(project['tasks'], list):
-                raise InvalidFileEstucture("Formato inválido: 'tasks' deve ser uma lista.")
+                raise InvalidFileEstucture("tasks must be a list.")
 
             for task in project['tasks']:
                 if not all(key in task for key in ['task', 'priority', 'end_date', 'notification_date', 'description', 'subtasks']):
-                    raise InvalidFileEstucture("Formato de tarefa inválido.")
+                    raise InvalidFileEstucture("Invalid task format.")
                 
                 if not isinstance(task['subtasks'], list):
-                    raise InvalidFileEstucture("Formato inválido: 'subtasks' deve ser uma lista.")
+                    raise InvalidFileEstucture("subtasks must be a list.")
 
     
     @staticmethod
     def check_duplicate_project_name(user, data):
+        """ Checks if the name of some project to import already exists in the user's projects."""
         for each_project in data:
             if each_project['project'] in [project.name for project in user.projects]:
-                erro_str = "Você ja possui um projeto com o nome: "+each_project['project']+""
-                erro_str += "\nPor favor, altere o nome do projeto e tente novamente."
-                raise ItemNameAlreadyExists(erro_str)
+                error_str = f"You already have a project named: {each_project['project']}."
+                error_str += "\nPlease change the project name and try again."
+                raise ItemNameAlreadyExists(error_str)
             
     @staticmethod
     def check_project_name_blank(data):
+        """ Checks if the name of some project to import is blank."""
         for each_project in data:
             if each_project['project'] == '':
-                erro_str = "O nome de algum projeto para importar está em branco."
-                raise ItemNameBlank(erro_str)
-            
+                error_str = "The name of some project to import is blank."
+                raise ItemNameBlank(error_str)
+
     @staticmethod
-    def check_task_name_black(data):
+    def check_task_name_blank(data):
+        """ Checks if the name of some task to import is blank."""
         for each_project in data:
             for each_task in each_project['tasks']:
                 if each_task['task'] == '':
-                    erro_str = "O nome de alguma tarefa para importar está em branco."
-                    raise ItemNameBlank(erro_str)
+                    error_str = "The name of some task to import is blank."
+                    raise ItemNameBlank(error_str)
 
 
 
