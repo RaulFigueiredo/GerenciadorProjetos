@@ -15,6 +15,9 @@ Exceptions:
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
 from datetime import date
+from src.logic.orms.orm import SubtaskORM
+from src.db.database import Database
+from sqlalchemy.orm import sessionmaker
 
 
 class Subtask(IItem):
@@ -33,7 +36,8 @@ class Subtask(IItem):
         unconclusion(): Mark the subtask as not completed.
     """
 
-    def __init__(self, task: IItem ,name: str):
+    def __init__(self, task: IItem ,name: str, id_subtask: int = None,
+                 status: bool = False, conclusion_date:date = None) -> None:
         """
         Initialize a Subtask instance.
 
@@ -43,15 +47,35 @@ class Subtask(IItem):
         """
         self._task = task
         self._name = name
-        self._status = False
-        self._conclusion_date = None
+        self._id_subtask = id_subtask
+        self._status = status
+        self._conclusion_date = conclusion_date
 
         self._task.add_subtask(self)
+
+        self.db = Database()
+        self.SessionLocal = sessionmaker(bind=self.db.engine)
+
+        if not self._id_subtask:
+            self.save_to_db()
+
+    def save_to_db(self):
+        with self.SessionLocal() as session:
+            new_subtask_orm = SubtaskORM(id_task=self._task.id_task,
+                                         name = self._name,
+                                         status = self._status)
+            session.add(new_subtask_orm)
+            self._id_subtask = new_subtask_orm.id_subtask
+            session.commit()
 
     def delete(self) -> None:
         """Remove the subtask from its parent task."""
         self._task.remove_subtask(self)
-        # remover do banco de dados
+        with self.SessionLocal() as session:
+            subtask_to_delete = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
+            if subtask_to_delete:
+                session.delete(subtask_to_delete)
+                session.commit()
 
     def update(self, **kwargs) -> None:
         """
@@ -67,25 +91,40 @@ class Subtask(IItem):
         task = kwargs.get("task")
         if task:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
-        for key, value in kwargs.items():
-            attr_name = f"_{key}"
-            if hasattr(self, attr_name):
-                setattr(self, attr_name, value)
-            else:
-                raise ItemDontHaveThisAttribute(f"Subtask does not have the attribute {key}.")
-            # atualizar no banco de dados
+
+        with self.SessionLocal() as session:
+            subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
+            if subtask_to_update:
+                for key, value in kwargs.items():
+                    attr_name = f"_{key}"
+                    if hasattr(self, attr_name):
+                        setattr(self, attr_name, value)
+                        setattr(subtask_to_update, key, value)
+                    else:
+                        raise ItemDontHaveThisAttribute(f"Subtask does not have the attribute {key}.")
+                session.commit()
 
     def conclusion(self) -> None:
         """Mark the subtask as completed."""
         self._status = True
         self._conclusion_date = date.today()
-        # atualizar no banco de dados
-
+        with self.SessionLocal() as session:
+            subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
+            if subtask_to_update:
+                subtask_to_update.status = self._status
+                subtask_to_update.conclusion_date = self._conclusion_date
+                session.commit()
+                
     def unconclusion(self) -> None:
         """Mark the subtask as not completed."""
         self._status = False
         self._conclusion_date = None
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
+            if subtask_to_update:
+                subtask_to_update.status = self._status
+                subtask_to_update.conclusion_date = self._conclusion_date
+                session.commit()
 
     @property
     def status(self) -> bool:

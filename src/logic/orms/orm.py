@@ -60,8 +60,9 @@ class TaskORM(Base):
     creation_date = Column(Date, nullable=False)
     end_date = Column(Date)
     conclusion_date = Column(Date)
+    notification_date = Column(Date)
     priority = Column(String(25))
-    descriptions = Column(String(300))
+    description = Column(String(300))
 
     subtasks = relationship("SubtaskORM", backref="task")
 
@@ -75,4 +76,5 @@ class SubtaskORM(Base):
     id_subtask = Column(Integer, primary_key=True)
     id_task = Column(Integer, ForeignKey('Task.id_task'), nullable=False)
     name = Column(String(150), nullable=False)
-    color = Column(String(25), nullable=False)
+    status = Column(Boolean, nullable=False)
+    conclusion_date = Column(Date)

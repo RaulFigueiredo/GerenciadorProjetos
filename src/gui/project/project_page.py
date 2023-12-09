@@ -59,10 +59,15 @@ class ProjectPage(BasePage):
             tk.Label(info_frame, text=f"{label} {value}").grid(row=i, column=0, sticky="w")
 
     def description_box(self):
+
         tk.Label(self, text="Descrição:").grid(row=2, column=0, sticky="w", padx=10, pady=(10, 0))
         descriptions_text = tk.Text(self, height=3, width=1, wrap="word")
         descriptions_text.grid(row=3, column=0, sticky="ew", padx=15)
-        descriptions_text.insert(tk.END, self.item.description)
+        if self.item.description is None:
+            description_content = ""  
+        else:
+            description_content = self.item.description
+        descriptions_text.insert(tk.END, description_content)
         descriptions_text.config(state="disabled")
 
     def task_box(self):

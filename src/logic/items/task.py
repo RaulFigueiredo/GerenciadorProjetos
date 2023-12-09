@@ -19,13 +19,15 @@ from datetime import date
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty
-
+from src.logic.orms.orm import TaskORM
+from src.db.database import Database
+from sqlalchemy.orm import sessionmaker
 class Task(IItem):
     """
     Represents a task in a project management system.
 
     This class provides methods to create, delete, update, and manage tasks. Tasks can
-    have attributes like priority, end dates, notifications, list of subtasks, descriptions,
+    have attributes like priority, end dates, notifications, list of subtasks, description,
     and a status indicating completion.
 
     Attributes:
@@ -52,8 +54,9 @@ class Task(IItem):
         Various property getters for accessing task attributes.
     """
 
-    def __init__(self,  project: IItem, name: str, priority: str = None, end_date: date = None,
-                 notification_date: date = None, description: str = None) -> None:
+    def __init__(self,  project: IItem, name: str, id_task: int = None, priority: str = None,
+                 end_date: date = None, notification_date: date = None, description: str = None,
+                 conclusion_date:date = None, status: bool = False, creation_date: date = None) -> None:
         """
         Initializes a new Task object with given parameters.
 
@@ -72,12 +75,36 @@ class Task(IItem):
         self._description = description
         self._end_date = end_date
         self._notification_date = notification_date
-        self._creation_date = date.today()
-        self._conclusion_date = None
-        self._status = False
+        self._id_task = id_task
+        self._creation_date = creation_date if creation_date else date.today()
+        self._conclusion_date = conclusion_date
+        self._status = status
         self._subtasks: List[IItem] = []
 
         self._project.add_task(self)
+
+        self.db = Database()
+        self.SessionLocal = sessionmaker(bind=self.db.engine)
+
+        if not self._id_task:
+            self.save_to_db()
+
+    def save_to_db(self):
+        with self.SessionLocal() as session:
+            new_task_orm = TaskORM( id_project=self._project.id_project,
+                                    name = self._name,
+                                    status = self._status,
+                                    creation_date = self._creation_date,
+                                    priority = self._priority,
+                                    end_date = self._end_date,
+                                    notification_date = self._notification_date,
+                                    description = self._description
+                                    )
+            
+            session.add(new_task_orm)
+            session.commit()
+            self._id_task = new_task_orm.id_task
+
 
     """
     - step 1 
@@ -118,8 +145,11 @@ class Task(IItem):
         for subtask in self._subtasks[:]:
             subtask.delete()
         self._project.remove_task(self)
-        # remover do banco de dados
-
+        with self.SessionLocal() as session:
+            task_to_delete = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+            if task_to_delete:
+                session.delete(task_to_delete)
+                session.commit()
     """
     - step 1
     def update(self) -> None:
@@ -180,13 +210,17 @@ class Task(IItem):
         if project or creation_date or subtasks:
             raise NonChangeableProperty('You requested an update for a non-changeable property.')
 
-        for key, value in kwargs.items():
-            attr_name = f"_{key}"
-            if hasattr(self, attr_name):
-                setattr(self, attr_name, value)
-            else:
-                raise ItemDontHaveThisAttribute(f"Task does not have the attribute {key}.")
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+            if task_to_update:
+                for key, value in kwargs.items():
+                    attr_name = f"_{key}"
+                    if hasattr(self, attr_name):
+                        setattr(self, attr_name, value)
+                        setattr(task_to_update, key, value)
+                    else:
+                        raise ItemDontHaveThisAttribute(f"Task does not have the attribute {key}.")
+            session.commit()
 
     def add_subtask(self, subtask: IItem) -> None:
         """
@@ -196,7 +230,6 @@ class Task(IItem):
             subtask (IItem): The subtask to be added.
         """
         self._subtasks.insert(0, subtask)
-        # adicionar no banco de dados
 
     def remove_subtask(self, subtask: IItem) -> None:
         """
@@ -206,7 +239,6 @@ class Task(IItem):
             subtask (IItem): The subtask to be removed.
         """
         self._subtasks.remove(subtask)
-        # remover do banco de dados
 
     def conclusion(self) -> None:
         """
@@ -216,7 +248,12 @@ class Task(IItem):
         """
         self._status = True
         self._conclusion_date = date.today()
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+            if task_to_update:
+                task_to_update.status = self._status
+                task_to_update.conclusion_date = self._conclusion_date
+                session.commit()
 
     def unconclusion(self) -> None:
         """
@@ -226,7 +263,12 @@ class Task(IItem):
         """
         self._status = False
         self._conclusion_date = None
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+            if task_to_update:
+                task_to_update.status = self._status
+                task_to_update.conclusion_date = self._conclusion_date
+                session.commit()
 
     @property
     def subtasks(self) -> List[IItem]:
@@ -277,3 +319,8 @@ class Task(IItem):
     def notification_date(self) -> date:
         """date: The date when a notification for this task should be sent."""
         return self._notification_date
+
+    @property
+    def id_task(self) -> int:
+        """int: The id of the task."""
+        return self._id_task

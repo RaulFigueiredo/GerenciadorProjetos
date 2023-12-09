@@ -18,7 +18,9 @@ Note:
 from typing import List
 from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
-
+from src.logic.orms.orm import UserORM
+from src.db.database import Database
+from sqlalchemy.orm import sessionmaker
 
 class User(IUser):
     """
@@ -48,7 +50,7 @@ class User(IUser):
     """
     _instance = None
 
-    def __new__(cls, name: str) -> IUser:
+    def __new__(cls, name: str, id_user: int) -> IUser:
         """
         Control the instantiation of the User class, ensuring it follows the singleton pattern.
 
@@ -67,7 +69,7 @@ class User(IUser):
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, id_user: int = None) -> None:
         """
         Initialize the User instance.
 
@@ -84,6 +86,21 @@ class User(IUser):
             self._labels: List[IItem] = []
             self._projects: List[IItem] = []
             self._initialized = True
+            self._id_user = id_user
+
+            self.db = Database()
+            self.SessionLocal = sessionmaker(bind=self.db.engine)
+
+            if not self._id_user:
+                self.seve_to_db()
+
+    def seve_to_db(self):
+        with self.SessionLocal() as session:
+            new_user_orm = UserORM(name=self._name)
+            session.add(new_user_orm)
+            self._id_user = new_user_orm.id_user
+            session.commit()
+
 
     def add_label(self, label: IItem) -> None:
         """
@@ -103,7 +120,6 @@ class User(IUser):
             label (IItem): The label to be removed from the user's collection.
         """
         self._labels.remove(label)
-        # remover do banco de dados
 
     def add_project(self, project: IItem) -> None:
         """
@@ -113,7 +129,6 @@ class User(IUser):
             project (IItem): The project to be added to the user's collection.
         """
         self._projects.insert(0,project)
-        # adicionar no banco de dados
 
     def remove_project(self, project: IItem) -> None:
         """
@@ -123,7 +138,6 @@ class User(IUser):
             project (IItem): The project to be removed from the user's collection.
         """
         self._projects.remove(project)
-        # remover do banco de dados
 
     @property
     def name(self) -> str:
@@ -154,3 +168,7 @@ class User(IUser):
             List[IItem]: A list of projects associated with the user.
         """
         return self._projects
+    
+    @property
+    def id_user(self) -> int:
+        return self._id_user

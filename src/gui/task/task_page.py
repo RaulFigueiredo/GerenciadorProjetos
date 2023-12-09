@@ -67,7 +67,11 @@ class TaskPage(BasePage):
         tk.Label(self, text="Descrição:").grid(row=2, column=0, sticky="w", padx=10, pady=(10, 0))
         description_text = tk.Text(self, height=3, width=1, wrap="word")
         description_text.grid(row=3, column=0, sticky="ew", padx=15)
-        description_text.insert(tk.END, self.item.description)
+        if self.item.description is None:
+            description_content = ""  
+        else:
+            description_content = self.item.description
+        description_text.insert(tk.END, description_content)
         description_text.config(state="disabled")
 
     def subtask_box(self):
