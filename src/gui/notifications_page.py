@@ -1,4 +1,14 @@
+"""
+    This module creates a Tkinter interface to display notifications for tasks.
 
+    It imports necessary modules and creates instances of users, labels, projects, and tasks
+for demonstration purposes.
+
+    It defines a `NotificationPage` class that inherits from Tkinter's `Frame` class.
+The class provides methods to create a GUI displaying different categories of tasks
+such as urgent tasks, tasks due for today, and tasks with notifications for the day.
+
+"""
 import tkinter as tk
 from tkinter import ttk
 from src.logic.notifications.notification import Notification
@@ -26,6 +36,9 @@ class NotificationPage(tk.Frame):
         super().__init__(master)
         self.user = user
         self.controller = controler
+        self.create_widgets()
+        # size of the window
+        self.master.geometry("600x400")
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.master.title("Notificações")
 
