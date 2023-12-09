@@ -41,7 +41,11 @@ class LoadPage(tk.Toplevel):
         if file_path:
             file_name = os.path.basename(file_path)
             self.file_name_label.config(text=file_name)
-            self.file_path = file_path 
+            self.file_path = file_path
+            print("File selected:", self.file_path)  # Adicione esta linha para depuração
+        else:
+            print("No file selected")  # Adicione esta linha para depuração
+
 
     def load_file(self):
         if not self.file_path:
@@ -51,8 +55,8 @@ class LoadPage(tk.Toplevel):
         try:
             FileAdapter.read_file(self.user, self.file_path)
             self.controller.update_main_page()
-            self.destroy()
             messagebox.showinfo("Sucesso", "Arquivo carregado com sucesso!")
+            self.destroy()
         except FileNotFoundError as e:
             messagebox.showerror("Aviso", str(e))
         except InvalidFileFormat as e:
