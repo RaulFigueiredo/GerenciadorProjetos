@@ -49,47 +49,46 @@ class FileAdapter:
                     raise InvalidFileFormat("Invalid content in TXT file. Unable to convert to JSON.")
 
         return json.dumps(combined_data)
-
+    
     @staticmethod
     def convert_csv_to_json(file_path: str) -> str:
-        """
-        Converts a CSV file into a format that can be read by json_reader.
+        projects = {}
+        tasks = {}
 
-        :param file_path: Path to the CSV file.
-        :return: String representation of the JSON list.
-        """
-        data = []
         with open(file_path, newline='', encoding='utf-8') as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
-                if 'tasks' in row and row['tasks']:
-                    tasks_json = row['tasks'].replace("'", '"').replace("None", "null")
-                    try:
-                        tasks = json.loads(tasks_json)
-                        for task in tasks:
-                            if 'subtasks' in task:
-                                if isinstance(task['subtasks'], str):
-                                    subtasks_str = task['subtasks'].replace("'", '"').replace("None", "null")
-                                    try:
-                                        task['subtasks'] = json.loads(subtasks_str)
-                                    except json.JSONDecodeError:
-                                        task['subtasks'] = []
-                                elif task['subtasks'] is None:
-                                    task['subtasks'] = []
-                                # Garanta que todas as subtasks sejam listas de dicionários
-                                if not all(isinstance(subtask, dict) for subtask in task['subtasks']):
-                                    task['subtasks'] = [{'subtask': subtask} if isinstance(subtask, str) else subtask for subtask in task['subtasks']]
-                            else:
-                                task['subtasks'] = []
-                        row['tasks'] = tasks
-                    except json.JSONDecodeError:
-                        raise InvalidFileFormat(f"Invalid JSON format in tasks: {tasks_json}")
-                else:
-                    row['tasks'] = []
+                item_type = row['type'].strip()
+                parent = row['parent'].strip()
+                name = row['name'].strip()
 
-                data.append(row)
+                if item_type == 'project':
+                    projects[name] = {
+                        'project': name,
+                        'description': row['description'].strip(),
+                        'end_date': row['end_date'].strip() if row['end_date'].strip() else None,
+                        'tasks': []
+                    }
 
-        return json.dumps(data)
+                elif item_type == 'task':
+                    task_info = {
+                        'task': name,
+                        'description': row['description'].strip(),
+                        'end_date': row['end_date'].strip() if row['end_date'].strip() else None,
+                        'notification_date': row['notification_date'].strip() if row['notification_date'].strip() else None,
+                        'priority': row['priority'].strip() if row['priority'].strip() else None,
+                        'subtasks': []
+                    }
+                    tasks[name] = task_info
+                    if parent in projects:
+                        projects[parent]['tasks'].append(task_info)
+
+                elif item_type == 'subtask':
+                    subtask_info = {'subtask': name}
+                    if parent in tasks:
+                        tasks[parent]['subtasks'].append(subtask_info)
+
+        return json.dumps(list(projects.values()), indent=4)
 
     
     @staticmethod
