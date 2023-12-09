@@ -49,7 +49,7 @@ class TopBar(tk.Frame):
         ttk.Button(self, text='Histórico', style='TButton', command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
         ttk.Button(self, text='Exportar', style='TButton', command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
         ttk.Button(self, text='Importar', style='TButton', command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
-        ttk.Button(self, text='Labels', style='TButton', command=lambda: on_navigate('labels')).grid(row=0, column=5, padx=5)
+        ttk.Button(self, text='Labels', style='TButton', command=lambda: on_navigate('labels')).grid(row=0, column=6, padx=5)
 
 
 class ProjectList(tk.Frame):
