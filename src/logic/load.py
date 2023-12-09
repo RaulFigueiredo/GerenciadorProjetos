@@ -9,6 +9,7 @@ from src.logic.execeptions.exceptions_items import ItemNameBlank,\
                                                     InvalidFileFormat,\
                                                     InvalidFileEstucture,\
                                                     FileNotFoundError
+from datetime import datetime 
 
 """
 This module contains the Load class, which is responsible for reading JSON files and reconstructing project,
@@ -41,20 +42,22 @@ class Load:
                     Load.check_project_name_blank([each_project])
                     Load.check_task_name_blank([each_project])
                     Load.check_duplicate_project_name(user, [each_project])
-
+                    end_date = Load.date_converter(each_project['end_date'])
                     project = ItemFactory.create_item(item_type='project',
                                                       user=user,
                                                       name=each_project['project'],
-                                                      end_date=each_project['end_date'],
+                                                      end_date=end_date,
                                                       description=each_project['description'])
 
                     for each_task in each_project['tasks']:
+                        end_date = Load.date_converter(each_task['end_date'])
+                        notification_date = Load.date_converter(each_task['notification_date'])
                         task = ItemFactory.create_item(item_type='task',
                                                        project=project,
                                                        name=each_task['task'],
                                                        priority=each_task['priority'],
-                                                       end_date=each_task['end_date'],
-                                                       notification_date=each_task['notification_date'],
+                                                       end_date=end_date,
+                                                       notification_date=notification_date,
                                                        description=each_task['description'])
 
                         for each_subtask in each_task['subtasks']:
@@ -65,6 +68,14 @@ class Load:
 
                 except json.JSONDecodeError:
                     raise InvalidFileFormat("Invalid content in TXT file. Unable to convert to JSON.")
+    @staticmethod
+    def date_converter(date: str) -> datetime:
+        if date is not None:
+            new_date = datetime.strptime(date, '%d/%m/%Y').date()
+            new_date = new_date.strftime('%d/%m/%Y')
+        else:
+            new_date = None
+        return new_date
 
     @staticmethod
     def json_reader(user: IUser,file_path: str) -> None:
@@ -77,7 +88,7 @@ class Load:
         """
 
         Load.check_file_existence(file_path)
-        Load.check_format(file_path)
+        Load.check_formart(file_path)
 
         with open(file_path, 'r') as json_file:
             try:

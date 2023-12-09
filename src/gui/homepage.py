@@ -260,7 +260,7 @@ class HomePage(tk.Frame):
         Display the export page layout.
         """
 
-        self.export_page = LoadPage(master=self, controller=self, user = self.user)
+        self.export_page = LoadPage(master=self, controller=self.project_list, user = self.user)
 
     def navigate(self, destination):
         """
@@ -281,3 +281,4 @@ class HomePage(tk.Frame):
             self.show_export_page()
         if destination == 'importar':
             self.show_import_page()
+            
