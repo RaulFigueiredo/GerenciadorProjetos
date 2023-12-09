@@ -28,7 +28,6 @@ class Export:
         :raises DirectoryBlank: If the directory is empty.
         """
         projects_data = []
-
         Export.check_filename(name_file)
 
         Export.check_directory(directory)
@@ -38,7 +37,7 @@ class Export:
         for project in list_projects:
             project_info = {
                 "project": project.name,
-                "end_date": project.end_date,
+                "end_date": project.end_date.strftime("%Y-%m-%d") if project.end_date else None,
                 "description": project.description,
                 "tasks": []
             }
@@ -47,8 +46,8 @@ class Export:
                 task_info = {
                     "task": task.name,
                     "priority": task.priority,
-                    "end_date": task.end_date,
-                    "notification_date": task.notification_date,
+                    "end_date": task.end_date.strftime("%Y-%m-%d") if task.end_date else None,
+                    "notification_date": task.notification_date.strftime("%Y-%m-%d") if task.notification_date else None,
                     "description": task.description,
                     "subtasks": []
                 }
@@ -62,7 +61,6 @@ class Export:
                 project_info["tasks"].append(task_info)
 
             projects_data.append(project_info)
-
         if not os.path.exists(directory):
             os.makedirs(directory)
 

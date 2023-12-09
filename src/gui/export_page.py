@@ -6,18 +6,16 @@ from src.logic.execeptions.exceptions_items import EmptyListProjects,\
                                                    FileNameBlank,\
                                                    DirectoryBlank
 
-class ExportPage(tk.Frame):
-    def __init__(self, master, controller, user):
+class ExportPage(tk.Toplevel):
+    def __init__(self, master, controller, user, project_list):
         super().__init__(master)
         self.controller = controller
         self.user = user
-
-        self.controller.title("Exportação de Projetos")
-        self.grid_columnconfigure(0, weight=1)  
-        self.grid_columnconfigure(1, weight=1)
+        self.project_list = project_list
+        self.title("Exportação de Projetos")
+        self.geometry("402x458")
         self.create_widgets()
 
-        self.controller.geometry("402x458")
         self.center_window(402, 458)
 
     def create_widgets(self):
@@ -44,7 +42,7 @@ class ExportPage(tk.Frame):
         # Botão para exportar
         export_button = tk.Button(self, text="Exportar", font=("Arial", 12), command=self.export_projects)
         export_button.grid(row=5, column=0, columnspan=2, pady=(5, 10), padx=10, sticky='we')
-        self.controller.update()
+        self.project_list.update_main_page() # check if this is necessary
 
     def select_folder(self):
         folder_selected = filedialog.askdirectory()
@@ -73,10 +71,10 @@ class ExportPage(tk.Frame):
 
 
     def center_window(self, width, height):
-        screen_width = self.controller.winfo_screenwidth()
-        screen_height = self.controller.winfo_screenheight()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
 
         x = int((screen_width / 2) - (width / 2))
         y = int((screen_height / 2) - (height / 2))
 
-        self.controller.geometry(f'{width}x{height}+{x}+{y}')
+        self.geometry(f'{width}x{height}+{x}+{y}')

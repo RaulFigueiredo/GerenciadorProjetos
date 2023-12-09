@@ -37,7 +37,7 @@ class Load:
 
         Load.check_file_structure(data)
         Load.check_project_name_blank(data)
-        Load.check_task_name_black(data)
+        Load.check_task_name_blank(data)
         Load.check_duplicate_project_name(user, data)
 
         for each_project in data:

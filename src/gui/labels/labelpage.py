@@ -1,6 +1,6 @@
 import tkinter as tk
-from src.gui.label_edit import EditLabelDialog
-from src.gui.label_create import AddLabelDialog
+from src.gui.labels.label_edit import EditLabelDialog
+from src.gui.labels.label_create import AddLabelDialog
 from src import User, Label
 from tkinter import messagebox
 from tkinter import ttk
