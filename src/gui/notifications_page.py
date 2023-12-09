@@ -30,3 +30,10 @@ class NotificationPage(tk.Frame):
         super().__init__(master)
         self.user = user
         self.controller = controler
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.master.title("Notificações")
+
+    def on_close(self):
+        """ This method will be used to close the window.
+        """
+        self.master.destroy()
