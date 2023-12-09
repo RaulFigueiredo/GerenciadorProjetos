@@ -32,9 +32,9 @@ def instance_user(db_user):
         project = Project(user = user,
                               name=db_project.name,
                               id_project = db_project.id_project,
-                              id_label = db_project.id_label if db_project.id_label else None,
-                              end_date=db_project.end_date if db_project.end_date else None,
-                              conclusion_date=db_project.conclusion_date if db_project.conclusion_date else None,
+                              id_label = db_project.id_label,
+                              end_date=db_project.end_date,
+                              conclusion_date=db_project.conclusion_date,
                               status=db_project.status,       
                               description=db_project.description)
         db_tasks = db_project.tasks
@@ -43,17 +43,18 @@ def instance_user(db_user):
                                name = db_task.name,
                                id_task = db_task.id_task,
                                status = db_task.status,        
-                               priority = db_task.priority if db_task.priority else None,
-                               end_date = db_task.end_date if db_task.end_date else None,
-                               notification_date = db_task.notification_date if db_task.notification_date else None,
-                               description=db_task.description if db_task.description else None)
+                               priority = db_task.priority,
+                               end_date = db_task.end_date,
+                               notification_date = db_task.notification_date,
+                               conclusion_date= db_task.conclusion_date,
+                               description=db_task.description)
             db_subtasks = db_task.subtasks
             for db_subtask in db_subtasks:
                 subtask = Subtask(task = task, 
                                       name = db_subtask.name,
                                       id_subtask = db_subtask.id_subtask,
                                       status = db_subtask.status,
-                                      conclusion_date = db_subtask.conclusion_date if db_subtask.conclusion_date else None)
+                                      conclusion_date = db_subtask.conclusion_date)
     for db_label in db_labes:
         label = Label(user = user,
                       name = db_label.name,
