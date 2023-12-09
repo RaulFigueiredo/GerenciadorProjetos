@@ -50,7 +50,7 @@ class User(IUser):
     """
     _instance = None
 
-    def __new__(cls, name: str, id_user: int) -> IUser:
+    def __new__(cls, name: str, id_user: int=None) -> IUser:
         """
         Control the instantiation of the User class, ensuring it follows the singleton pattern.
 
