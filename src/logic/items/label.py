@@ -72,8 +72,6 @@ class Label(IItem):
             NonChangeableProperty: If an attempt is made to change a non-modifiable property.
             ItemDontHaveThisAttribute: If an attribute to update does not exist in the Label class.
         """
-
-    def update(self, **kwargs) -> None:
         if "user" in kwargs:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
