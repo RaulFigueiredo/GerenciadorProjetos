@@ -28,12 +28,12 @@ class DateField:
 
         self.date = DateEntry(self.frame, width=width - 4, background='darkblue',
                                     foreground='white', borderwidth=2, state='readonly',
-                                    date_pattern='dd/mm/yy')
+                                    date_pattern='dd/mm/yyyy')
         self.date.pack(side="right", **padding)
 
     def get_value(self):
         date_str = self.date.get()
-        return datetime.strptime(date_str, '%d/%m/%y').date()  
+        return datetime.strptime(date_str, '%d/%m/%Y').date()  
     
     def set_value(self, value):
         self.date.set_date(value)  

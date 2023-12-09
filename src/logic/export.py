@@ -5,6 +5,8 @@ from src.logic.execeptions.exceptions_items import EmptyListProjects,\
 import json
 import os
 from typing import List
+from datetime import datetime
+
 
 """
 This module contains the Export class, responsible for generating JSON files from a list of projects.
@@ -35,19 +37,21 @@ class Export:
         Export.check_data(list_projects)
 
         for project in list_projects:
+            end_date = Export.date_converter(project.end_date)
             project_info = {
                 "project": project.name,
-                "end_date": project.end_date.strftime("%Y-%m-%d") if project.end_date else None,
+                "end_date": end_date,
                 "description": project.description,
                 "tasks": []
             }
-
             for task in project.tasks:
+                end_date = Export.date_converter(task.end_date)
+                notification_date = Export.date_converter(task.notification_date)
                 task_info = {
                     "task": task.name,
                     "priority": task.priority,
-                    "end_date": task.end_date.strftime("%Y-%m-%d") if task.end_date else None,
-                    "notification_date": task.notification_date.strftime("%Y-%m-%d") if task.notification_date else None,
+                    "end_date": end_date,
+                    "notification_date": notification_date,
                     "description": task.description,
                     "subtasks": []
                 }
@@ -86,3 +90,12 @@ class Export:
         """ Checks if the directory is empty."""
         if directory == '':
             raise DirectoryBlank("Directory must be selected.")
+        
+    @staticmethod
+    def date_converter(date: str) -> datetime:
+        if date is not None:
+            new_date = datetime.strptime(date, '%d/%m/%Y').date()
+            new_date = new_date.strftime('%d/%m/%Y')
+        else:
+            new_date = None
+        return new_date
