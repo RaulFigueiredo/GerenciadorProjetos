@@ -18,6 +18,53 @@ correct format of the data.
 
 class Load:
     """ Class responsible for loading project data from a JSON file. """
+    
+
+    @staticmethod
+    def txt_reader(user: IUser, file_path: str) -> None:
+        """
+        Reads a TXT file where each line is a JSON object, converts its content to JSON format, 
+        and loads the data into the application.
+
+        :param user: IUser object representing the current user.
+        :param file_path: Path to the TXT file.
+        :raises FileNotFoundError, InvalidFileFormat, InvalidFileStructure, ItemNameBlank, ItemNameAlreadyExists
+        """
+
+        Load.check_file_existence(file_path)
+
+        with open(file_path, 'r') as txt_file:
+            for line in txt_file:
+                try:
+                    each_project = json.loads(line.strip())
+                    Load.check_file_structure([each_project])
+                    Load.check_project_name_blank([each_project])
+                    Load.check_task_name_blank([each_project])
+                    Load.check_duplicate_project_name(user, [each_project])
+
+                    project = ItemFactory.create_item(item_type='project',
+                                                      user=user,
+                                                      name=each_project['project'],
+                                                      end_date=each_project['end_date'],
+                                                      description=each_project['description'])
+
+                    for each_task in each_project['tasks']:
+                        task = ItemFactory.create_item(item_type='task',
+                                                       project=project,
+                                                       name=each_task['task'],
+                                                       priority=each_task['priority'],
+                                                       end_date=each_task['end_date'],
+                                                       notification_date=each_task['notification_date'],
+                                                       description=each_task['description'])
+
+                        for each_subtask in each_task['subtasks']:
+                            print(task)
+                            subtask = ItemFactory.create_item(item_type='subtask',
+                                                              task=task,
+                                                              name=each_subtask['subtask'])
+
+                except json.JSONDecodeError:
+                    raise InvalidFileFormat("Invalid content in TXT file. Unable to convert to JSON.")
 
     @staticmethod
     def json_reader(user: IUser,file_path: str) -> None:
@@ -30,15 +77,19 @@ class Load:
         """
 
         Load.check_file_existence(file_path)
-        Load.check_formart(file_path)
+        Load.check_format(file_path)
 
         with open(file_path, 'r') as json_file:
-            data = json.load(json_file)
+            try:
+                data = json.load(json_file)
+            except json.JSONDecodeError:
+                raise InvalidFileFormat("Invalid content in JSON file.")
 
         Load.check_file_structure(data)
         Load.check_project_name_blank(data)
         Load.check_task_name_blank(data)
         Load.check_duplicate_project_name(user, data)
+
 
         for each_project in data:
             projet = ItemFactory.create_item(item_type = 'project',
@@ -134,5 +185,3 @@ if __name__ == '__main__':
     print('+'*30)
     print(user.projects[0].tasks)
     print('+'*30)
-
-            
