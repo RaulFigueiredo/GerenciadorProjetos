@@ -55,6 +55,7 @@ class ExportPage(tk.Toplevel):
 
         try:
             Export.json_generator(selected_projects, self.file_name_entry.get(), self.folder_path.get())
+            self.destroy()
             messagebox.showinfo("Sucesso", "Projetos exportados com sucesso.")
 
         except EmptyListProjects as e:
