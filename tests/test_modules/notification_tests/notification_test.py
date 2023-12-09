@@ -1,5 +1,8 @@
-import unittest
+"""
+    Test module for notification class.
+"""
 
+import unittest
 import datetime
 from src.logic.users.user import User
 from src.logic.items.project import Project
@@ -20,7 +23,22 @@ class TestNotification(unittest.TestCase):
         self.assertIn(self.task, self.notification.notification_date_tasks)
 
     def test_check_due_date_urgent(self):
+        self.task.update(end_date=self.today + datetime.timedelta(days=1), priority='Urgente')
         self.notification.check_due_date()
+        self.assertIn(self.task, self.notification.urgent_tasks)
+        self.assertNotIn(self.task, self.notification.due_date_tasks)
+
+    def test_check_due_date_today(self):
+        self.task.update(end_date=self.today)
+        self.notification.check_due_date()
+        self.assertIn(self.task, self.notification.due_date_tasks)
+        self.assertNotIn(self.task, self.notification.urgent_tasks)
+
+    def test_check_due_date_passed(self):
+        self.task.update(end_date=self.today - datetime.timedelta(days=1))
+        self.notification.check_due_date()
+        self.assertIn(self.task, self.notification.due_date_tasks)
+        self.assertNotIn(self.task, self.notification.urgent_tasks)
 
 if __name__ == '__main__':
     unittest.main()
