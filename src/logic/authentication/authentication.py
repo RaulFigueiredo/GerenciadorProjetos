@@ -25,21 +25,40 @@ def instance_user(db_user):
         User: An instance of the User class, populated with data from the UserORM instance, including associated projects, tasks, subtasks, and labels.
     """
     print(f'Creating user instance from {db_user.name}')
-    user = User(db_user.name)
+    user = User(db_user.name, id_user=db_user.id_user)
     db_projects = db_user.projects
     db_labes = db_user.labels
     for db_project in db_projects:
-        project = Project(user, db_project.name, description=db_project.description)
+        project = Project(user = user,
+                              name=db_project.name,
+                              id_project = db_project.id_project,
+                              id_label = db_project.id_label if db_project.id_label else None,
+                              end_date=db_project.end_date if db_project.end_date else None,
+                              conclusion_date=db_project.conclusion_date if db_project.conclusion_date else None,
+                              status=db_project.status,       
+                              description=db_project.description)
         db_tasks = db_project.tasks
         for db_task in db_tasks:
-            task = Task(project, db_task.name, description=db_task.descriptions, end_date=db_task.end_date, priority=db_task.priority)
+            task = Task(project = project,
+                               name = db_task.name,
+                               id_task = db_task.id_task,
+                               status = db_task.status,        
+                               priority = db_task.priority if db_task.priority else None,
+                               end_date = db_task.end_date if db_task.end_date else None,
+                               notification_date = db_task.notification_date if db_task.notification_date else None,
+                               description=db_task.description if db_task.description else None)
             db_subtasks = db_task.subtasks
             for db_subtask in db_subtasks:
-                subtask = Subtask(task, db_subtask.name)
-                task.add_subtask(subtask)
+                subtask = Subtask(task = task, 
+                                      name = db_subtask.name,
+                                      id_subtask = db_subtask.id_subtask,
+                                      status = db_subtask.status,
+                                      conclusion_date = db_subtask.conclusion_date if db_subtask.conclusion_date else None)
     for db_label in db_labes:
-        label = Label(user, db_label.name, db_label.color)
-        user.add_label(label)
+        label = Label(user = user,
+                      name = db_label.name,
+                      id_label = db_label.id_label,
+                      color = db_label.color)
     return user
 
 class LoginLogic:

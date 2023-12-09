@@ -21,6 +21,9 @@ from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty
+from src.logic.orms.orm import ProjectORM
+from src.db.database import Database
+from sqlalchemy.orm import sessionmaker
 
 class Project(IItem):
     """
@@ -48,8 +51,9 @@ class Project(IItem):
         Various property getters for accessing project attributes.
     """
 
-    def __init__(self, user: IUser ,name: str, label: IItem = None,
-                 end_date: date = None, description: str = None) -> None:
+    def __init__(self, user: IUser ,name: str, id_project: int = None, label: IItem = None,
+                 end_date: date = None, description: str = None, conclusion_date: date = None,
+                 status: bool = False, creation_date: date = None, id_label: int = None) -> None:
         """
         Initialize a new Project object with given parameters.
 
@@ -62,15 +66,40 @@ class Project(IItem):
         """
         self._user = user
         self._name = name
+        self._id_label = id_label
         self._label = label
         self._end_date = end_date
         self._description = description
-        self._creation_date = date.today()
-        self._conclusion_date = None
-        self._status = False
+        self._creation_date = creation_date if creation_date else date.today()
+        self._conclusion_date = conclusion_date
+        self._status = status
+        self._id_project = id_project
+        
         self._tasks: List[IItem] = []
 
         self._user.add_project(self)
+
+        self.db = Database()
+        self.SessionLocal = sessionmaker(bind=self.db.engine)
+
+        if not self._id_project:
+            self.save_to_db()
+
+    def save_to_db(self):
+        with self.SessionLocal() as session:
+            new_project_orm = ProjectORM(id_user=self._user.id_user,
+                                        id_label = self._label.id_label if self.label else None,
+                                        name = self._name,
+                                        status = self._status,
+                                        creation_date = self._creation_date,
+                                        end_date = self._end_date ,
+                                        description = self._description 
+                                        )
+            
+            session.add(new_project_orm)
+            session.commit()
+            self._id_project = new_project_orm.id_project
+
 
     def delete(self):
         """
@@ -81,7 +110,11 @@ class Project(IItem):
             task.delete()
 
         self._user.remove_project(self)
-        # remover do banco de dados
+        with self.SessionLocal() as session:
+            project_to_delete = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            if project_to_delete:
+                session.delete(project_to_delete)
+                session.commit()
 
     def update(self, **kwargs: Any) -> None:
         """
@@ -107,13 +140,18 @@ class Project(IItem):
         if user or creation_date or tasks:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
-        for key, value in kwargs.items():
-            attr_name = f"_{key}"
-            if hasattr(self, attr_name):
-                setattr(self, attr_name, value)
-            else:
-                raise ItemDontHaveThisAttribute(f"Project does not have the attribute {key}.")
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            if project_to_update:
+                for key, value in kwargs.items():
+                    attr_name = f"_{key}"
+                    if hasattr(self, attr_name):
+                        setattr(self, attr_name, value)
+                        setattr(project_to_update, key, value)
+                    else:
+                        raise ItemDontHaveThisAttribute(f"Project does not have the attribute {key}.")
+
+            session.commit()
 
     def add_task(self, task: IItem) -> None:
         """
@@ -123,7 +161,6 @@ class Project(IItem):
             task (IItem): The task item to be added to the project.
         """
         self._tasks.insert(0, task)
-        # adicionar no banco de dados
 
     def remove_task(self, task: IItem) -> None:
         """
@@ -133,7 +170,6 @@ class Project(IItem):
             task (IItem): The task item to be removed from the project.
         """
         self._tasks.remove(task)
-        # remover do banco de dados
 
     def conclusion(self) -> None:
         """
@@ -141,7 +177,12 @@ class Project(IItem):
         """
         self._status = True
         self._conclusion_date = date.today()
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            if project_to_update:
+                project_to_update.status = self._status
+                project_to_update.conclusion_date = self._conclusion_date
+                session.commit()
 
     def unconclusion(self) -> None:
         """
@@ -149,7 +190,12 @@ class Project(IItem):
         """
         self._status = False
         self._conclusion_date = None
-        # atualizar no banco de dados
+        with self.SessionLocal() as session:
+            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            if project_to_update:
+                project_to_update.status = self._status
+                project_to_update.conclusion_date = self._conclusion_date
+                session.commit()
 
     @property
     def tasks(self) -> List[IItem]:
@@ -191,3 +237,7 @@ class Project(IItem):
         """bool: The status of the project, indicating whether it is concluded or not."""
         return self._status
     
+    @property
+    def id_project(self) -> int:
+        """int: The id of the project."""
+        return self._id_project
