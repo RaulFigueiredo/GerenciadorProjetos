@@ -14,5 +14,13 @@ class TestNotification(unittest.TestCase):
         self.today = datetime.date.today()
         self.notification = Notification(self.user)
 
+    def test_check_notification_date(self):
+        self.task.update(notification_date=self.today)
+        self.notification.check_notification_date()
+        self.assertIn(self.task, self.notification.notification_date_tasks)
+
+    def test_check_due_date_urgent(self):
+        self.notification.check_due_date()
+
 if __name__ == '__main__':
     unittest.main()
