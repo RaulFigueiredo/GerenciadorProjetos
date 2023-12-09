@@ -37,14 +37,14 @@ class LoadPage(tk.Toplevel):
         self.load_button.grid(row=4, column=0, padx=10, pady=10)
 
     def choose_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json"), ("TXT files", "*.txt")])
+        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json"), ("TXT files", "*.txt"), ("CSV files", "*.csv")])
         if file_path:
             file_name = os.path.basename(file_path)
             self.file_name_label.config(text=file_name)
-            self.file_path = file_path
-            print("File selected:", self.file_path)  # Adicione esta linha para depuração
+            self.file_path = file_path 
+            print("File selected:", self.file_path)  # Para depuração
         else:
-            print("No file selected")  # Adicione esta linha para depuração
+            print("No file selected")  # Para depuração
 
 
     def load_file(self):
