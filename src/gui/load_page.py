@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 from src.logic.load import Load
+from src.logic.adapter import FileAdapter
 from src.logic.execeptions.exceptions_items import ItemNameBlank,\
                                                     ItemNameAlreadyExists, \
                                                     InvalidFileFormat,\
@@ -23,7 +24,7 @@ class LoadPage(tk.Toplevel):
         self.instruction_label = tk.Label(self, text="Importe novos projetos", font=("Arial", 20))
         self.instruction_label.grid(row=0, column=0, padx=10, pady=10)
 
-        self.instruction_label = tk.Label(self, text="Escolha um arquivo JSON para carregar:")
+        self.instruction_label = tk.Label(self, text="Escolha um arquivo JSON ou TXT para carregar:", font=("Arial", 20))
         self.instruction_label.grid(row=1, column=0, padx=10, pady=10)
 
         self.choose_file_button = tk.Button(self, text="Escolher Arquivo", command=self.choose_file)
@@ -36,30 +37,30 @@ class LoadPage(tk.Toplevel):
         self.load_button.grid(row=4, column=0, padx=10, pady=10)
 
     def choose_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json"), ("TXT files", "*.txt")])
         if file_path:
             file_name = os.path.basename(file_path)
             self.file_name_label.config(text=file_name)
             self.file_path = file_path 
 
     def load_file(self):
+        if not self.file_path:
+            messagebox.showerror("Aviso", "Nenhum arquivo selecionado.")
+            return
+
         try:
-            Load.json_reader(self.user, self.file_path) 
+            FileAdapter.read_file(self.user, self.file_path)
+            messagebox.showinfo("Sucesso", "Arquivo carregado com sucesso!")
         except FileNotFoundError as e:
             messagebox.showerror("Aviso", str(e))
-            return
         except InvalidFileFormat as e:
             messagebox.showerror("Aviso", str(e))
-            return
         except InvalidFileEstucture as e:
             messagebox.showerror("Aviso", str(e))
-            return
         except ItemNameBlank as e:
             messagebox.showerror("Aviso", str(e))
-            return
         except ItemNameAlreadyExists as e:
             messagebox.showerror("Aviso", str(e))
-            return
 
 
     def center_window(self, width, height):
