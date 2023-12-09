@@ -3,13 +3,11 @@
 This module implements a simple Tkinter-based interface to display completed
 tasks using the HistoryManagerApp class.
 
-
 Classes:
     HistoryManagerApp: Creates a Tkinter interface to display completed tasks.
 
 Usage:
     Run the script to open the Tkinter window displaying completed tasks.
-
 """
 import tkinter as tk
 from tkinter import ttk
@@ -45,20 +43,24 @@ class HistoryManagerApp(tk.Frame):
         """
         self.call_add_completed_task(self.user.projects)
 
-        history_label = tk.Label(self, text="Histórico de Tarefas", font=("Arial", 16))
+        # make it bold
+        history_label = tk.Label(self, text="Histórico de Tarefas", font=("Arial", 16, "bold"))
         history_label.grid(row=1, column=1, columnspan=2, sticky="ns")
+
+        tasks_frame = tk.Frame(self)
+        tasks_frame.grid(row=2, column=1, columnspan=2, sticky="nsew")
 
         completed_tasks = self.history.tasks_completed()
 
-        # itereting over the list of completed tasks and displaying them
+        # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
             task_info = self.get_task_info(task)
             if task.project.label is None:
-                task_label = tk.Label(history_label, text=task_info, font=("Arial", 12))
+                task_label = tk.Label(tasks_frame, text=task_info, font=("Arial", 12))
             else:
-                task_label = tk.Label(history_label, text=task_info,\
+                task_label = tk.Label(tasks_frame, text=task_info,\
                                    font=("Arial", 12), bg=task.project.label.color)
-            task_label.grid(row=index+1, column=1, columnspan=2, sticky="ns")
+            task_label.grid(row=index, column=1, columnspan=2, sticky="ns")
 
     def get_task_info(self, task: object) -> str:
         """ This method will be used to get the task information.
