@@ -62,11 +62,40 @@ class Notification:
         if task not in self.urgent_tasks and task not in self.due_date_tasks:
             self.notification_date_tasks.add(task)
 
+    def add_due_date_task(self, task: IItem) -> None:
+        """ This method will be used to add a due date task
+
+        Args:
+            task (IItem): Task
+        """
+        if task not in self.urgent_tasks and task not in self.notification_date_tasks:
+            self.due_date_tasks.add(task)
+
     """
     # step 1:
     def check_due_date(self) -> None:
         pass
-    """
+
+    # step 2:
     def check_due_date(self) -> None:
-        
-        
+        self.due_date_tasks.add(self.usr.projects[0].tasks[0])
+    
+    # step 3:
+    def check_due_date(self) -> None:
+        if self.usr.projects[0].tasks[0].end_date == datetime.date.today():
+            self.due_date_tasks.add(self.usr.projects[0].tasks[0])
+
+    # step 4:
+    def check_due_date(self) -> None:
+        today = datetime.date.today()
+        for each_project in self.usr.projects:
+            if each_project.tasks[0].end_date == today:
+                self.due_date_tasks.add(each_project.tasks[0])
+    """
+
+    def check_due_date(self) -> None:
+        today = datetime.date.today()
+        for each_project in self.usr.projects:
+            for each_task in each_project.tasks:
+                if each_task.end_date == today:
+                    self.add_due_date_task(each_task)
