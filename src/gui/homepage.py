@@ -9,6 +9,7 @@ from src.gui.task.task_manager import TaskDisplayManager
 from src.gui.history_page import HistoryManagerApp
 from src.gui.export_page import ExportPage
 from src.gui.load_page import LoadPage
+from src.gui.labels.labelpage import LabelManager
 
 class TopBar(tk.Frame):
     """
@@ -48,6 +49,7 @@ class TopBar(tk.Frame):
         ttk.Button(self, text='Histórico', style='TButton', command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
         ttk.Button(self, text='Exportar', style='TButton', command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
         ttk.Button(self, text='Importar', style='TButton', command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
+        ttk.Button(self, text='Labels', style='TButton', command=lambda: on_navigate('labels')).grid(row=0, column=5, padx=5)
 
 
 class ProjectList(tk.Frame):
@@ -199,6 +201,7 @@ class HomePage(tk.Frame):
         self.dashboard_page = None
         self.export_page = None
         self.import_page = None
+        self.label_page = None
 
     def show_home_page(self):
         """
@@ -262,6 +265,13 @@ class HomePage(tk.Frame):
 
         self.export_page = LoadPage(master=self, controller=self.project_list, user = self.user)
 
+    def show_label_page(self):
+        """
+        Display the label page layout.
+        """
+
+        self.label_page = LabelManager(parent=self, controller=self, user = self.user)
+
     def navigate(self, destination):
         """
         Navigate to a specified page in the application.
@@ -281,4 +291,6 @@ class HomePage(tk.Frame):
             self.show_export_page()
         if destination == 'importar':
             self.show_import_page()
+        if destination == 'labels':
+            self.show_label_page()
             
