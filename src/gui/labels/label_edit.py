@@ -29,7 +29,16 @@ class EditLabelDialog:
         """
         self.top = tk.Toplevel(parent)
         self.top.title("Editar Etiqueta")
-        self.top.geometry("425x550+400+50")
+
+        self.top.geometry("300x300")
+
+        screen_width = self.top.winfo_screenwidth()
+        screen_height = self.top.winfo_screenheight()
+        x = (screen_width - 425) // 2
+        y = (screen_height - 550) // 2
+
+        self.top.geometry(f"+{x}+{y}")
+
         self.top.configure(bg='lightgray')
 
         self.existing_labels = existing_labels
@@ -50,8 +59,6 @@ class EditLabelDialog:
 
         self.confirm_button = tk.Button(frame, text="Confirmar", command=self.on_confirm)
         self.confirm_button.pack(pady=10)
-
-        self.result = None
 
         self.result = None
 
