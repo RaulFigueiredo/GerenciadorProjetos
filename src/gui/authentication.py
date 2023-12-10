@@ -1,10 +1,17 @@
+"""
+This module contains classes and methods for managing user authentication in a tkinter-based GUI application. It includes the Login and Register classes, which provide user interfaces for login and registration processes, and the Authentication class, which orchestrates the authentication flow including displaying appropriate interfaces and handling user interactions.
+
+Classes:
+- Login: A tkinter Frame for the login interface, allowing users to enter their credentials and submit them for authentication.
+- Register: A tkinter Frame for the user registration interface, enabling new users to create an account by providing necessary details.
+- Authentication: Manages the overall authentication process, including switching between login and registration interfaces and initiating user sessions.
+
+Each class is designed to interact with the backend logic for authentication and user management, encapsulating the GUI elements and user interaction logic within a structured application framework.
+"""
+
 from src.logic.authentication.authentication import LoginLogic, RegisterLogic
 from src.gui.homepage import HomePage
 import tkinter as tk
-from src.logic.items.project import Project
-from src.logic.items.task import Task
-from src.logic.users.user import User
-from src.logic.orms.orm import UserORM, ProjectORM, TaskORM
 
 class Login(tk.Frame):
     """
