@@ -13,6 +13,7 @@ import tkinter as tk
 from tkinter import ttk
 from src.logic.history.task_history import HistorySingleton
 from src.logic.users.user import User
+from src.logic.items.label import Label
 
 class HistoryManagerApp(tk.Frame):
     """ This class will be used to create a Tkinter interface to display completed tasks.
@@ -55,11 +56,11 @@ class HistoryManagerApp(tk.Frame):
         # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
             task_info = self.get_task_info(task)
-            if task.project.label is None:
-                task_label = tk.Label(tasks_frame, text=task_info, font=("Arial", 12))
-            else:
+            if task.project.label is Label:
                 task_label = tk.Label(tasks_frame, text=task_info,\
                                    font=("Arial", 12), bg=task.project.label.color)
+            else:
+                task_label = tk.Label(tasks_frame, text=task_info, font=("Arial", 12))
             task_label.grid(row=index, column=1, columnspan=2, sticky="ns")
 
     def get_task_info(self, task: object) -> str:
