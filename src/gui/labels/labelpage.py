@@ -35,32 +35,35 @@ class LabelManager(tk.Toplevel):
         self.controller = controller
         self.user = user
         self.title("Label Manager")
-        self.geometry("425x550+400+50")  # Set window size and position
+        self.geometry("425x380+400+50")  # Set window size and position
         self.create_widgets()
 
     def create_widgets(self):
         """
-        Creates the widgets for this frame.
+        Creates and arranges the widgets for this frame.
         """
         self.button_style = ttk.Style()
         self.button_style.configure('LabelManager.TButton', font=('Arial', 10), padding=5)
 
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
+        main_frame.columnconfigure(0, weight=1)  # Configure column for equal expansion
 
         self.label_list = tk.Listbox(main_frame, height=10, width=50)
-        self.label_list.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky='ew')
+        self.label_list.grid(row=0, column=0, padx=10, pady=10)
 
+        # Botões alinhados ao centro, sem expansão
         self.add_button = ttk.Button(main_frame, text="Add Label", style='LabelManager.TButton', command=self.add_label)
-        self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
+        self.add_button.grid(row=1, column=0, padx=5, pady=5)
 
         self.edit_button = ttk.Button(main_frame, text="Edit Label", style='LabelManager.TButton', command=self.edit_label)
-        self.edit_button.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
+        self.edit_button.grid(row=2, column=0, padx=5, pady=5)
 
         self.remove_button = ttk.Button(main_frame, text="Remove Label", style='LabelManager.TButton', command=self.remove_label)
-        self.remove_button.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
+        self.remove_button.grid(row=3, column=0, padx=5, pady=5)
 
         self.update_label_list()
+
 
 
     """
