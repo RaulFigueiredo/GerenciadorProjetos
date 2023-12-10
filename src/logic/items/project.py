@@ -21,6 +21,7 @@ from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty
+from src.logic.items.project_memento import ProjectMemento
 from src.logic.orms.orm import ProjectORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
@@ -76,7 +77,7 @@ class Project(IItem):
         self._id_project = id_project
         
         self._tasks: List[IItem] = []
-
+        self._mementos = []
         self._user.add_project(self)
 
         self.db = Database()
@@ -139,7 +140,8 @@ class Project(IItem):
         tasks = kwargs.get("tasks")
         if user or creation_date or tasks:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
-
+        
+        self.save_to_memento()
         with self.SessionLocal() as session:
             project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
             if project_to_update:
@@ -175,6 +177,7 @@ class Project(IItem):
         """
         Mark the project as concluded and set the current date as the conclusion date.
         """
+        self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
         with self.SessionLocal() as session:
@@ -188,6 +191,7 @@ class Project(IItem):
         """
         Revert the project's status to unconcluded and reset the conclusion date to None.
         """
+        self.save_to_memento()
         self._status = False
         self._conclusion_date = None
         with self.SessionLocal() as session:
@@ -197,6 +201,41 @@ class Project(IItem):
                 project_to_update.conclusion_date = self._conclusion_date
                 session.commit()
 
+    def save_to_memento(self):
+        memento = ProjectMemento(
+            self._name, 
+            self._label, 
+            self._end_date, 
+            self._description, 
+            self._status, 
+            self._conclusion_date
+        )
+        self._mementos.append(memento)
+
+    def has_memento(self):
+        return bool(len(self._mementos) > 0)
+    
+    def restore_from_memento(self):
+        if self._mementos:
+            memento = self._mementos.pop()
+            state = memento.get_state()
+
+            self._name, self._label, self._end_date, \
+            self._description, self._status, self._conclusion_date = state
+
+            with self.SessionLocal() as session:
+                project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+                if project_to_update:
+                    project_to_update.name = self._name
+                    project_to_update.label = self._label
+                    project_to_update.end_date = self._end_date
+                    project_to_update.description = self._description
+                    project_to_update.status = self._status
+                    project_to_update.conclusion_date = self._conclusion_date
+                    session.commit()
+        else:
+            print("Sem mementos para restaurar")  
+    
     @property
     def tasks(self) -> List[IItem]:
         """List[IItem]: The list of tasks associated with this project."""
