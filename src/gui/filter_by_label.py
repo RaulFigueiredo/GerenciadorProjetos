@@ -2,16 +2,24 @@ from tkinter import messagebox
 import tkinter as tk
 
 class LabelFilterPage(tk.Toplevel):
-    def __init__(self, master, user, on_confirm):
+    def __init__(self, master, user, controller, on_confirm):
+        if hasattr(controller, 'label_filter_page_window') and controller.label_filter_page_window:
+            controller.label_filter_page_window.destroy()
+
         super().__init__(master)
         self.user = user
+        self.controller = controller
         self.on_confirm = on_confirm
 
         self.title("Filtrar por Etiquetas")
         self.configure(bg="white")
         self.create_widgets()
-        self.center_window(320, 320) 
+        self.center_window(320, 320)
 
+        controller.label_filter_page_window = self
+
+        self.protocol("WM_DELETE_WINDOW", self.on_window_close)
+    
     def create_widgets(self):
         main_frame = tk.Frame(self, bg="white")
         main_frame.pack(padx=10, pady=10)
@@ -43,3 +51,7 @@ class LabelFilterPage(tk.Toplevel):
         y = int((screen_height / 2) - (height / 2))
         self.geometry(f'{width}x{height}+{x}+{y}')
 
+    def on_window_close(self):
+        if self.controller.label_filter_page_window is self:
+            self.controller.label_filter_page_window = None
+        self.destroy()

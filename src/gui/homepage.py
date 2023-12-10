@@ -257,6 +257,8 @@ class HomePage(tk.Frame):
         self.export_page = None
         self.import_page = None
         self.label_page = None
+        self.project_filter_page = None
+        self.label_filter_page =  None
         
     def apply_project_filter(self, selected_projects):
             self.project_list.apply_filter(selected_projects)
@@ -336,12 +338,10 @@ class HomePage(tk.Frame):
         self.label_page = LabelManager(parent=self, controller=self, user = self.user)
 
     def show_filter_project_page(self):
-        filter_page = ProjectFilterPage(self, self.user, self.apply_project_filter)
-        filter_page.grab_set()
+        self.project_filter_page = ProjectFilterPage(master = self, user = self.user, controller=self, on_confirm=self.apply_project_filter)
 
     def show_label_filter_page(self):
-        label_filter_page = LabelFilterPage(self, self.user, self.apply_label_filter)
-        label_filter_page.grab_set()
+        self.label_filter_page = LabelFilterPage(master = self, user = self.user, controller=self, on_confirm=self.apply_label_filter)
         
     def navigate(self, destination):
         """
