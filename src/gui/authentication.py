@@ -31,15 +31,15 @@ class Login(tk.Frame):
         self.on_show_register = on_show_register
 
         tk.Label(self, text="Login", font=('Arial', 24), bg='#ADD8E6').pack(pady=20)
-        tk.Label(self, text="Username:", font=('Arial', 18), bg='#EAEAEA').pack(pady=10)
+        tk.Label(self, text="Nome:", font=('Arial', 18), bg='#EAEAEA').pack(pady=10)
         self.username_entry = tk.Entry(self, font=('Arial', 18), width=30)
         self.username_entry.pack(pady=10)
-        tk.Label(self, text="Password:", font=('Arial', 18), bg='#EAEAEA').pack(pady=10)
+        tk.Label(self, text="Senha:", font=('Arial', 18), bg='#EAEAEA').pack(pady=10)
         self.password_entry = tk.Entry(self, show="*", font=('Arial', 18), width=30)
         self.password_entry.pack(pady=10)
 
         tk.Button(self, text="Login", command=self._on_login, font=('Arial', 18), bg='#7FFF7F', width=20).pack(pady=20)
-        tk.Button(self, text="Register", command=self.on_show_register, font=('Arial', 18), bg='#FF7F7F', width=20).pack(pady=10)
+        tk.Button(self, text="Registro", command=self.on_show_register, font=('Arial', 18), bg='#FF7F7F', width=20).pack(pady=10)
 
         self.status_label = tk.Label(self, text="", font=('Arial', 12), bg='#EAEAEA')
         self.status_label.pack()
@@ -85,11 +85,11 @@ class Register(tk.Frame):
         super().__init__(parent, bg='#EAEAEA')
         self.on_register = on_register
 
-        tk.Label(self, text="Register", font=('Arial', 24), bg='#B19CD9').pack(pady=10)
-        tk.Label(self, text="Username:", font=('Arial', 18), bg='#EAEAEA').pack()
+        tk.Label(self, text="Registro", font=('Arial', 24), bg='#B19CD9').pack(pady=10)
+        tk.Label(self, text="Nome:", font=('Arial', 18), bg='#EAEAEA').pack()
         self.username_entry = tk.Entry(self, font=('Arial', 18))
         self.username_entry.pack()
-        tk.Label(self, text="Password:", font=('Arial', 18), bg='#EAEAEA').pack()
+        tk.Label(self, text="Senha:", font=('Arial', 18), bg='#EAEAEA').pack()
         self.password_entry = tk.Entry(self, show="*", font=('Arial', 18))
         self.password_entry.pack()
         tk.Label(self, text="Email:", font=('Arial', 18), bg='#EAEAEA').pack()
@@ -98,7 +98,7 @@ class Register(tk.Frame):
 
         register_button = tk.Button(
             self, 
-            text="Register", 
+            text="Registrar", 
             command=self._on_register,
             bg='#7FFF7F', 
             font=('Arial', 18)
