@@ -34,6 +34,7 @@ from src.gui.filter_by_label import LabelFilterPage
 from src.logic.items.project import Project
 from src.logic.users.user import User
 from .calendar_page import CalendarPage
+from src.gui.notifications_page import NotificationPage
 
 
 
@@ -247,6 +248,8 @@ class HomePage(tk.Frame):
         self.top_bar.grid(row=0, column=0, sticky='ew')
         self.user = user
 
+        self.show_notification_page()
+
         self.project_list = ProjectList(self, self.user)
         self.project_list.grid(row=1, column=0, sticky='nsew')
         self.grid_rowconfigure(1, weight=1)
@@ -369,5 +372,9 @@ class HomePage(tk.Frame):
             self.show_label_filter_page()
         if destination == 'remove_filter':
             self.remove_project_filter()
-            
 
+    def show_notification_page(self) -> None:
+        """ Display the notification page layout.
+        """
+        notification_window = tk.Toplevel(self)
+        NotificationPage(notification_window, self.user, self).pack()

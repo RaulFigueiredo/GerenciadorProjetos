@@ -25,7 +25,7 @@ class NotificationPage(tk.Frame):
         user (User): An instance of the User class.
         controller (Controller): An instance of the controller class.
     """
-    def __init__(self, master, user, controler):
+    def __init__(self, master: tk, user: callable, controler:tk):
         """ Initializes the NotificationPage class.
 
         Args:
@@ -42,7 +42,7 @@ class NotificationPage(tk.Frame):
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.master.title("Notificações")
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
         """ This method will be used to create the widgets.
         """
         notfi = Notification(self.user)
@@ -59,38 +59,62 @@ class NotificationPage(tk.Frame):
         urgent_frame.grid(row=1, column=0, sticky="ew", padx=10)
         urgent_frame.grid_columnconfigure(0, weight=1)
 
-        label_urgent = tk.Label(urgent_frame, text="Tarefa Urgente", font=("Arial", 12, "bold"))
+        label_urgent = tk.Label(urgent_frame, text="Tarefas Urgentes", font=("Arial", 12, "bold"))
         label_urgent.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 
         for index, task in enumerate(notfi.urgent_tasks):
             task_info = self.get_task_info(task)
-            task_label = tk.Label(urgent_frame, text=task_info, font=("Arial", 12))
-            task_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+            task_project_label = tk.Label(urgent_frame,\
+                         text=task_info["Projeto"], font=("Arial", 12))
+            task_project_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+
+            task_name_label = tk.Label(urgent_frame, text=task_info["Tarefa"], font=("Arial", 12))
+            task_name_label.grid(row=index+1, column=1, sticky="w", padx=5, pady=5)
+
+            task_date_label = tk.Label(urgent_frame, text=task_info["Data"], font=("Arial", 12))
+            task_date_label.grid(row=index+1, column=2, sticky="w", padx=5, pady=5)
 
         due_date_frame = ttk.Frame(self)
         due_date_frame.grid(row=2, column=0, sticky="ew", padx=10)
         due_date_frame.grid_columnconfigure(0, weight=1)
 
-        label_due_date = tk.Label(due_date_frame, text="Entrega para hoje",font=("Arial",12,"bold"))
+        label_due_date = tk.Label(due_date_frame,\
+                         text="Entregas para hoje",font=("Arial",12,"bold"))
         label_due_date.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 
         for index, task in enumerate(notfi.due_date_tasks):
             task_info = self.get_task_info(task)
-            task_label = tk.Label(due_date_frame, text=task_info, font=("Arial", 12))
-            task_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+            task_project_label = tk.Label(due_date_frame,\
+                         text=task_info["Projeto"], font=("Arial", 12))
+            task_project_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+
+            task_name_label = tk.Label(due_date_frame, text=task_info["Tarefa"], font=("Arial", 12))
+            task_name_label.grid(row=index+1, column=1, sticky="w", padx=5, pady=5)
+
+            task_date_label = tk.Label(due_date_frame, text=task_info["Data"], font=("Arial", 12))
+            task_date_label.grid(row=index+1, column=2, sticky="w", padx=5, pady=5)
 
         notification_date_frame = ttk.Frame(self)
         notification_date_frame.grid(row=3, column=0, sticky="ew", padx=10)
         notification_date_frame.grid_columnconfigure(0, weight=1)
 
-        label_notification_date = tk.Label(notification_date_frame,
-                                            text="Notificação para hoje",font=("Arial",12,"bold"))
+        label_notification_date = tk.Label(notification_date_frame,\
+                         text="Notificações para hoje",font=("Arial",12,"bold"))
         label_notification_date.grid(row=0, column=0, sticky="w", padx=5, pady=5)
 
         for index, task in enumerate(notfi.notification_date_tasks):
             task_info = self.get_task_info(task)
-            task_label = tk.Label(notification_date_frame, text=task_info, font=("Arial", 12))
-            task_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+            task_project_label = tk.Label(notification_date_frame,\
+                         text=task_info["Projeto"], font=("Arial", 12))
+            task_project_label.grid(row=index+1, column=0, sticky="w", padx=5, pady=5)
+
+            task_name_label = tk.Label(notification_date_frame,\
+                         text=task_info["Tarefa"], font=("Arial", 12))
+            task_name_label.grid(row=index+1, column=1, sticky="w", padx=5, pady=5)
+
+            task_date_label = tk.Label(notification_date_frame,\
+                         text=task_info["Data"], font=("Arial", 12))
+            task_date_label.grid(row=index+1, column=2, sticky="w", padx=5, pady=5)
 
         tasks_frame = ttk.Frame(self)
         tasks_frame.grid(row=4, column=0, sticky="ew", padx=10, pady=(10, 0))
@@ -99,12 +123,12 @@ class NotificationPage(tk.Frame):
         back_button = ttk.Button(self, text="Voltar", command=self.on_close)
         back_button.grid(row=5, column=0, sticky="ew", padx=10, pady=10)
 
-    def on_close(self):
+    def on_close(self) -> None:
         """ This method will be used to close the window.
         """
         self.master.destroy()
 
-    def get_task_info(self, task: object) -> str:
+    def get_task_info(self, task: object) -> dict:
         """ Gets information about a task.
 
         Args:
@@ -113,5 +137,9 @@ class NotificationPage(tk.Frame):
         Returns:
             str: Information about the task.
         """
-        key, value = task.project.name, task.name
-        return f"{key}: \t{value} \t" + task.end_date.strftime("%d/%m/%Y")
+        data = {
+            "Projeto": task.project.name,
+            "Tarefa": task.name,
+            "Data": task.end_date.strftime("%d/%m/%Y")
+        }
+        return data
