@@ -38,21 +38,27 @@ class Load:
     """ Contains methods to read and process data from JSON files.
     """
     @staticmethod
-    def date_converter(date: str) -> datetime:
+    def date_converter(date_str: str) -> datetime.date:
         """ Converts a date string to a datetime object.
+        
+        Tries multiple date formats.
 
         Args:
-            date (str): Date string in the format 'dd/mm/yyyy'.
+            date_str (str): Date string.
 
         Returns:
-            datetime: Datetime object representing the date string.
+            datetime.date: Datetime object representing the date string, or None if conversion fails.
         """
-        if date is not None:
-            new_date = datetime.strptime(date, '%d/%m/%Y').date()
-            new_date = new_date.strftime('%d/%m/%Y')
-        else:
-            new_date = None
-        return new_date
+        if not date_str:
+            return None
+
+        for fmt in ['%d/%m/%Y', '%Y-%m-%d']:  # Adicione mais formatos aqui se necessário
+            try:
+                return datetime.strptime(date_str, fmt).date()
+            except ValueError:
+                continue
+        raise ValueError(f"Date string does not match any expected format: {date_str}")
+
 
     @staticmethod
     def json_reader(usr: IUser,file_path: str) -> None:
@@ -80,21 +86,25 @@ class Load:
         Load.check_duplicate_project_name(usr, data)
 
 
+
         for each_project in data:
-            projet = ItemFactory.create_item(item_type = 'project',
-                                              user = usr,
-                                              name = each_project['project'],
-                                              end_date = each_project['end_date'],
-                                              description = each_project['description'])
+            project_end_date = Load.date_converter(each_project['end_date'])  # Converte para objeto datetime
+            projet = ItemFactory.create_item(item_type='project',
+                                            user=usr,
+                                            name=each_project['project'],
+                                            end_date=project_end_date,  # Usa o objeto datetime
+                                            description=each_project['description'])
 
             for each_task in each_project['tasks']:
-                task = ItemFactory.create_item( item_type = 'task',
-                                                project = projet,
-                                                name = each_task['task'],
-                                                priority = each_task['priority'],
-                                                end_date = each_task['end_date'],
-                                                notification_date = each_task['notification_date'],
-                                                description = each_task['description'])
+                task_end_date = Load.date_converter(each_task['end_date'])  # Converte para objeto datetime
+                notification_date = Load.date_converter(each_task['notification_date'])  # Converte para objeto datetime
+                task = ItemFactory.create_item(item_type='task',
+                                            project=projet,
+                                            name=each_task['task'],
+                                            priority=each_task['priority'],
+                                            end_date=task_end_date,  # Usa o objeto datetime
+                                            notification_date=notification_date,  # Usa o objeto datetime
+                                            description=each_task['description'])
 
                 for each_subtask in each_task['subtasks']:
                     print(task)
