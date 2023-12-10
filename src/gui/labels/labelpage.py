@@ -34,7 +34,7 @@ class LabelManager(tk.Toplevel):
         super().__init__(parent)
         self.controller = controller
         self.user = user
-        self.title("Label Manager")
+        self.title("Gerenciador de Etiquetas")
         self.geometry("425x380+400+50")  # Set window size and position
         self.create_widgets()
 
@@ -47,23 +47,27 @@ class LabelManager(tk.Toplevel):
 
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
-        main_frame.columnconfigure(0, weight=1)  # Configure column for equal expansion
+        main_frame.columnconfigure(0, weight=1)
+
+        label_title = tk.Label(main_frame, text="Etiquetas Disponíveis", font=('Arial', 20))
+        label_title.grid(row=0, column=0, padx=10, pady=(10, 0))
 
         self.label_list = tk.Listbox(main_frame, height=10, width=50)
-        self.label_list.grid(row=0, column=0, padx=10, pady=10)
+        self.label_list.grid(row=1, column=0, padx=10, pady=10)
 
-        # Botões alinhados ao centro, sem expansão
-        self.add_button = ttk.Button(main_frame, text="Add Label", style='LabelManager.TButton', command=self.add_label)
-        self.add_button.grid(row=1, column=0, padx=5, pady=5)
 
-        self.edit_button = ttk.Button(main_frame, text="Edit Label", style='LabelManager.TButton', command=self.edit_label)
-        self.edit_button.grid(row=2, column=0, padx=5, pady=5)
+        self.add_button = ttk.Button(main_frame, text="Adicionar Etiqueta", style='LabelManager.TButton', command=self.add_label)
+        self.add_button.grid(row=2, column=0, padx=5, pady=5)
 
-        self.remove_button = ttk.Button(main_frame, text="Remove Label", style='LabelManager.TButton', command=self.remove_label)
-        self.remove_button.grid(row=3, column=0, padx=5, pady=5)
+        self.edit_button = ttk.Button(main_frame, text="Editar Etiqueta", style='LabelManager.TButton', command=self.edit_label)
+        self.edit_button.grid(row=3, column=0, padx=5, pady=5)
+
+        self.remove_button = ttk.Button(main_frame, text="Remover Etiqueta", style='LabelManager.TButton', command=self.remove_label)
+        self.remove_button.grid(row=4, column=0, padx=5, pady=5)
 
         self.update_label_list()
 
+        self.center_window(425, 380)
 
 
     """
@@ -237,3 +241,13 @@ class LabelManager(tk.Toplevel):
         for label in self.user.labels:
             label_text = f"{label.name} (Color: {label.color})"
             self.label_list.insert(tk.END, label_text)
+
+    def center_window(self, width, height):
+        """
+        Centers the window on the screen.
+        """
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        x = int((screen_width - width) / 2)
+        y = int((screen_height - height) / 2)
+        self.geometry(f'{width}x{height}+{x}+{y}')

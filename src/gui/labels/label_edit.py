@@ -27,20 +27,20 @@ class EditLabelDialog:
             current_color (str): The current color of the label.
         """
         self.top = tk.Toplevel(parent)
-        self.top.title("Edit Label")
+        self.top.title("Editar Etiqueta")
         self.top.geometry("425x550+400+50")
         self.top.configure(bg='lightgray')
 
         frame = tk.Frame(self.top, bg='lightgray', pady=5)
         frame.pack(padx=10, pady=10, fill=tk.X)
 
-        tk.Label(frame, text="Label Name:", bg='lightgray').pack(padx=10, pady=5)
+        tk.Label(frame, text="Nome da Etiqueta:", bg='lightgray').pack(padx=10, pady=5)
         self.name_entry = tk.Entry(frame)
         self.name_entry.insert(0, current_name)
         self.name_entry.pack(padx=10, pady=5, fill=tk.X)
 
-        tk.Label(frame, text="Label Color:", bg='lightgray').pack(padx=10, pady=5)
-        self.color_combobox = ttk.Combobox(frame, values=["blue", "green", "red"], state="readonly")
+        tk.Label(frame, text="Cor da Etiqueta:", bg='lightgray').pack(padx=10, pady=5)
+        self.color_combobox = ttk.Combobox(frame, values=["azul", "verde", "vermelho"], state="readonly")
         self.color_combobox.set(current_color)
         self.color_combobox.pack(padx=10, pady=5, fill=tk.X)
 

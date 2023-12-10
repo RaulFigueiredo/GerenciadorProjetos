@@ -24,17 +24,17 @@ class AddLabelDialog:
             parent (tk.Widget): The parent widget for this dialog.
         """
         self.top = tk.Toplevel(parent)
-        self.top.title("Add Label")
+        self.top.title("Adicionar Etiqueta")
 
-        tk.Label(self.top, text="Label Name:").pack(padx=10, pady=5)
+        tk.Label(self.top, text="Nome da etiqueta:").pack(padx=10, pady=5)
         self.name_entry = tk.Entry(self.top)
         self.name_entry.pack(padx=10, pady=5)
 
-        tk.Label(self.top, text="Label Color:").pack(padx=10, pady=5)
-        self.color_combobox = ttk.Combobox(self.top, values=["blue", "green", "red"], state="readonly")
+        tk.Label(self.top, text="Cor da etiqueta:").pack(padx=10, pady=5)
+        self.color_combobox = ttk.Combobox(self.top, values=["azul", "verde", "vermelho"], state="readonly")
         self.color_combobox.pack(padx=10, pady=5)
 
-        self.confirm_button = tk.Button(self.top, text="Confirm", command=self.on_confirm)
+        self.confirm_button = tk.Button(self.top, text="Confirmar", command=self.on_confirm)
         self.confirm_button.pack(pady=10)
 
         self.result = None
