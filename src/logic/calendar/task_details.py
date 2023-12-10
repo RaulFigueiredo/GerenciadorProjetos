@@ -67,8 +67,8 @@ class TaskDetails:
             self.details_text.grid(row=0, column=0, sticky='nsew')
             self.details_scroll.grid(row=0, column=1, sticky='ns')
 
-        closeButton = tk.Button(self.details_frame, text="Fechar", command=self.close_details)
-        closeButton.grid(row=1, column=0, columnspan=2, sticky='ne') 
+        close_button = tk.Button(self.details_frame, text="Fechar", command=self.close_details)
+        close_button.grid(row=1, column=0, columnspan=2, sticky='ne')
 
     def clear_details(self) -> None:
         """

@@ -44,7 +44,7 @@ class DateUtilities:
         j = year // 100
 
         # Zeller's congruence formula
-        f = 1 
+        f = 1
         h = (f + ((13 * (month + 1)) // 5) + k + (k // 4) + (j // 4) + (5 * j)) % 7
         day_of_week = (h + 6) % 7
 
