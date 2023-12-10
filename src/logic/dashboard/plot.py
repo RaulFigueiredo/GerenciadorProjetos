@@ -43,6 +43,8 @@ or displayed as desired.
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import datetime
+
 
 class Plot:
     """ Plot class
@@ -122,6 +124,7 @@ class Plot:
         """
         plt.close()
         x, y = list(data.keys()), list(data.values())
+        x = [datetime.datetime.strptime(date, '%d-%m-%Y') for date in x]
         fig, ax = plt.subplots(figsize=(4, 3))
         ax.fill_between(x, y, zorder=4, alpha=0.8)
         ax.plot(x, y, zorder=4, alpha=1)
