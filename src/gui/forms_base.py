@@ -71,7 +71,7 @@ class EntryField:
             value (str): The value to be set.
         """
         self.entry.delete(0, tk.END)
-        self.entry.insert(0, value)  
+        self.entry.insert(0, value)
 
 class DateField:
     """ Class: DateField
