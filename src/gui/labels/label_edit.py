@@ -17,7 +17,7 @@ class EditLabelDialog:
         current_color (str): The current color of the label to be edited.
     """
 
-    def __init__(self, parent: tk.Widget, current_name: str, current_color: str) -> None:
+    def __init__(self, parent: tk.Widget, current_name: str, current_color: str, existing_labels: list) -> None:
         """
         Initializes a new instance of EditLabelDialog.
 
@@ -25,11 +25,15 @@ class EditLabelDialog:
             parent (tk.Widget): The parent widget for this dialog.
             current_name (str): The current name of the label.
             current_color (str): The current color of the label.
+            existing_labels (list): List of existing label names.
         """
         self.top = tk.Toplevel(parent)
         self.top.title("Editar Etiqueta")
         self.top.geometry("425x550+400+50")
         self.top.configure(bg='lightgray')
+
+        self.existing_labels = existing_labels
+        self.original_name = current_name
 
         frame = tk.Frame(self.top, bg='lightgray', pady=5)
         frame.pack(padx=10, pady=10, fill=tk.X)
@@ -44,8 +48,10 @@ class EditLabelDialog:
         self.color_combobox.set(current_color)
         self.color_combobox.pack(padx=10, pady=5, fill=tk.X)
 
-        self.confirm_button = tk.Button(frame, text="Confirm", command=self.on_confirm)
+        self.confirm_button = tk.Button(frame, text="Confirmar", command=self.on_confirm)
         self.confirm_button.pack(pady=10)
+
+        self.result = None
 
         self.result = None
 
@@ -57,11 +63,11 @@ class EditLabelDialog:
         color = self.color_combobox.get()
 
         if not name:
-            messagebox.showwarning("Warning", "The label name cannot be empty.", parent=self.top)
+            messagebox.showwarning("Aviso", "O nome da etiqueta não pode estar vazio", parent=self.top)
             return
 
-        if not color:
-            messagebox.showwarning("Warning", "Please select a color.", parent=self.top)
+        if name in self.existing_labels and name != self.original_name:
+            messagebox.showwarning("Aviso", "Esse nome de etiqueta já existe", parent=self.top)
             return
 
         self.result = (name, color)

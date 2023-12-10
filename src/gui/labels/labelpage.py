@@ -35,7 +35,7 @@ class LabelManager(tk.Toplevel):
         self.controller = controller
         self.user = user
         self.title("Gerenciador de Etiquetas")
-        self.geometry("425x380+400+50")  # Set window size and position
+        self.geometry("425x380+400+50")
         self.create_widgets()
 
     def create_widgets(self):
@@ -149,7 +149,8 @@ class LabelManager(tk.Toplevel):
             label_to_edit = next((label for label in self.user.labels if label.name == label_name), None)
 
             if label_to_edit:
-                dialog = EditLabelDialog(self.controller, label_to_edit.name, label_to_edit.color)
+                existing_label_names = [label.name for label in self.user.labels if label.name != label_name]
+                dialog = EditLabelDialog(self.controller, label_to_edit.name, label_to_edit.color, existing_label_names)
                 result = dialog.show()
 
                 if result:
@@ -158,7 +159,7 @@ class LabelManager(tk.Toplevel):
 
                     self.update_label_list()
         else:
-            messagebox.showinfo("Selection", "Please select a label to edit.")
+            messagebox.showinfo("Selecionar", "Por favor, selecione uma etiqueta para editar")
 
 
     def add_label(self):
@@ -172,11 +173,11 @@ class LabelManager(tk.Toplevel):
             name, color = result
 
             if not name.strip():
-                messagebox.showwarning("Warning", "Name field cannot be blank.")
+                messagebox.showwarning("Aviso", "O campo de nome não pode estar vazio")
                 return
 
             if any(label.name == name for label in self.user.labels):
-                messagebox.showwarning("Warning", "A label with this name already exists.")
+                messagebox.showwarning("Aviso", "Uma etiqueta com esse nome já existe")
                 return
 
             ItemFactory.create_item(item_type='label', user=self.user, name=name, color=color)
@@ -199,9 +200,9 @@ class LabelManager(tk.Toplevel):
                 label_to_remove.delete()
                 self.update_label_list()
             else:
-                messagebox.showinfo("Error", "Label not found.")
+                messagebox.showinfo("Erro", "Etiqueta não encontrada")
         else:
-            messagebox.showinfo("Selection", "Please select a label to remove.")
+            messagebox.showinfo("Seleção", "Por favor, selecione uma etiqueta para remover")
 
 
     """
