@@ -235,7 +235,7 @@ class HomePage(tk.Frame):
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.dashboard_page:
-            self.dashboard_page = DashboardPage(master=self, on_close=self.show_home_page)
+            self.dashboard_page = DashboardPage(master=self, on_close=self.show_home_page, user=self.user)
         self.dashboard_page.grid(row=1, column=0)
 
     def show_history_page(self):

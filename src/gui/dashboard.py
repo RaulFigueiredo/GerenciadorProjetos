@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.logic.dashboard.plot import Plot
+from src.logic.dashboard.dashboard_data import DashboardData
 
 
 class GridFrame(tk.Frame):
@@ -59,7 +60,7 @@ class DashboardPlots():
 
 
 class Dashboard(tk.Frame):
-    def __init__(self, parent, row, col, rowspan=1, colspan=1):
+    def __init__(self, parent, row, col, dashboard_data, rowspan=1, colspan=1):
         super().__init__(parent)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.config(bg="#eaeaea")
@@ -69,7 +70,13 @@ class Dashboard(tk.Frame):
 
         cards = GridFrame(self, row=0, col=0)
         cards.config(bg="#eaeaea")
-        texts = ["Tarefas\n27", "Para Hoje\n4", "Feitas\n12", "Atrasadas\n4"]
+
+        tasks = dashboard_data.get_number_of_tasks()
+        for_today = dashboard_data.get_number_of_for_today_tasks()
+        done = dashboard_data.get_number_of_done_tasks()
+        late = dashboard_data.get_number_of_late_tasks()
+
+        texts = [f"Tarefas\n{tasks}", f"Para Hoje\n{for_today}", f"Feitas\n{done}", f"Atrasadas\n{late}"]
         for i in range(len(texts)):
             cards.grid_columnconfigure(i, weight=1)
             label = GridLabel(cards, 0, i, text=texts[i])
@@ -81,17 +88,19 @@ class Dashboard(tk.Frame):
 
 
         # Fake data #
-        tasks = {'Feitas': 10,'Para fazer': 8,'Atrasadas': 3}
-        tasks_timespan = {'até 1': 30,'1 a 2': 50,'2 a 3': 1,'3+': 40}
-        next_deadlines = {'até 1': 30,'1 a 2 ': 50,'2 a 3': 30,'3+': 9}
-        total_tasks = {'01-03-2023': 3,'02-03-2023': 4,'03-03-2023': 6,'04-03-2023': 7,'05-03-2023': 8,'06-03-2023': 11,'07-03-2023': 11,'08-03-2023': 11,'09-03-2023': 12,'10-03-2023': 12,'11-03-2023': 15,'12-03-2023': 18,'13-03-2023': 18,'14-03-2023': 18,'15-03-2023': 18,'16-03-2023': 20,'17-03-2023': 26,'18-03-2023': 30,'19-03-2023': 30,'20-03-2023': 30,'21-03-2023': 30,'22-03-2023': 30,'23-03-2023': 30,'24-03-2023': 30,'25-03-2023': 30,'26-03-2023': 31,'27-03-2023': 33,'28-03-2023': 33,'29-03-2023': 34,'30-03-2023': 36}
-        weekday_mean = {'seg': 0.4,'ter': 1.05,'qua': 0.5,'qui': 0.7,'sex': 2,'sab': 3,'dom': 4}
+        tasks = {'Feitas': done,
+                 'Para fazer': dashboard_data.get_number_of_on_time_tasks(),
+                 'Atrasadas': late}
+        tasks_timespan = dashboard_data.get_timespan_of_tasks()
+        next_deadlines = dashboard_data.get_next_deadlines()
+        total_tasks = dashboard_data.get_created_tasks()
+        finished_by_week_day = dashboard_data.get_finished_by_weekday()
 
         plot1 = Plot.make_donutplot(tasks, 'Tarefas')
         plot2 = Plot.make_barplot(tasks_timespan, 'Duração das Tarefas (semanas)')
         plot3 = Plot.make_pieplot(next_deadlines, 'Próximos Limites (semanas)')
         plot4 = Plot.make_areaplot(total_tasks, 'Total de Tarefas Criadas')
-        plot5 = Plot.make_lineplot(weekday_mean, 'Média de Tarefas Concluídas')
+        plot5 = Plot.make_lineplot(finished_by_week_day, 'Tarefas Concluídas')
 
         dash_plots = DashboardPlots()
         dash_plots.add_plot(plot1, 0, 0)
@@ -105,17 +114,18 @@ class Dashboard(tk.Frame):
 
 
 class Sidebar(tk.Frame):
-    def __init__(self, parent, row, col, back, rowspan=1, colspan=1):
+    def __init__(self, parent, row, col, back, dashboard_data, rowspan=1, colspan=1):
         super().__init__(parent)
+        self.parent = parent
+        self.dashboard_data = dashboard_data
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.config(bg="#add8e6")
         self.grid_configure(sticky="nsew")
         self.grid_rowconfigure(5, weight=1)
 
-        # Fake data #
-        options = ['Todos', 'Projeto 1', 'Projeto 2', 'Etiqueta 1', 'Etiqueta 2']
+        options = ['Todos'] + [project.name for project in dashboard_data.projects]
 
-        label = GridLabel(self, row=0, col=0, text="Projeto/Etiqueta")
+        label = GridLabel(self, row=0, col=0, text="Projeto")
         label.config(bg="#add8e6")
         label.grid_configure(sticky="w", padx=(10, 100), pady=(110, 0))
 
@@ -123,18 +133,26 @@ class Sidebar(tk.Frame):
         dropdown.set("Todos")
         dropdown.grid_configure(padx=10)
 
-        filter_button = GridButton(self, row=4, col=0, text="Filtrar", command=lambda: print('filter'))
+        filter_button = GridButton(self, row=4, col=0, text="Filtrar",
+                                   command=lambda: self.update_dashboard(dropdown.get()))
         filter_button.grid_configure(padx=10, pady=20, sticky="nsew")
 
         back_button = GridButton(self, row=5, col=0, text="Voltar", command=back)
         back_button.grid_configure(sticky="sw", padx=10, pady=10)
+    
+    def update_dashboard(self, selected_project):
+        self.dashboard_data.update_data(selected_project)
+        self.parent.winfo_children()[1].destroy()
+        Dashboard(self.parent, row=0, col=1, dashboard_data=self.dashboard_data, rowspan=2)
+
 
 
 class DashboardPage(tk.Frame):
-    def __init__(self, master, on_close=None):
+    def __init__(self, master, user, on_close=None):
         super().__init__(master)
         self.configure(bg="#eaeaea")
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=1)
-        Sidebar(self, row=0, col=0, back=on_close)
-        Dashboard(self, row=0, col=1, rowspan=2)
+        dashboard_data = DashboardData(user)
+        Sidebar(self, row=0, col=0, back=on_close, dashboard_data=dashboard_data)
+        Dashboard(self, row=0, col=1, dashboard_data=dashboard_data, rowspan=2)
