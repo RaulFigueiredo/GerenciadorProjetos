@@ -12,3 +12,12 @@ __pycache__
 mock_list_project.py
 mock_page_main.py
 .env
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
