@@ -36,7 +36,7 @@ class IUser(ABC):
         remove_project: To be implemented to handle removing a project from the user.
         Various abstract property getters for accessing user's attributes.
     """
-    def __init__(self, name) -> None:
+    def __init__(self, name: str) -> None:
         self._name = name
         self._labels = List[IItem]
         self._projects = List[IItem]

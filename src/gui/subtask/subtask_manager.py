@@ -33,15 +33,17 @@ class SubtaskDisplayManager(BaseDisplayManager):
     Args:
         BaseDisplayManager (BaseDisplayManager): Base class for the display manager
     """
-    def __init__(self, home):
+    def __init__(self, home) -> None:
         """ Creates the subtask display manager.
 
         Args:
             home (object): home page
         """
         super().__init__(home)
+        self.item = None
+        self.parent = None
 
-    def open_page(self, item, parent):
+    def open_page(self, item: callable, parent: callable) -> None:
         if self.top_window and self.top_window.winfo_exists():
             self.top_window.destroy()
 
@@ -56,7 +58,7 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.resize_page()
 
-    def open_update_page(self,item):
+    def open_update_page(self,item:callable) -> None:
         if self.top_window and self.top_window.winfo_exists():
             self.top_window.destroy()
 
@@ -73,7 +75,7 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.resize_page()
 
-    def open_create_page(self, parent):
+    def open_create_page(self, parent) -> None:
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return

@@ -1,10 +1,31 @@
+"""
+Module Name: Module Name Here
+
+Description:
+This module contains classes and functions related to building a Tkinter
+graphical interface for a dashboard application.
+
+Classes:
+- GridFrame: Represents a grid-based frame for organizing elements.
+- GridLabel: Represents a labeled grid element.
+- GridDropdown: Represents a dropdown widget within a grid.
+- GridButton: Represents a button within a grid.
+- DashboardUtils: Provides utility functions for the dashboard.
+- DashboardPlots: Manages plots for the dashboard.
+- Dashboard: Constructs the main dashboard interface.
+- Sidebar: Represents the sidebar interface.
+- DashboardPage: Constructs the dashboard page.
+
+Dependencies:
+- tkinter: Library for GUI elements.
+- matplotlib.backends.backend_tkagg.FigureCanvasTkAgg: Used for embedding
+Matplotlib plots in Tkinter.
+- src.logic.dashboard.plot.Plot: Plotting functions for the dashboard.
+- src.logic.dashboard.dashboard_data.DashboardData: Data management for the dashboard.
+"""
+
 import tkinter as tk
 from tkinter import ttk
-
-"""
-This module provides a dialog interface for adding new labels
-It allows users to input a name and select a color for a new label in a graphical user interface.
-"""
 
 class AddLabelDialog:
     """
@@ -40,7 +61,8 @@ class AddLabelDialog:
         self.name_entry.pack(padx=10, pady=5)
 
         tk.Label(self.top, text="Cor da etiqueta:").pack(padx=10, pady=5)
-        self.color_combobox = ttk.Combobox(self.top, values=["azul", "verde", "vermelho"], state="readonly")
+        self.color_combobox = ttk.Combobox(self.top,
+                 values=["azul", "verde", "vermelho"], state="readonly")
         self.color_combobox.pack(padx=10, pady=5)
 
         self.confirm_button = tk.Button(self.top, text="Confirmar", command=self.on_confirm)
