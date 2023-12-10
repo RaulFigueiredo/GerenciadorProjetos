@@ -22,8 +22,9 @@ class TestProjectUpdatePage(unittest.TestCase):
         self.assertIsNotNone(self.update_page)
 
     def test_create_widgets(self):
-        expected_date_str = self.project.end_date.strftime('%m/%d/%y').lstrip('0').replace('/0','/')
-        self.assertEqual(self.update_page.date_field.get_value(), expected_date_str)
+        #expected_date_str = self.project.end_date.strftime('%m/%d/%y').lstrip('0').replace('/0','/')
+        self.assertEqual(self.update_page.date_field.get_value(), self.project.end_date)
+
 
         self.assertEqual(self.update_page.name_field.get_value(), self.project.name)
         self.assertEqual(self.update_page.label_combobox.get_value(), self.project.label)
@@ -33,7 +34,7 @@ class TestProjectUpdatePage(unittest.TestCase):
         expected_data = {
             "name": self.project.name,
             "label": self.project.label,
-            "end_date": self.project.end_date.strftime('%m/%d/%y').lstrip('0').replace('/0','/'),
+            "end_date": self.project.end_date,  # Sem formatação para a data
             "description": self.project.description
         }
         self.assertEqual(self.update_page.prepare_data(), expected_data)

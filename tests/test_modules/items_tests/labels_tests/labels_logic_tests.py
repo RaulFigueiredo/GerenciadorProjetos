@@ -7,8 +7,8 @@ along with interactions with a mocked user object to simulate system operations.
 import unittest
 from unittest.mock import Mock
 from src.logic.items.label import Label
-from src.gui.label_create import AddLabelDialog
-from src.gui.label_edit import EditLabelDialog
+from src.gui.labels.label_create import AddLabelDialog
+from src.gui.labels.label_edit import EditLabelDialog
 from unittest.mock import patch
 import tkinter as tk
 
