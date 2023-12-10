@@ -144,7 +144,7 @@ class Notification:
             for each_task in each_project.tasks:
                 task_due_date = each_task.end_date.date() if \
                       isinstance(each_task.end_date, datetime.datetime) else each_task.end_date
-                if task_due_date < today:
+                if task_due_date is not None and task_due_date < today:
                     self.add_due_date_task(each_task)
 
     def check_priority(self, task: IItem) -> None:
