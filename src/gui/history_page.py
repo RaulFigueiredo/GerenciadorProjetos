@@ -66,7 +66,7 @@ class HistoryManagerApp(tk.Frame):
                 project_label.grid(row=index, column=0, sticky="e", padx=10)
                 task_label.grid(row=index, column=1, sticky="w", padx=10)
                 data_label.grid(row=index, column=2)
-            else:
+            elif task.project.label is Label:
                 color = task.project.label.color
                 project_label = tk.Label(tasks_frame, text=task_info["key"]+": ",\
                      font=("Arial", 12), bg=color)
