@@ -7,12 +7,11 @@ from src.logic.items.project import Project
 from src.logic.items.task import Task
 from src.logic.items.subtask import Subtask
 from src.logic.items.label import Label
-
 from sqlalchemy.orm import sessionmaker
 
 db = Database()
 
-SessionLocal = sessionmaker(bind=db.engine)
+SessionLocal = sessionmaker(bind=db.engine) # pylint: disable=no-member
 
 def instance_user(db_user):
     """
@@ -50,16 +49,16 @@ def instance_user(db_user):
                                description=db_task.description)
             db_subtasks = db_task.subtasks
             for db_subtask in db_subtasks:
-                subtask = Subtask(task = task, 
-                                      name = db_subtask.name,
-                                      id_subtask = db_subtask.id_subtask,
-                                      status = db_subtask.status,
-                                      conclusion_date = db_subtask.conclusion_date)
+                Subtask(task = task,
+                        name = db_subtask.name,
+                        id_subtask = db_subtask.id_subtask,
+                        status = db_subtask.status,
+                        conclusion_date = db_subtask.conclusion_date)
     for db_label in db_labes:
-        label = Label(user = user,
-                      name = db_label.name,
-                      id_label = db_label.id_label,
-                      color = db_label.color)
+        Label(user = user,
+              name = db_label.name,
+              id_label = db_label.id_label,
+              color = db_label.color)
     return user
 
 class LoginLogic:
