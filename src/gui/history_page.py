@@ -53,7 +53,7 @@ class HistoryManagerApp(tk.Frame):
 
         completed_tasks = self.history.tasks_completed()
 
-        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red"}
+        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red", "amarelo": "yellow", "laranja": "orange"}
 
         # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
