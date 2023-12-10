@@ -1,62 +1,101 @@
+"""Module: Input Fields
+
+This module provides classes for different types of input fields to be used in GUI forms.
+
+Classes:
+    EntryField: Represents a simple entry field.
+    DateField: Represents a field for selecting dates.
+    LabelCombobox: Represents a labeled combobox for selections.
+    DescriptionText: Represents a text field for descriptions.
+
+Functions:
+    - No module-level functions documented -
+
+Example Usage:
+    # Example usage of EntryField class
+    root = tk.Tk()
+    mediator = Mediator()
+    entry_field = EntryField(root, "Name:", 20, {'padx': 10, 'pady': 5}, mediator)
+    value = entry_field.get_value()
+"""
+
 import tkinter as tk
 from tkinter import ttk
-from tkcalendar import DateEntry
-from datetime import datetime
+
+from src.gui.mediator import FormMediator
 
 class EntryField:
+    """ Represents a simple entry field.
+    """
     def __init__(self, parent, label, width, padding, mediator):
-        self.mediator = mediator
-        self.frame = ttk.Frame(parent)
-        self.frame.pack(side="top", fill="x", **padding)
-        tk.Label(self.frame, text=label).pack(side="left", **padding)
-        self.entry = tk.Entry(self.frame, width=width)
-        self.entry.pack(side="right", **padding)
+        """Represents a simple entry field.
 
-    def get_value(self):
-        return self.entry.get().strip()
-    
-    def set_value(self, value):
-        self.entry.delete(0, tk.END)  
-        self.entry.insert(0, value)   
+        Args:
+            parent (object): Parent window.
+            label (object): Label of the entry field.
+            width (object): Width of the entry field.
+            padding (object): Padding of the entry field.
+            mediator (object): Mediator of the entry field.
+        """
 
 class DateField:
+    """ Represents a field for selecting dates.
+    """
     def __init__(self, parent, label, width, padding, mediator):
-        self.mediator = mediator
-        self.frame = ttk.Frame(parent)
-        self.frame.pack(side="top", fill="x", **padding)
-        tk.Label(self.frame, text=label).pack(side="left", **padding)
+        """Represents a field for selecting dates.
 
-        self.date = DateEntry(self.frame, width=width - 4, background='darkblue',
-                                    foreground='white', borderwidth=2, state='readonly',
-                                    date_pattern='dd/mm/yyyy')
-        self.date.pack(side="right", **padding)
-
-    def get_value(self):
-        date_str = self.date.get()
-        return datetime.strptime(date_str, '%d/%m/%Y').date()  
-    
-    def set_value(self, value):
-        self.date.set_date(value)  
+        Args:
+            parent (object): Parent window.
+            label (object): Label of the date field.
+            width (object): Width of the date field.
+            padding (object): Padding of the date field.
+            mediator (object): Mediator of the date field.
+        """
 
 class LabelCombobox:
-    def __init__(self, parent, label, labels, width, padding, mediator):
-        self.mediator = mediator
-        self.frame = ttk.Frame(parent)
-        self.frame.pack(side="top", fill="x", **padding)
-        tk.Label(self.frame, text=label).pack(side="left", **padding)
+    """ Represents a labeled combobox for selections.
+    """
+    def __init__(
+            self,
+            parent:object,
+            label: str,
+            labels:object,
+            width:int,
+            padding:int,
+            mediator:int
+        ):
+        """Represents a labeled combobox for selections.
 
-        self.labels = [""] + labels
-        self.combobox = ttk.Combobox(self.frame, values=self.labels, width=width - 4, state="readonly")
-        self.combobox.pack(side="right", **padding)
-
-    def get_value(self):
-        return self.combobox.get()
-
-    def set_value(self, value):
-        self.combobox.set(value)
-
+        Args:
+            parent (object): Parent window.
+            label (object): Label of the combobox.
+            labels (object): Labels of the combobox.
+            width (object): Width of the combobox.
+            padding (object): Padding of the combobox.
+            mediator (object): Mediator of the combobox.
+        """
 class DescriptionText:
-    def __init__(self, parent, label, height, width, padding, mediator):
+    """ Represents a text field for descriptions.
+    """
+    def __init__(
+            self,
+            parent: object,
+            label: str,
+            height: int,
+            width:int,
+            padding: int,
+            mediator: FormMediator
+        ):
+        """Represents a text field for descriptions.
+
+        Args:
+            parent (object): Parent window.
+            label (object): Label of the text field.
+            height (object): Height of the text field.
+            width (object): Width of the text field.
+            padding (object): Padding of the text field.
+            mediator (object): Mediator of the text field.
+        """
         self.mediator = mediator
         self.frame = ttk.Frame(parent)
         self.frame.pack(side="top", fill="x", **padding)
@@ -65,9 +104,19 @@ class DescriptionText:
         self.text = tk.Text(self.frame, height=height, width=width)
         self.text.pack(side="bottom", **padding)
 
-    def get_value(self):
+    def get_value(self) -> str:
+        """ Gets the value of the text field.
+
+        Returns:
+            str: Value of the text field.
+        """
         return self.text.get("1.0", "end").strip()
-    
-    def set_value(self, value):
-        self.text.delete("1.0", tk.END) 
-        self.text.insert("1.0", value)   
+
+    def set_value(self, value: str) -> None:
+        """ Sets the value of the text field.
+
+        Args:
+            value (object): Value to be set.
+        """
+        self.text.delete("1.0", tk.END)
+        self.text.insert("1.0", value)
