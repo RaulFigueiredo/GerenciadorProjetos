@@ -26,7 +26,16 @@ class AddLabelDialog:
         self.top = tk.Toplevel(parent)
         self.top.title("Adicionar Etiqueta")
 
-        tk.Label(self.top, text="Nome da etiqueta:").pack(padx=10, pady=5)
+        self.top.geometry("300x300")
+
+        screen_width = self.top.winfo_screenwidth()
+        screen_height = self.top.winfo_screenheight()
+        x = (screen_width - 300) // 2
+        y = (screen_height - 150) // 2
+
+        self.top.geometry(f"+{x}+{y}")
+
+        tk.Label(self.top, text="Nome da etiqueta:").pack(padx=10, pady=(15, 5))
         self.name_entry = tk.Entry(self.top)
         self.name_entry.pack(padx=10, pady=5)
 
