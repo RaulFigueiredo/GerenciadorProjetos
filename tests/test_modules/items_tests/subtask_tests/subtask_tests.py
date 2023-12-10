@@ -34,7 +34,7 @@ class TestSubtask(unittest.TestCase):
         self.session = TestSubtask.SessionLocal()
         self.create_test_subtask()
 
-    def create_test_subtask(self):
+    def create_test_items(self):
         db_test_task = TaskORM(name='Test Task', id_project=self.test_project.id_project, status=False, creation_date=date(2021, 1, 1)) 
         self.session.add(db_test_task)
         self.session.commit()
