@@ -162,9 +162,11 @@ class DashboardData:
         Returns:
             dict: Every day of the last month with the number of tasks created on that day
         """
-        tasks = [task for task in self.projects
-                 if task.creation_date is not None
-                 and task.end_date is not None]
+        tasks = []
+        for project in self.projects:
+            for task in project.tasks:
+                if task.creation_date is not None and task.end_date is not None:
+                    tasks.append(task)
         days_diffs = list(map(lambda x: (x.end_date - x.creation_date).days, tasks))
         data = {'até 1': 0, '1 a 2': 0, '2 a 3': 0, '3+': 0}
         for days_diff in days_diffs:
