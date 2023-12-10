@@ -5,8 +5,8 @@ It includes the CalendarPage class for displaying the calendar with tasks
 
 from datetime import date
 import tkinter as tk
-from src import CalendarDisplay, TaskDetails, MonthView, MonthYearNavigation
 from typing import Callable as function
+from src import CalendarDisplay, TaskDetails, MonthView, MonthYearNavigation
 from src.logic.users.user import User
 
 class CalendarPage:
@@ -20,12 +20,14 @@ class CalendarPage:
         interface (CalendarDisplay): The main calendar display component.
         tasks_dict (dict): Dictionary mapping dates to tasks and their details.
         task_details (TaskDetails): The component to display details of tasks.
-        month_year_navigation (MonthYearNavigation): Component for navigating through months and years.
+        month_year_navigation (MonthYearNavigation): Component for navigating through
+    months and years.
         month_view (MonthView): The view displaying the calendar for a specific month.
 
     Methods:
         __init__(self, master=None, on_close: Callable = None): Constructor of the class.
-        update_calendar(self, month: int, year: int): Updates the calendar view for a given month and year.
+        update_calendar(self, month: int, year: int): Updates the calendar view for 
+a given month and year.
         run(self): Placeholder method for future functionality.
     """
     def __init__(self, user: User , master: tk.Tk = None, on_close: function = None) -> None:
@@ -48,7 +50,6 @@ class CalendarPage:
             self.interface.close_button
         )
 
-       
         self.task_details.close_details()
 
 
@@ -60,8 +61,12 @@ class CalendarPage:
             self.update_calendar
         )
         self.update_calendar(date.today().month, date.today().year)
-    def create_task_dict(self):
-        # complete the function
+    def create_task_dict(self) -> dict:
+        """ Creates a dictionary mapping dates to tasks and their details.
+
+        Returns:
+            dict: A dictionary mapping dates to tasks and their details.
+        """
         tasks_dict = {}
 
         for project in self.user.projects:
@@ -77,11 +82,11 @@ class CalendarPage:
                 name = task.name
                 description = task.description
                 if task.end_date is not None:
-                    date = task.end_date.strftime("%Y-%m-%d")
+                    date = task.end_date.strftime("%d/%m/%Y")
                 else:
                     date = None
                 project_name = project.name
-                if date in tasks_dict.keys():
+                if date in tasks_dict:
                     tasks_dict[date].append((name, color, label, description, project_name))
                 else:
                     tasks_dict[date] = [(name, color, label, description, project_name)]

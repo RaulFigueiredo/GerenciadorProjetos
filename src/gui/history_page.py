@@ -79,7 +79,6 @@ class HistoryManagerApp(tk.Frame):
                 task_label.grid(row=index, column=1, sticky="w", padx=10)
                 data_label.grid(row=index, column=2)
 
-
     def get_task_info(self, task: callable) -> dict:
         """ This method will be used to get the task information.
 
