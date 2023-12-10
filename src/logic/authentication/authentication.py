@@ -27,15 +27,33 @@ def instance_user(db_user):
     user = User(db_user.name, id_user=db_user.id_user)
     db_projects = db_user.projects
     db_labes = db_user.labels
+    list_labels = []
+
+    for db_label in db_labes:
+        label = Label(  user = user,
+                        name = db_label.name,
+                        id_label = db_label.id_label,
+                        color = db_label.color)
+        list_labels.append(label)
+    
+        
     for db_project in db_projects:
+        label = None
+        for each_label in list_labels:
+            if each_label.id_label == db_project.id_label:
+                 label = each_label
+                 break
+        
         project = Project(user = user,
                               name=db_project.name,
                               id_project = db_project.id_project,
                               id_label = db_project.id_label,
+                              label = label,
                               end_date=db_project.end_date,
                               conclusion_date=db_project.conclusion_date,
                               status=db_project.status,       
                               description=db_project.description)
+        
         db_tasks = db_project.tasks
         for db_task in db_tasks:
             task = Task(project = project,
@@ -54,11 +72,7 @@ def instance_user(db_user):
                         id_subtask = db_subtask.id_subtask,
                         status = db_subtask.status,
                         conclusion_date = db_subtask.conclusion_date)
-    for db_label in db_labes:
-        Label(user = user,
-              name = db_label.name,
-              id_label = db_label.id_label,
-              color = db_label.color)
+
     return user
 
 class LoginLogic:

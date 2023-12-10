@@ -35,10 +35,6 @@ class ProjectPage(BasePage):
     def create_widgets(self) -> None:
         """ Creates the widgets.
         """
-        # pensar se deixo assim memo, não sei se gostei
-        # as outras paginas ficaram pequenas, ai ficava suave
-        # deixar tudo aq dentro, nessa ficou estranho
-        # Pensar nisso dps
         self.info_box()
 
         self.description_box()
@@ -72,15 +68,14 @@ class ProjectPage(BasePage):
         info_frame.grid(row=1, column=0, sticky="ew", padx=10)
         info_frame.grid_columnconfigure(0, weight=1)
 
+        label_value = self.item.label.name if self.item.label else "Sem etiqueta"
+        
         labels = ["Etiqueta:", "Data de Início:", "Data de previsao de Termino:",\
                   "Status:", "Data de Conclusao:"]
-        values = [self.item.label, str(self.item.creation_date), self.item.end_date,\
+        values = [label_value, str(self.item.creation_date), self.item.end_date,\
                   self.item.status, str(self.item.conclusion_date)  ]
 
         for i, (label, value) in enumerate(zip(labels, values)):
-            if label == "Etiqueta:" and not value:
-                value = "Sem etiqueta"
-
             if label == "Status:" and value:
                 value = "Concluído"
 

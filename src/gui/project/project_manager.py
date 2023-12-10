@@ -70,7 +70,6 @@ class ProjectDisplayManager(BaseDisplayManager):
 
 
     def open_create_page(self):
-        # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
@@ -79,13 +78,10 @@ class ProjectDisplayManager(BaseDisplayManager):
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Criar Novo Projeto")
 
-        labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        parent = self.parent
         create_project_page = ProjectCreatePage(master=self.top_window,
                                                 mediator=FormMediator(self.submit_item),
-                                                parent= parent,
-                                                labels=labels_mock)
+                                                parent= self.parent)
         create_project_page.pack(fill='both', expand=True)
 
         self.resize_page()
@@ -104,14 +100,12 @@ class ProjectDisplayManager(BaseDisplayManager):
         self.top_window.title("Editar Projeto")
 
         self.item  = item
-        labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
         update_project_page = ProjectUpdatePage(project=self.item,\
                                                 manager=self,\
                                                 master=self.top_window,\
                                                 parent = self.parent,\
-                                                mediator=FormMediator(self.update_item),
-                                                labels=labels_mock)
+                                                mediator=FormMediator(self.update_item))
         update_project_page.pack(fill='both', expand=True)
 
         self.resize_page()
