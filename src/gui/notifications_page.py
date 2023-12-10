@@ -25,7 +25,7 @@ class NotificationPage(tk.Frame):
         user (User): An instance of the User class.
         controller (Controller): An instance of the controller class.
     """
-    def __init__(self, master, user, controler):
+    def __init__(self, master: tk, user: callable, controler:tk):
         """ Initializes the NotificationPage class.
 
         Args:
@@ -42,7 +42,7 @@ class NotificationPage(tk.Frame):
         self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.master.title("Notificações")
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
         """ This method will be used to create the widgets.
         """
         notfi = Notification(self.user)
@@ -99,7 +99,7 @@ class NotificationPage(tk.Frame):
         back_button = ttk.Button(self, text="Voltar", command=self.on_close)
         back_button.grid(row=5, column=0, sticky="ew", padx=10, pady=10)
 
-    def on_close(self):
+    def on_close(self) -> None:
         """ This method will be used to close the window.
         """
         self.master.destroy()
