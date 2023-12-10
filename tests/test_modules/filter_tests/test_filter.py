@@ -64,7 +64,7 @@ class TestFilterMethods(unittest.TestCase):
         self.assertIsInstance(result, list)
         self.assertTrue(all(list(map(lambda x: x.label.name == 'Faculdade', result))))
 
-    def filter_tasks_by_creation_date(self):
+    def test_filter_tasks_by_creation_date(self):
         lower_limit = date(2023, 2, 15)
         upper_limit = date(2023, 3, 15)
         result = self.filter.filter_tasks_by_creation_date(self.user.projects, lower_limit, upper_limit)
@@ -75,7 +75,7 @@ class TestFilterMethods(unittest.TestCase):
                                    and task.creation_date <= upper_limit)
         self.assertTrue(all(inside_interval))
 
-    def filter_tasks_by_end_date(self):
+    def test_filter_tasks_by_end_date(self):
         lower_limit = date(2023, 2, 15)
         upper_limit = date(2023, 3, 15)
         result = self.filter.filter_tasks_by_end_date(self.user.projects, lower_limit, upper_limit)
@@ -86,7 +86,7 @@ class TestFilterMethods(unittest.TestCase):
                                    and task.end_date <= upper_limit)
         self.assertTrue(all(inside_interval))
 
-    def filter_tasks_by_conclusion_date(self):
+    def test_filter_tasks_by_conclusion_date(self):
         lower_limit = date(2023, 2, 15)
         upper_limit = date(2023, 3, 15)
         result = self.filter.filter_tasks_by_conclusion_date(self.user.projects, lower_limit, upper_limit)
@@ -96,6 +96,10 @@ class TestFilterMethods(unittest.TestCase):
             inside_interval.append(task.conclusion_date >= lower_limit
                                    and task.conclusion_date <= upper_limit)
         self.assertTrue(all(inside_interval))
+
+    def test_filter_tasks_by_status(self):
+        result = self.filter.filter_tasks_by_status(self.user.projects, False)
+        self.assertTrue(all(list(map(lambda x: not x.status, result))))
 
 
 if __name__ == '__main__':

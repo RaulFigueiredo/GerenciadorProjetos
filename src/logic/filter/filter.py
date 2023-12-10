@@ -90,3 +90,11 @@ class Filter:
             if task.conclusion_date >= lower_limit and task.conclusion_date <= upper_limit:
                 tasks.append(task)
         return tasks
+
+    def filter_tasks_by_status(self, projects, status):
+        tasks = []
+        for project in projects:
+            for task in project.tasks:
+                if task.status == status:
+                    tasks.append(task)
+        return tasks
