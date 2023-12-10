@@ -7,6 +7,7 @@ from datetime import date
 import tkinter as tk
 from src import CalendarDisplay, TaskDetails, MonthView, MonthYearNavigation
 from typing import Callable as function
+from src.logic.users.user import User
 
 class CalendarPage:
     """
@@ -27,7 +28,7 @@ class CalendarPage:
         update_calendar(self, month: int, year: int): Updates the calendar view for a given month and year.
         run(self): Placeholder method for future functionality.
     """
-    def __init__(self, master: tk.Tk = None, on_close: function = None) -> None:
+    def __init__(self, user: User , master: tk.Tk = None, on_close: function = None) -> None:
         """
         Initializes the CalendarPage with a given master widget and a callback for closure.
 
@@ -36,20 +37,9 @@ class CalendarPage:
             on_close (Callable): Function to be called when the calendar page is closed.
         """
         self.interface = CalendarDisplay(master, on_close=on_close)
+        self.user = user
+        self.tasks_dict = self.create_task_dict()
 
-        self.tasks_dict = {
-            '2023-08-25': [('Atualizar dados', 'lightblue', 'TAG112', 'Descrição 3', 'Projeto AP')],  
-            '2023-11-05': [('limpar tapete da sala', 'black', 'TAG1', 'Descrição 4', 'Projeto BQ')],   
-            '2023-10-06': [('jogar futebol com os amigos', 'black', 'TAG1', 'Descrição 2', 'Projeto BE')],   
-            '2023-10-05': [('treinar perna', 'purple', 'TAG15', 'Descrição 21', 'Projto DA'), 
-            ('atividade de ciencia de redes', 'blue', 'TAG1432', 'Desação 24', 'Projeto AC'),
-            ('vida bl', 'green', 'TAG1754', 'Descrição 42', 'Projeto A'), ('Limpar cozinha', 'red', 'TAG34141',
-            'Descrição 512', 'Projeto A'),
-            ('Tarefa de casa', 'red', 'TAG1512', 'Descrição 512', 'ProjA')],
-            '2023-11-22': [('crud etiquetas', 'red', 'TAG1', 'Descrição 213', 'Projeto AZ'),
-                            ('atualizxa excel2', 'blue', 'TAG15422', 'Descrição 214', 'Projeto BC')],
-            '2023-11-28': [('Tarefa xisquedele', 'green', 'TAG313', 'Descrição 2513', 'Projeto CG')]
-        }
 
         self.task_details = TaskDetails(
             self.interface.details_frame,
@@ -70,10 +60,36 @@ class CalendarPage:
             self.update_calendar
         )
         self.update_calendar(date.today().month, date.today().year)
+    def create_task_dict(self):
+        # complete the function
+        tasks_dict = {}
 
+        for project in self.user.projects:
+            if project.label is None:
+                label = ''
+                color = 'gray'
+            else:
+                print('color: ', project.label.color)
+                label = project.label.name
+                color = project.label.color
+
+            for task in project.tasks:
+                name = task.name
+                description = task.description
+                if task.end_date is not None:
+                    date = task.end_date.strftime("%Y-%m-%d")
+                else:
+                    date = None
+                project_name = project.name
+                if date in tasks_dict.keys():
+                    tasks_dict[date].append((name, color, label, description, project_name))
+                else:
+                    tasks_dict[date] = [(name, color, label, description, project_name)]
+        return tasks_dict
     def update_calendar(self, month: int, year: int) -> None:
         """Updates the calendar view for a given month and year."""
-        month_year_tuple = (month, year)  
+        self.tasks_dict = self.create_task_dict()
+        month_year_tuple = (month, year)
         self.month_view = MonthView(self.interface.calendar_frame,
                                     self.tasks_dict, self.task_details, month_year_tuple)
 

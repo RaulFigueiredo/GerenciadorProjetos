@@ -224,8 +224,7 @@ class HomePage(tk.Frame):
 
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
-        if not self.calendar_page:
-            self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page)
+        self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page, user = self.user)
         self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
 
     def show_dashboard_page(self):
