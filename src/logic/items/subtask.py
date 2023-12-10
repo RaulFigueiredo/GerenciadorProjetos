@@ -95,7 +95,7 @@ class Subtask(IItem):
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
         self.save_to_memento()
-        
+
         with self.SessionLocal() as session:
             subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_update:
@@ -109,7 +109,8 @@ class Subtask(IItem):
                 session.commit()
 
     def conclusion(self) -> None:
-        """Mark the subtask as completed."""
+        self.save_to_memento()
+
         self._status = True
         self._conclusion_date = date.today()
         with self.SessionLocal() as session:
@@ -121,6 +122,8 @@ class Subtask(IItem):
                 
     def unconclusion(self) -> None:
         """Mark the subtask as not completed."""
+        self.save_to_memento()
+
         self._status = False
         self._conclusion_date = None
         with self.SessionLocal() as session:
@@ -134,7 +137,6 @@ class Subtask(IItem):
         memento = SubtaskMemento(self._name, self._status, self._conclusion_date)
         self._mementos.append(memento)
 
-    # funçao para ver se existe algum memento
     def has_memento(self):
         return bool(len(self._mementos) > 0)
     
@@ -152,7 +154,7 @@ class Subtask(IItem):
                     subtask_to_update.conclusion_date = self._conclusion_date
                     session.commit()
         else:
-            print("No more states to revert to.")
+            print("Sem mementos para restaurar")
 
     @property
     def status(self) -> bool:

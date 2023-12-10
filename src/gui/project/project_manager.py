@@ -16,8 +16,6 @@ class ProjectDisplayManager(BaseDisplayManager):
     def open_page(self, item, parent=None):
         # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
-            if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
-                return
             self.top_window.destroy()
 
         # conf window
