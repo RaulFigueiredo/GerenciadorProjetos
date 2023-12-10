@@ -85,8 +85,10 @@ class Project(IItem):
 
         if not self._id_project:
             self.save_to_db()
+            
 
     def save_to_db(self):
+        print(self.label)
         with self.SessionLocal() as session:
             new_project_orm = ProjectORM(id_user=self._user.id_user,
                                         id_label = self._label.id_label if self.label else None,
@@ -141,9 +143,14 @@ class Project(IItem):
         if user or creation_date or tasks:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
         
+        label = kwargs.get("label")
+        print(label)
+        self._id_label = label.id_label if label else None
         self.save_to_memento()
         with self.SessionLocal() as session:
             project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            if label:
+                project_to_update.id_label = label.id_label
             if project_to_update:
                 for key, value in kwargs.items():
                     attr_name = f"_{key}"

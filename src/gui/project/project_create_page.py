@@ -29,11 +29,10 @@ class ProjectCreatePage(BaseCreatePage):
     def __init__(self,
                 master: object,
                 mediator: object,
-                parent: object,
-                labels: object
+                parent: object
             ):
         super().__init__(master,mediator, parent)
-        self.labels = labels
+        self.labels = self.parent.labels
         self.create_widgets()
 
     def create_widgets(self) -> None:
@@ -45,9 +44,10 @@ class ProjectCreatePage(BaseCreatePage):
         title_label = tk.Label(self, text="Novo Projeto", font=("Arial", 20))
         title_label.pack(side="top", fill="x", **padding)
 
+        label_names = [label.name for label in self.labels]
         self.name_field = EntryField(self, "Nome:", entry_width, padding, self.mediator)
         self.label_combobox = LabelCombobox(self, "Etiqueta:", \
-                         self.labels, entry_width, padding, self.mediator)
+                         label_names, entry_width, padding, self.mediator)
         self.date_field = DateField(self, "Data de Entrega:", entry_width, padding, self.mediator)
         self.description_text = DescriptionText(self, "Descrição:", 6,\
                          entry_width, padding, self.mediator)
@@ -60,11 +60,17 @@ class ProjectCreatePage(BaseCreatePage):
         Returns:
             dict: The data to be sent to the server
         """
+        label = None
+        selected_name = self.label_combobox.get_value()
+        for each_label in self.labels:
+            if each_label.name == selected_name:
+                label = each_label
+                break
         data = {
             "item_type": "project",
             "user": self.parent,
             "name": self.name_field.get_value(),
-            "label": self.label_combobox.get_value(),
+            "label": label,
             "end_date": self.date_field.get_value(),
             "description": self.description_text.get_value()
         }
