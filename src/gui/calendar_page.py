@@ -61,6 +61,7 @@ a given month and year.
             self.update_calendar
         )
         self.update_calendar(date.today().month, date.today().year)
+
     def create_task_dict(self) -> dict:
         """ Creates a dictionary mapping dates to tasks and their details.
 
@@ -89,8 +90,9 @@ a given month and year.
                     tasks_dict[task_date].append((name, color, label, description, project_name))
                 else:
                     tasks_dict[task_date] = [(name, color, label, description, project_name)]
-        print(tasks_dict)
+
         return tasks_dict
+
     def update_calendar(self, month: int, year: int) -> None:
         """Updates the calendar view for a given month and year."""
         self.tasks_dict = self.create_task_dict()

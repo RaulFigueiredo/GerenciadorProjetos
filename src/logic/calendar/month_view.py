@@ -74,7 +74,7 @@ class MonthView:
 
         This method adds labels for Sunday through Saturday at the top of the calendar view.
         """
-        day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        day_names = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
         for i, name in enumerate(day_names):
             label = tk.Label(self.calendar_frame, text=name, fg="black")
             label.grid(column=i, row=0, sticky='nsew')

@@ -68,8 +68,8 @@ class MonthYearNavigation:
         This method updates the label_month_year with the new month and year, 
         and calls the update_callback function to update the calendar display.
         """
-        months = ["January", "February", "March", "April", "May", "June",
-                  "July", "August", "September", "October", "November", "December"]
+        months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
         written_month = months[month - 1]
         self.label_month_year.config(text=f"{written_month} {year}")
         self.update_callback(month, year)
