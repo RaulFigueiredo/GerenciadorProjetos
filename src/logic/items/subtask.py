@@ -22,6 +22,7 @@ from datetime import date
 from src.logic.orms.orm import SubtaskORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 
 class Subtask(IItem):
@@ -41,7 +42,7 @@ class Subtask(IItem):
     """
 
     def __init__(self, task: IItem ,name: str, id_subtask: int = None,
-                 status: bool = False, conclusion_date:date = None) -> None:
+                 status: bool = False, conclusion_date:date = None, session: Session = None) -> None:
         """
         Initialize a Subtask instance.
 
@@ -58,14 +59,17 @@ class Subtask(IItem):
 
         self._task.add_subtask(self)
 
-        self.db = Database()
-        self.SessionLocal = sessionmaker(bind=self.db.engine)
+        if session is not None:
+            self.SessionLocal = session
+        else:
+            self.db = Database()
+            self.SessionLocal = sessionmaker(bind=self.db.engine)()
 
         if self._id_subtask == None:
             self.save_to_db()
 
     def save_to_db(self):
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             new_subtask_orm = SubtaskORM(id_task=self._task.id_task,
                                          name = self._name,
                                          status = self._status)
@@ -76,7 +80,7 @@ class Subtask(IItem):
     def delete(self) -> None:
         """Remove the subtask from its parent task."""
         self._task.remove_subtask(self)
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             subtask_to_delete = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_delete:
                 session.delete(subtask_to_delete)
@@ -108,7 +112,7 @@ class Subtask(IItem):
             raise ItemNameBlank(erro_str)
         self.save_to_memento()
 
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_update:
                 for key, value in kwargs.items():
@@ -125,7 +129,7 @@ class Subtask(IItem):
 
         self._status = True
         self._conclusion_date = date.today()
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_update:
                 subtask_to_update.status = self._status
@@ -138,7 +142,7 @@ class Subtask(IItem):
 
         self._status = False
         self._conclusion_date = None
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_update:
                 subtask_to_update.status = self._status
@@ -158,7 +162,7 @@ class Subtask(IItem):
             self._name = name
             self._status = status
             self._conclusion_date = conclusion_date
-            with self.SessionLocal() as session:
+            with self.SessionLocal as session:
                 subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
                 if subtask_to_update:
                     subtask_to_update.name = self._name
@@ -186,3 +190,7 @@ class Subtask(IItem):
     @property
     def conclusion_date(self) -> date:
         return self._conclusion_date
+    
+    @property
+    def id_subtask(self) -> int:
+        return self._id_subtask

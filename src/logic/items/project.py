@@ -27,6 +27,7 @@ from src.logic.items.project_memento import ProjectMemento
 from src.logic.orms.orm import ProjectORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 class Project(IItem):
     """
@@ -56,7 +57,8 @@ class Project(IItem):
 
     def __init__(self, user: IUser ,name: str, id_project: int = None, label: IItem = None,
                  end_date: date = None, description: str = None, conclusion_date: date = None,
-                 status: bool = False, creation_date: date = None, id_label: int = None) -> None:
+                 status: bool = False, creation_date: date = None, id_label: int = None,
+                 session:Session = None) -> None:
         """
         Initialize a new Project object with given parameters.
 
@@ -82,8 +84,11 @@ class Project(IItem):
         self._mementos = []
         self._user.add_project(self)
 
-        self.db = Database()
-        self.SessionLocal = sessionmaker(bind=self.db.engine)
+        if session is not None:
+            self.SessionLocal = session
+        else:
+            self.db = Database()
+            self.SessionLocal = sessionmaker(bind=self.db.engine)()
 
         if not self._id_project:
             self.save_to_db()
@@ -91,7 +96,7 @@ class Project(IItem):
 
     def save_to_db(self):
         print(self.label)
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             new_project_orm = ProjectORM(id_user=self._user.id_user,
                                         id_label = self._label.id_label if self.label else None,
                                         name = self._name,
@@ -115,7 +120,7 @@ class Project(IItem):
             task.delete()
 
         self._user.remove_project(self)
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             project_to_delete = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
             if project_to_delete:
                 session.delete(project_to_delete)
@@ -159,7 +164,7 @@ class Project(IItem):
         label = kwargs.get("label")
         self._id_label = label.id_label if label else None
         self.save_to_memento()
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
             if label:
                 project_to_update.id_label = label.id_label
@@ -199,7 +204,7 @@ class Project(IItem):
         self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
             if project_to_update:
                 project_to_update.status = self._status
@@ -213,7 +218,7 @@ class Project(IItem):
         self.save_to_memento()
         self._status = False
         self._conclusion_date = None
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
             if project_to_update:
                 project_to_update.status = self._status
@@ -242,7 +247,7 @@ class Project(IItem):
             self._name, self._label, self._end_date, \
             self._description, self._status, self._conclusion_date = state
 
-            with self.SessionLocal() as session:
+            with self.SessionLocal as session:
                 project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
                 if project_to_update:
                     project_to_update.name = self._name
