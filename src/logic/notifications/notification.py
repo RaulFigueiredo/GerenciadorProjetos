@@ -1,32 +1,39 @@
 """
-    This module contains the Notification class responsible for managing and notifying
+Module Name: Notification Manager
+
+Description:
+This module contains the Notification class responsible for managing and notifying
 users about various task-related events.
 
 - The Notification class is initialized with a User object to handle notifications
-for the associated user.
+  for the associated user.
 
 - Three sets - 'urgent_tasks', 'notification_date_tasks', and 'due_date_tasks'
-(manage tasks categorized by urgency, notification dates, and due dates, respectively).
+  (manage tasks categorized by urgency, notification dates, and due dates, 
+  respectively).
 
 Methods:
-    - check_notification_date(): Checks for tasks with notification dates set for the current
-day and adds them to notification_date_tasks.
-    - check_due_date(): Manages the process of checking tasks due today, tomorrow, or overdue
-and categorizes them accordingly.
-    - check_tomorrows_due_date(today): Handles tasks due the next day and performs specific actions,
-such as checking priority.
-    - check_todays_due_date(today): Identifies tasks due today and adds them to due_date_tasks.
-    - check_passed_due_date(today): Identifies tasks overdue before the current day and adds
-them to due_date_tasks.
-    - check_priority(task): Checks if a task has high priority and adds it to the urgent_tasks set.
-    - add_notification_date_task(task): Adds tasks with notification dates to
-notification_date_tasks based on exclusion criteria.
-    - add_due_date_task(task): Adds tasks with due dates to due_date_tasks based on exclusion
-criteria.
-    - add_urgent_task(task): Adds urgent tasks to urgent_tasks based on exclusion criteria.
+- check_notification_date(): Checks for tasks with notification dates set for the 
+  current day and adds them to notification_date_tasks.
+- check_due_date(): Manages the process of checking tasks due today, tomorrow, or 
+  overdue and categorizes them accordingly.
+- check_tomorrows_due_date(today): Handles tasks due the next day and performs 
+  specific actions, such as checking priority.
+- check_todays_due_date(today): Identifies tasks due today and adds them to 
+  due_date_tasks.
+- check_passed_due_date(today): Identifies tasks overdue before the current day 
+  and adds them to due_date_tasks.
+- check_priority(task): Checks if a task has high priority and adds it to the 
+  urgent_tasks set.
+- add_notification_date_task(task): Adds tasks with notification dates to 
+  notification_date_tasks based on exclusion criteria.
+- add_due_date_task(task): Adds tasks with due dates to due_date_tasks based on 
+  exclusion criteria.
+- add_urgent_task(task): Adds urgent tasks to urgent_tasks based on exclusion 
+  criteria.
 
-    The methods handle various task-related conditions, manage task categorization, and ensure
-tasks are added to the respective sets based on specific criteria.
+The methods handle various task-related conditions, manage task categorization, 
+and ensure tasks are added to the respective sets based on specific criteria.
 """
 import datetime
 from src.logic.users.user import User
