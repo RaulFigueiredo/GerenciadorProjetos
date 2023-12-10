@@ -42,15 +42,8 @@ class LabelManager(tk.Toplevel):
         """
         Creates the widgets for this frame.
         """
-        self.style = ttk.Style()
-        self.style.configure('TButton', font=('Arial', 10), padding=5)
-        self.style.configure('TLabel', font=('Arial', 10), padding=5)
-
-        user_labels = self.user.labels
-
-        # for label in user_labels:
-        #     print(label.name, label.color)
-        #     ItemFactory.create_item(item_type='label', user=self.user, name=label.name, color=label.color)
+        self.button_style = ttk.Style()
+        self.button_style.configure('LabelManager.TButton', font=('Arial', 10), padding=5)
 
         main_frame = ttk.Frame(self, padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True)
@@ -58,13 +51,13 @@ class LabelManager(tk.Toplevel):
         self.label_list = tk.Listbox(main_frame, height=10, width=50)
         self.label_list.grid(row=0, column=0, columnspan=3, padx=10, pady=10, sticky='ew')
 
-        self.add_button = ttk.Button(main_frame, text="Add Label", command=self.add_label)
+        self.add_button = ttk.Button(main_frame, text="Add Label", style='LabelManager.TButton', command=self.add_label)
         self.add_button.grid(row=1, column=0, padx=5, pady=5, sticky='ew')
 
-        self.edit_button = ttk.Button(main_frame, text="Edit Label", command=self.edit_label)
+        self.edit_button = ttk.Button(main_frame, text="Edit Label", style='LabelManager.TButton', command=self.edit_label)
         self.edit_button.grid(row=2, column=0, padx=5, pady=5, sticky='ew')
 
-        self.remove_button = ttk.Button(main_frame, text="Remove Label", command=self.remove_label)
+        self.remove_button = ttk.Button(main_frame, text="Remove Label", style='LabelManager.TButton', command=self.remove_label)
         self.remove_button.grid(row=3, column=0, padx=5, pady=5, sticky='ew')
 
         self.update_label_list()
@@ -241,37 +234,3 @@ class LabelManager(tk.Toplevel):
         for label in self.user.labels:
             label_text = f"{label.name} (Color: {label.color})"
             self.label_list.insert(tk.END, label_text)
-
-# class StartPage(ttk.Frame):
-#     def __init__(self, parent, controller):
-#         super().__init__(parent)
-#         self.controller = controller
-
-        
-#         self.go_to_label_page_button = ttk.Button(self, text="Gerenciar Etiquetas",
-#                                                   command=lambda: controller.show_frame("LabelManager"))
-#         self.go_to_label_page_button.pack(pady=20)
-
-# class MainApp(tk.Tk):
-#     def __init__(self):
-#         super().__init__()
-#         self.title("Minha Aplicação")
-#         self.geometry("300x200")
-
-#         self.frames = {}
-
-#         for F in (StartPage, LabelManager):
-#             page_name = F.__name__
-#             frame = F(parent=self, controller=self)
-#             self.frames[page_name] = frame
-#             frame.grid(row=0, column=0, sticky="nsew")
-
-#         self.show_frame("StartPage")
-
-#     def show_frame(self, page_name):
-#         frame = self.frames[page_name]
-#         frame.tkraise()
-
-
-# app = MainApp()
-# app.mainloop()
