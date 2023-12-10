@@ -14,7 +14,10 @@ Exceptions:
 
 from src.logic.items.item_interface import IItem
 from src.logic.items.subtask_memento import SubtaskMemento
-from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
+from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
+                                                    NonChangeableProperty,\
+                                                    ItemNameBlank,\
+                                                    ItemNameAlreadyExists
 from datetime import date
 from src.logic.orms.orm import SubtaskORM
 from src.db.database import Database
@@ -89,11 +92,20 @@ class Subtask(IItem):
         Raises:
             NonChangeableProperty: If an attempt is made to change a non-changeable attribute.
             ItemDontHaveThisAttribute: If the specified attribute does not exist.
+            ItemNameAlreadyExists: If the specified name already exists in the parent task.
+            ItemNameBlank: If the specified name is null or empty.
         """
         task = kwargs.get("task")
         if task:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
+        name = kwargs.get('name')
+        if name in [subtask.name for subtask in self._task.subtasks] and name != self._name:
+            erro_str = "Já existe uma subtask com esse nome"
+            raise ItemNameAlreadyExists(erro_str)
+        if name is None or name == '':
+            erro_str = "Campo 'nome' é obrigatório"
+            raise ItemNameBlank(erro_str)
         self.save_to_memento()
 
         with self.SessionLocal() as session:

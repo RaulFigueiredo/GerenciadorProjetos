@@ -20,7 +20,9 @@ from typing import List, Any
 from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
-                                                    NonChangeableProperty
+                                                    NonChangeableProperty,\
+                                                    ItemNameAlreadyExists,\
+                                                    ItemNameBlank
 from src.logic.items.project_memento import ProjectMemento
 from src.logic.orms.orm import ProjectORM
 from src.db.database import Database
@@ -136,6 +138,9 @@ class Project(IItem):
                                    property.
             ItemDontHaveThisAttribute: If an attribute to update does not exist in
                                    the Project class.
+            ItemNameAlreadyExists: If a project with the provided name already exists
+                                      in the user's project list.   
+            ItemNameBlank: If the 'name' argument is missing, null, or empty.
         """
         user = kwargs.get("user")
         creation_date = kwargs.get("creation_date")
@@ -143,8 +148,15 @@ class Project(IItem):
         if user or creation_date or tasks:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
         
+        name = kwargs.get('name')
+        if name in [project.name for project in self._user.projects] and name != self._name:
+            erro_str = "Já existe um projeto com esse nome"
+            raise ItemNameAlreadyExists(erro_str)
+        if name is None or name == '':
+            erro_str = "Campo 'nome' é obrigatório"
+            raise ItemNameBlank(erro_str)
+    
         label = kwargs.get("label")
-        print(label)
         self._id_label = label.id_label if label else None
         self.save_to_memento()
         with self.SessionLocal() as session:
