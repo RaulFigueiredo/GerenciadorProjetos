@@ -77,9 +77,9 @@ class BasePage(tk.Frame):
     def undo_update(self):
         if self.item.has_memento():
             self.item.restore_from_memento()
+            messagebox.showinfo("Sucesso", "Atualização desfeita com sucesso")
             self.manager.refresh_parent_page()
             self.manager.refrash_page()
-            messagebox.showinfo("Sucesso", "Atualização desfeita com sucesso")
         else:
             messagebox.showerror("Erro", "Não há atualizações para desfazer")
 

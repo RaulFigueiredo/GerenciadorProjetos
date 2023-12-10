@@ -18,7 +18,9 @@ from typing import List, Any
 from datetime import date
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
-                                                    NonChangeableProperty
+                                                    NonChangeableProperty,\
+                                                    ItemNameAlreadyExists,\
+                                                    ItemNameBlank
 from src.logic.items.task_memento import TaskMemento
 from src.logic.orms.orm import TaskORM
 from src.db.database import Database
@@ -204,6 +206,9 @@ class Task(IItem):
         Raises:
             NonChangeableProperty: If an attempt is made to update a non-changeable property.
             ItemDontHaveThisAttribute: If an attribute to update does not exist in the Task.
+            ItemNameAlreadyExists: If an item with the provided name already exists
+                                    in the respective project.
+            ItemNameBlank: If the 'name' argument is missing, null, or empty.
         """
         project = kwargs.get("project", None)
         creation_date = kwargs.get("creation_date", None)
@@ -211,7 +216,15 @@ class Task(IItem):
 
         if project or creation_date or subtasks:
             raise NonChangeableProperty('You requested an update for a non-changeable property.')
-
+        
+        name = kwargs.get('name')
+        if name in [task.name for task in self._project.tasks] and name != self._name:
+            erro_str = "Já existe uma task com esse nome"
+            raise ItemNameAlreadyExists(erro_str)
+        if name is None or name == '':
+            erro_str = "Campo 'nome' é obrigatório"
+            raise ItemNameBlank(erro_str)
+        
         self.save_to_memento()
         with self.SessionLocal() as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()

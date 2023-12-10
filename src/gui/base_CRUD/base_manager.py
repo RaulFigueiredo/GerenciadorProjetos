@@ -24,9 +24,16 @@ class BaseDisplayManager:
                 return
 
     def update_item(self, data):
-        self.item.update(**data)
-        self.refresh_parent_page()
-        print("Atualizado:", data)
+        try:
+            self.item.update(**data)
+            self.refresh_parent_page()
+            print("Atualizado:", data)
+        except ItemNameBlank as e:
+            if not messagebox.showerror("Erro", e):
+                return
+        except ItemNameAlreadyExists as e:
+            if not messagebox.showerror("Erro", e):
+                return
 
     def resize_page(self):
         # Atualiza a janela para calcular o tamanho necessário com base no conteúdo
