@@ -1,17 +1,52 @@
+"""Module: Load Page
+
+This module provides a 'LoadPage' class for importing projects via a graphical user interface.
+
+Classes:
+    LoadPage: Represents a window for importing projects.
+
+Functions:
+    - No module-level functions documented -
+
+Example Usage:
+    # Example instantiation of LoadPage class
+    root = tk.Tk()
+    controller = Controller()
+    user = User()
+    load_page = LoadPage(root, controller, user)
+    load_page.center_window(500, 300)
+"""
+
+import os
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
-from src.logic.load import Load
+
 from src.logic.adapter import FileAdapter
+from src.logic.users.user_interface import IUser
+
+# pylint: disable=redefined-builtin
 from src.logic.execeptions.exceptions_items import ItemNameBlank,\
-                                                    ItemNameAlreadyExists, \
-                                                    InvalidFileFormat,\
-                                                    InvalidFileEstucture,\
-                                                    FileNotFoundError
-import os
+    ItemNameAlreadyExists, \
+    InvalidFileFormat,\
+    InvalidFileEstucture,\
+    FileNotFoundError
+
 
 class LoadPage(tk.Toplevel):
-    def __init__(self, master, controller, user):
+    """ Class for the import projects window.
+
+    Args:
+        tk (tk.Toplevel): Toplevel window.
+    """
+    def __init__(self, master: tk, controller: tk, user: IUser) -> None:
+        """ Creates a new window for importing projects.
+
+        Args:
+            master (_type_): Master window.
+            controller (_type_): Controller for the page.
+            user (_type_): Current user.
+        """
         super().__init__(master)
         self.controller = controller
         self.user = user
@@ -20,11 +55,14 @@ class LoadPage(tk.Toplevel):
         self.create_widgets()
 
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
+        """ Creates the widgets for the page.
+        """
         self.instruction_label = tk.Label(self, text="Importe novos projetos", font=("Arial", 20))
         self.instruction_label.grid(row=0, column=0, padx=10, pady=10)
 
-        self.instruction_label = tk.Label(self, text="Escolha um arquivo JSON ou TXT para carregar:", font=("Arial", 12))
+        self.instruction_label =tk.Label(self,text="Escolha um arquivo JSON ou TXT para carregar:",\
+                     font=("Arial", 12))
         self.instruction_label.grid(row=1, column=0, padx=10, pady=10)
 
         self.choose_file_button = tk.Button(self, text="Escolher Arquivo", command=self.choose_file)
@@ -36,18 +74,23 @@ class LoadPage(tk.Toplevel):
         self.load_button = tk.Button(self, text="Carregar Arquivo", command=self.load_file)
         self.load_button.grid(row=4, column=0, padx=10, pady=10)
 
-    def choose_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json"), ("TXT files", "*.txt"), ("CSV files", "*.csv")])
+    def choose_file(self) -> None:
+        """ Opens a file dialog to choose a file.
+        """
+        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json"),\
+                         ("TXT files", "*.txt"), ("CSV files", "*.csv")])
         if file_path:
             file_name = os.path.basename(file_path)
             self.file_name_label.config(text=file_name)
-            self.file_path = file_path 
+            self.file_path = file_path
             print("File selected:", self.file_path)  # Para depuração
         else:
             print("No file selected")  # Para depuração
 
 
-    def load_file(self):
+    def load_file(self) -> None:
+        """ Loads a file and adds the projects to the user's list of projects.
+        """
         if not self.file_path:
             messagebox.showerror("Aviso", "Nenhum arquivo selecionado.")
             return
@@ -69,7 +112,13 @@ class LoadPage(tk.Toplevel):
             messagebox.showerror("Aviso", str(e))
 
 
-    def center_window(self, width, height):
+    def center_window(self, width:int, height:int) -> None:
+        """ Centers the window on the screen.
+
+        Args:
+            width (object): Width of the window.
+            height (object): Height of the window.
+        """
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
