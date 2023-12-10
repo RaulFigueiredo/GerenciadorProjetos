@@ -13,6 +13,7 @@ Exceptions:
 """
 
 from src.logic.items.item_interface import IItem
+from src.logic.items.subtask_memento import SubtaskMemento
 from src.logic.execeptions.exceptions_items import ItemDontHaveThisAttribute, NonChangeableProperty
 from datetime import date
 from src.logic.orms.orm import SubtaskORM
@@ -50,13 +51,14 @@ class Subtask(IItem):
         self._id_subtask = id_subtask
         self._status = status
         self._conclusion_date = conclusion_date
+        self._mementos = []
 
         self._task.add_subtask(self)
 
         self.db = Database()
         self.SessionLocal = sessionmaker(bind=self.db.engine)
 
-        if not self._id_subtask:
+        if self._id_subtask == None:
             self.save_to_db()
 
     def save_to_db(self):
@@ -65,8 +67,8 @@ class Subtask(IItem):
                                          name = self._name,
                                          status = self._status)
             session.add(new_subtask_orm)
-            self._id_subtask = new_subtask_orm.id_subtask
             session.commit()
+            self._id_subtask = new_subtask_orm.id_subtask
 
     def delete(self) -> None:
         """Remove the subtask from its parent task."""
@@ -92,6 +94,8 @@ class Subtask(IItem):
         if task:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
+        self.save_to_memento()
+        
         with self.SessionLocal() as session:
             subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
             if subtask_to_update:
@@ -125,6 +129,30 @@ class Subtask(IItem):
                 subtask_to_update.status = self._status
                 subtask_to_update.conclusion_date = self._conclusion_date
                 session.commit()
+
+    def save_to_memento(self):
+        memento = SubtaskMemento(self._name, self._status, self._conclusion_date)
+        self._mementos.append(memento)
+
+    # funçao para ver se existe algum memento
+    def has_memento(self):
+        return bool(len(self._mementos) > 0)
+    
+    def restore_from_memento(self):
+        if self._mementos:
+            name, status, conclusion_date = self._mementos.pop().get_state()
+            self._name = name
+            self._status = status
+            self._conclusion_date = conclusion_date
+            with self.SessionLocal() as session:
+                subtask_to_update = session.query(SubtaskORM).filter(SubtaskORM.id_subtask == self._id_subtask).first()
+                if subtask_to_update:
+                    subtask_to_update.name = self._name
+                    subtask_to_update.status = self._status
+                    subtask_to_update.conclusion_date = self._conclusion_date
+                    session.commit()
+        else:
+            print("No more states to revert to.")
 
     @property
     def status(self) -> bool:
