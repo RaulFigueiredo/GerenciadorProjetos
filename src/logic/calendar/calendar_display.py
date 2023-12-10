@@ -53,7 +53,6 @@ class CalendarDisplay(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # Configurações de layout do Frame
         self.config(bg='lightblue')
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
@@ -68,7 +67,7 @@ class CalendarDisplay(tk.Frame):
         """
         Close the calendar window and execute the on_close callback if provided.
         """
-        self.master.destroy()  # Destruir a janela principal
+        self.master.destroy()
 
         if self.on_close:
             self.on_close()
@@ -77,7 +76,7 @@ class CalendarDisplay(tk.Frame):
         """
         Create and configure the navigation frame within the main window.
         """
-        self.navigation_frame = tk.Frame(self)  # Referência ao próprio Frame
+        self.navigation_frame = tk.Frame(self)
         self.navigation_frame.grid(row=0, column=0, sticky='nsew')
         self.navigation_frame.grid_columnconfigure(1, weight=1)
 
@@ -98,18 +97,18 @@ class CalendarDisplay(tk.Frame):
         Create and configure the month view frame within the main window.
         """
 
-        self.calendar_frame = tk.Frame(self)  # Referência ao próprio Frame
+        self.calendar_frame = tk.Frame(self)
         self.calendar_frame.grid(row=1, column=0, sticky='nsew')
 
     def create_task_details(self) -> None:
         """
         Create and configure the task details frame within the main window.
         """
-        self.details_frame = tk.Frame(self, bg='white')  # Referência ao próprio Frame
+        self.details_frame = tk.Frame(self, bg='white')
         self.details_frame.grid(row=0, column=1, sticky='nsew', padx=10, pady=10)
 
 
-        self.details_text = tk.Text(self.details_frame, wrap='word', height=40, width=30)
+        self.details_text = tk.Text(self.details_frame, wrap='word', height=60, width=30)
         self.details_scroll = tk.Scrollbar(self.details_frame, command=self.details_text.yview)
         self.details_text.configure(yscrollcommand=self.details_scroll.set)
 
