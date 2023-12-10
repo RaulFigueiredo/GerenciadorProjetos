@@ -55,14 +55,31 @@ class HistoryManagerApp(tk.Frame):
         # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
             task_info = self.get_task_info(task)
-            if task.project.label is None:
-                task_label = tk.Label(tasks_frame, text=task_info, font=("Arial", 12))
-            else:
-                task_label = tk.Label(tasks_frame, text=task_info,\
-                                   font=("Arial", 12), bg=task.project.label.color)
-            task_label.grid(row=index, column=1, columnspan=2, sticky="ns")
 
-    def get_task_info(self, task: object) -> str:
+            if task.project.label is None:
+                project_label = tk.Label(tasks_frame, text=task_info["key"]+": ",\
+                     font=("Arial", 12))
+                task_label = tk.Label(tasks_frame, text=task_info["value"], font=("Arial", 12))
+                data_label = tk.Label(tasks_frame, text=task_info["date"], font=("Arial", 12))
+
+                project_label.grid(row=index, column=0, sticky="e", padx=10)
+                task_label.grid(row=index, column=1, sticky="w", padx=10)
+                data_label.grid(row=index, column=2)
+            else:
+                color = task.project.label.color
+                project_label = tk.Label(tasks_frame, text=task_info["key"]+": ",\
+                     font=("Arial", 12), bg=color)
+                task_label = tk.Label(tasks_frame, text=task_info["value"],\
+                     font=("Arial", 12), bg=color)
+                data_label = tk.Label(tasks_frame, text=task_info["date"],\
+                     font=("Arial", 12), bg=color)
+
+                project_label.grid(row=index, column=0, sticky="e", padx=10)
+                task_label.grid(row=index, column=1, sticky="w", padx=10)
+                data_label.grid(row=index, column=2)
+
+
+    def get_task_info(self, task: callable) -> dict:
         """ This method will be used to get the task information.
 
         Args:
@@ -71,8 +88,14 @@ class HistoryManagerApp(tk.Frame):
         Returns:
             str: Task information
         """
-        key, value = task.project.name, task.name
-        return f"{key}: \t{value}  \t" + task.conclusion_date.strftime("%d/%m/%Y")
+        #key, value = task.project.name, task.name
+        data = {
+            "key": task.project.name,
+            "value": task.name,
+            "date": task.conclusion_date.strftime("%d/%m/%Y")
+        }
+        #return f"{key}: \t{value}  \t" + task.conclusion_date.strftime("%d/%m/%Y")
+        return data
 
     def go_back(self) -> None:
         """ This method will be used to go back to the previous window.
