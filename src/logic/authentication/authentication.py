@@ -66,7 +66,6 @@ def instance_user(db_user):
                                end_date = db_task.end_date,
                                notification_date = db_task.notification_date,
                                conclusion_date= db_task.conclusion_date,
-                               creation_date=db_task.creation_date,
                                description=db_task.description)
             db_subtasks = db_task.subtasks
             for db_subtask in db_subtasks:
