@@ -56,6 +56,10 @@ class Filter:
     def filter_projects_by_status(self, status):
         return [project for project in self.user.projects
                 if project.status == status]
+    
+    def filter_projects_by_label_name(self, name):
+        valid_projects = [project for project in self.user.projects if project.label is not None]
+        return [project for project in valid_projects if project.label.name == name]
 
     def filter_tasks_by_creation_date(self, projects, lower_limit=date(1,1,1), upper_limit=date(9999,12,31)):
         valid_tasks = []
@@ -76,7 +80,6 @@ class Filter:
             if task.end_date >= lower_limit and task.end_date <= upper_limit:
                 tasks.append(task)
         return tasks
-
 
     def filter_tasks_by_conclusion_date(self, projects, lower_limit=date(1,1,1), upper_limit=date(9999,12,31)):
         valid_tasks = []

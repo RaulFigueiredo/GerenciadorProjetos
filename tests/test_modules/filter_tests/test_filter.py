@@ -59,6 +59,11 @@ class TestFilterMethods(unittest.TestCase):
         self.assertIsInstance(result, list)
         self.assertTrue(all(list(map(lambda x: x.status, result))))
 
+    def test_filter_projects_by_label_name(self):
+        result = self.filter.filter_projects_by_label_name('Faculdade')
+        self.assertIsInstance(result, list)
+        self.assertTrue(all(list(map(lambda x: x.label.name == 'Faculdade', result))))
+
     def filter_tasks_by_creation_date(self):
         lower_limit = date(2023, 2, 15)
         upper_limit = date(2023, 3, 15)
