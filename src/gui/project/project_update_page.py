@@ -35,10 +35,10 @@ class ProjectUpdatePage(BaseUpdatePage):
         mediator: object,
         project: callable,
         parent: object
-        
+
     ) -> None:
         super().__init__(master, manager,mediator,  project ,parent)
-        self.labels = self.parent.labels 
+        self.labels = self.parent.labels
         self.create_widgets()
 
     def create_widgets(self) -> None:

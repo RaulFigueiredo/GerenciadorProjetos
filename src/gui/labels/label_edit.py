@@ -1,11 +1,28 @@
+"""
+Module Name: EditLabelDialog Module
+
+Description:
+This module contains a class, `EditLabelDialog`, to create an edit label
+dialog in a Tkinter graphical interface. This dialog allows users to modify
+ the name and color of a label.
+
+Classes:
+- EditLabelDialog: Creates a dialog for editing a label in the Tkinter interface.
+
+Attributes:
+- parent (tk.Widget): The parent widget for this dialog.
+- current_name (str): The current name of the label to be edited.
+- current_color (str): The current color of the label to be edited.
+
+Dependencies:
+- tkinter: Library for GUI elements.
+- tkinter.messagebox: For displaying warning messages in the Tkinter interface.
+"""
+
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-
-"""
-This module provides a dialog interface for editing label properties
-It allows users to change the name and color of a label in a graphical user interface.
-"""
 
 class EditLabelDialog:
     """
@@ -17,7 +34,8 @@ class EditLabelDialog:
         current_color (str): The current color of the label to be edited.
     """
 
-    def __init__(self, parent: tk.Widget, current_name: str, current_color: str, existing_labels: list) -> None:
+    def __init__(self, parent: tk.Widget, current_name: str,\
+                 current_color: str, existing_labels: list) -> None:
         """
         Initializes a new instance of EditLabelDialog.
 
@@ -53,7 +71,8 @@ class EditLabelDialog:
         self.name_entry.pack(padx=10, pady=5, fill=tk.X)
 
         tk.Label(frame, text="Cor da Etiqueta:", bg='lightgray').pack(padx=10, pady=5)
-        self.color_combobox = ttk.Combobox(frame, values=["azul", "verde", "vermelho"], state="readonly")
+        self.color_combobox = ttk.Combobox(frame,
+                 values=["azul", "verde", "vermelho"], state="readonly")
         self.color_combobox.set(current_color)
         self.color_combobox.pack(padx=10, pady=5, fill=tk.X)
 
@@ -63,14 +82,15 @@ class EditLabelDialog:
         self.result = None
 
     def on_confirm(self) -> None:
-        """
-        Handles the confirmation event of the dialog, validating the input and returning the result.
+        """ Handles the confirmation event of the dialog,
+         validating the input and returning the result.
         """
         name = self.name_entry.get().strip()
         color = self.color_combobox.get()
 
         if not name:
-            messagebox.showwarning("Aviso", "O nome da etiqueta não pode estar vazio", parent=self.top)
+            messagebox.showwarning("Aviso",
+                 "O nome da etiqueta não pode estar vazio", parent=self.top)
             return
 
         if name in self.existing_labels and name != self.original_name:

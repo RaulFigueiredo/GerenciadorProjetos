@@ -31,6 +31,7 @@ class ProjectPage(BasePage):
     def __init__(self, master: tk, home: object, manager: object, project: callable) -> None:
         super().__init__(master, home, manager, project)
         self.create_widgets()
+        self.tasks_listbox = None
 
     def create_widgets(self) -> None:
         """ Creates the widgets.
@@ -69,7 +70,7 @@ class ProjectPage(BasePage):
         info_frame.grid_columnconfigure(0, weight=1)
 
         label_value = self.item.label.name if self.item.label else "Sem etiqueta"
-        
+
         labels = ["Etiqueta:", "Data de Início:", "Data de previsao de Termino:",\
                   "Status:", "Data de Conclusao:"]
         values = [label_value, str(self.item.creation_date), self.item.end_date,\
