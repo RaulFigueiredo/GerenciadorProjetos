@@ -22,7 +22,7 @@ Example Usage:
 import json
 import os
 from typing import List
-from datetime import datetime
+from datetime import datetime, date
 
 
 from src.logic.items.item_interface import IItem
@@ -109,18 +109,22 @@ class Export:
             raise DirectoryBlank("Directory must be selected.")
 
     @staticmethod
-    def date_converter(date: str) -> datetime:
+    def date_converter(date_input):
         """ Converts the date from string to datetime format.
-
         Args:
-            date (str): Date in string format.
-
+            date_input (str or datetime.date): Date in string or datetime.date format.
         Returns:
-            datetime: Date in datetime format.
+            str: Date in string format.
         """
-        if date is not None:
-            new_date = datetime.strptime(date, '%d/%m/%Y').date()
-            new_date = new_date.strftime('%d/%m/%Y')
+        if isinstance(date_input, datetime):
+            return date_input.strftime('%d/%m/%Y')
+        elif isinstance(date_input, date):
+            return date_input.strftime('%d/%m/%Y')
+        elif isinstance(date_input, str):
+            try:
+                new_date = datetime.strptime(date_input, '%d/%m/%Y').date()
+                return new_date.strftime('%d/%m/%Y')
+            except ValueError:
+                raise ValueError("Invalid date format. Expected 'dd/mm/yyyy'.")
         else:
-            new_date = None
-        return new_date
+            return None
