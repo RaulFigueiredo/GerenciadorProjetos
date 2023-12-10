@@ -153,7 +153,7 @@ class Notification:
         Args:
             task (IItem): Task
         """
-        if task.priority == "Urgente":
+        if task.priority == "Alta":
             self.add_urgent_task(task)
 
     def add_notification_date_task(self, task: IItem) -> None:
