@@ -1,11 +1,12 @@
 import tkinter as tk
 
 class BaseUpdatePage(tk.Frame):
-    def __init__(self, master, manager, mediator, item):
+    def __init__(self, master, manager, mediator, item,parent):
         super().__init__(master)
         self.manager = manager
         self.mediator = mediator
         self.item = item
+        self.parent = parent
 
     def get_buttons(self):
         # Criação de um frame adicional para os botões
@@ -17,15 +18,14 @@ class BaseUpdatePage(tk.Frame):
         submit_button.grid(row=0, column=1, padx=5)
 
         # Botão para fechar a janela
-        #close_button = tk.Button(button_frame, text="Sair", command=lambda: self.controller.task_manager.open_page(self.task))
-        close_button = tk.Button(button_frame, text="Sair", command=lambda: self.manager.open_page(self.item))
+        close_button = tk.Button(button_frame, text="Sair", command=lambda: self.manager.open_page(self.item,self.parent))
         close_button.grid(row=0, column=0, padx=5)
 
 
     def submit(self):
         data = self.prepare_data()
         self.mediator.update(data)
-        self.master.destroy()
+        self.manager.open_page(self.item,self.parent)
 
     def create_widgets(self): ...
 

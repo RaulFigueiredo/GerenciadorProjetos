@@ -32,16 +32,23 @@ class BasePage(tk.Frame):
         )
         update_button.grid(row=0, column=2, sticky="e")
 
-        # Configuração do layout do Frame dos botões para expandir com a janela
-        self.grid_rowconfigure(row, weight=1)
-        self.grid_columnconfigure(0, weight=1)
+        # Nova frame para os botões Concluir e Desatualizar
+        conclusion_frame = tk.Frame(self)
+        conclusion_frame.grid(row=row+1, column=0, sticky="ew", padx=10, pady=10)
+        conclusion_frame.grid_columnconfigure(0, weight=1)
+        conclusion_frame.grid_columnconfigure(1, weight=1)
 
+        # Botão Desatualizar ao lado esquerdo do botão Concluir
+        undo_update_button = ttk.Button(conclusion_frame, text="Desfazer", command=self.undo_update)
+        undo_update_button.grid(row=0, column=0)
+
+        # Botão Concluir ao lado direito do botão Desatualizar
         if self.item.status:
-            unconclusion_button = ttk.Button(self, text="Reativar", command=self.unconclusion)
-            unconclusion_button.grid(row=row+1, column=0, pady=10)
+            unconclusion_button = ttk.Button(conclusion_frame, text="Reativar", command=self.unconclusion)
+            unconclusion_button.grid(row=0, column=1)
         else:
-            conclusion_button = ttk.Button(self, text="Concluir", command=self.conclusion)
-            conclusion_button.grid(row=row+1, column=0, pady=10)
+            conclusion_button = ttk.Button(conclusion_frame, text="Concluir", command=self.conclusion)
+            conclusion_button.grid(row=0, column=1)
 
     def confirm_delete(self):
         response = messagebox.askyesno("Confirmar Exclusão",
@@ -66,6 +73,14 @@ class BasePage(tk.Frame):
 
     def close_window(self):
         self.master.destroy()
+
+    def undo_update(self):
+        if self.item.has_memento():
+            self.item.restore_from_memento()
+            self.manager.refrash_page()
+            messagebox.showinfo("Sucesso", "Atualização desfeita com sucesso")
+        else:
+            messagebox.showerror("Erro", "Não há atualizações para desfazer")
 
     def on_double_click(self): ...
 

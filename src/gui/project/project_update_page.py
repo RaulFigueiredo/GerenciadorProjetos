@@ -4,8 +4,8 @@ from src.gui.base_CRUD.base_updata_page import BaseUpdatePage
 
 
 class ProjectUpdatePage(BaseUpdatePage):
-    def __init__(self, master, manager, mediator, project, labels):
-        super().__init__(master, manager,mediator,  project)
+    def __init__(self, master, manager, mediator, project,parent,  labels):
+        super().__init__(master, manager,mediator,  project,parent)
         self.labels = labels  # Mock de etiquetas recebidas da página principal
         self.create_widgets()
 

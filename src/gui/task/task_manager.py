@@ -39,8 +39,11 @@ class TaskDisplayManager(BaseDisplayManager):
         self.top_window.title("Editar Tarefa")
 
         self.item = item
-        update_task_page = TaskUpdatePage(task=self.item, manager=self, master=self.top_window, 
-                                                mediator=FormMediator(self.update_item))
+        update_task_page = TaskUpdatePage(task=self.item,
+                                          manager=self,
+                                          master=self.top_window, 
+                                          parent=self.parent,
+                                          mediator=FormMediator(self.update_item))
         update_task_page.pack(fill='both', expand=True)
 
         self.resize_page()
@@ -67,3 +70,7 @@ class TaskDisplayManager(BaseDisplayManager):
         self.home.project_manager.open_page(self.parent)
         self.home.project_manager.refresh_parent_page()
 
+    def refrash_page(self):
+        self.top_window.destroy()
+        self.open_page(self.item, self.parent)
+    

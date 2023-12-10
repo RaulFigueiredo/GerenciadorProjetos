@@ -47,4 +47,14 @@ class IItem(ABC):
                       that need to be updated on the item.
         """
 
-    # undo fica aqui, assim controlo esse padrao em todos os items
+    @abstractmethod
+    def has_memento(self) -> bool:
+        """
+        Abstract method to be implemented in subclasses for checking if the item has memento.
+        """
+    
+    @abstractmethod
+    def restore_from_memento(self) -> None:
+        """
+        Abstract method to be implemented in subclasses for restoring item from memento.
+        """
