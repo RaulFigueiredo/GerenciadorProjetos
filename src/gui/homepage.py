@@ -1,19 +1,44 @@
+"""
+Creates a custom GUI application using tkinter to manage projects, tasks, and labels.
+
+This module defines several custom tkinter Frames for various functionalities in
+the application.
+
+Classes:
+    - TopBar: A custom tkinter Frame serving as the top navigation bar.
+    - ProjectList: A custom tkinter Frame to display a list of projects.
+    - HomePage: A custom tkinter Frame serving as the home page of the application.
+
+Functions:
+    - instance_user: Converts a UserORM instance to a User instance with associated
+projects, tasks, subtasks, and labels.
+
+Usage:
+    - The TopBar class provides navigation buttons for various pages like Dashboard, 
+Calendar, History, Export, Import, and Labels.
+    - The ProjectList class displays a list of projects and allows users to navigate 
+to individual project pages.
+    - The HomePage class serves as the main layout displaying the TopBar and ProjectList,
+allowing navigation to different sections of the application.
+"""
+
 import tkinter as tk
 from tkinter import ttk
-from .calendar_page import CalendarPage
+
 from src.gui.project.project_manager import ProjectDisplayManager
-from src.gui.task.task_manager   import TaskDisplayManager
+from src.gui.task.task_manager import TaskDisplayManager
 from src.gui.subtask.subtask_manager import SubtaskDisplayManager
 from src.gui.dashboard import DashboardPage
-from src.gui.task.task_manager import TaskDisplayManager
 from src.gui.history_page import HistoryManagerApp
 from src.gui.export_page import ExportPage
 from src.gui.load_page import LoadPage
 from src.gui.labels.labelpage import LabelManager
+from src.logic.items.project import Project
+from src.logic.users.user import User
+from .calendar_page import CalendarPage
 
 class TopBar(tk.Frame):
-    """
-    A custom tkinter Frame that serves as a top navigation bar for the application.
+    """ A custom tkinter Frame that serves as a top navigation bar for the application.
 
     Attributes:
         parent (tk.Widget): The parent widget of this frame.
@@ -21,16 +46,21 @@ class TopBar(tk.Frame):
         bg_color (str): Background color for the top bar.
         fg_color (str): Foreground color for the text in the top bar.
     """
-
-    def __init__(self, parent, on_navigate, bg_color='#5a6e7f', fg_color='white'):
-        """
-        Initialize the TopBar.
+    def __init__(
+            self,
+            parent: tk.Widget,
+            on_navigate: callable,
+            bg_color: str='#5a6e7f',
+            fg_color: str='white'
+        ):
+        """ Initialize the TopBar.
 
         Parameters:
             parent (tk.Widget): The parent widget of this frame.
             on_navigate (function): A callback function to handle navigation requests.
             bg_color (str, optional): Background color for the top bar. Defaults to '#5a6e7f'.
-            fg_color (str, optional): Foreground color for the text in the top bar. Defaults to 'white'.
+            fg_color (str, optional): Foreground color for the text in the top bar.
+        Defaults to 'white'.
         """
 
         super().__init__(parent, bg=bg_color)
@@ -42,19 +72,25 @@ class TopBar(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         btn_style = ttk.Style()
-        btn_style.configure('TButton', font=('Arial', 12), padding=10, background=bg_color, foreground=fg_color)
+        btn_style.configure('TButton', font=('Arial', 12), padding=10,\
+             background=bg_color, foreground=fg_color)
 
-        ttk.Button(self, text='Dashboard', style='TButton', command=lambda: on_navigate('dashboard')).grid(row=0, column=1, padx=5)
-        ttk.Button(self, text='Calendário', style='TButton', command=lambda: on_navigate('calendario')).grid(row=0, column=2, padx=5)
-        ttk.Button(self, text='Histórico', style='TButton', command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
-        ttk.Button(self, text='Exportar', style='TButton', command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
-        ttk.Button(self, text='Importar', style='TButton', command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
-        ttk.Button(self, text='Labels', style='TButton', command=lambda: on_navigate('labels')).grid(row=0, column=6, padx=5)
+        ttk.Button(self, text='Dashboard', style='TButton',\
+             command=lambda: on_navigate('dashboard')).grid(row=0, column=1, padx=5)
+        ttk.Button(self, text='Calendário', style='TButton',\
+             command=lambda: on_navigate('calendario')).grid(row=0, column=2, padx=5)
+        ttk.Button(self, text='Histórico', style='TButton',\
+             command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
+        ttk.Button(self, text='Exportar', style='TButton',\
+             command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
+        ttk.Button(self, text='Importar', style='TButton',\
+             command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
+        ttk.Button(self, text='Labels', style='TButton', \
+            command=lambda: on_navigate('labels')).grid(row=0, column=6, padx=5)
 
 
 class ProjectList(tk.Frame):
-    """
-    A custom tkinter Frame to display a list of projects.
+    """ A custom tkinter Frame to display a list of projects.
 
     Attributes:
         parent (tk.Widget): The parent widget of this frame.
@@ -63,8 +99,7 @@ class ProjectList(tk.Frame):
     """
 
     def __init__(self, parent, user, bg_color='#ffffff'):
-        """
-        Initialize the ProjectList.
+        """ Initialize the ProjectList.
 
         Parameters:
             parent (tk.Widget): The parent widget of this frame.
@@ -73,7 +108,7 @@ class ProjectList(tk.Frame):
         """
 
         super().__init__(parent, bg=bg_color, bd=1, relief='solid')
-        
+
         self.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
         parent.grid_rowconfigure(1, weight=1)
 
@@ -105,13 +140,13 @@ class ProjectList(tk.Frame):
         open_create_project_button = tk.Button(
                                     self,
                                     text="Criar Projeto",
-                                    command=lambda: self.project_manager.open_create_page()
+                                    # pylint: disable=unnecessary-lambda
+                                    command= lambda: self.project_manager.open_create_page()
                                 )
         open_create_project_button.grid(row=2, column=0, sticky='nsew')
 
-    def show_project_page(self, project):
-        """
-        Display the page for a selected project.
+    def show_project_page(self, project: Project):
+        """ Display the page for a selected project.
 
         Parameters:
             project (Project): The project to display.
@@ -119,9 +154,9 @@ class ProjectList(tk.Frame):
 
         self.project_manager.open_page(project)
 
-    def on_double_click(self, event):
-        """
-        Handle double-click events on project items.
+    # pylint: disable=unused-argument
+    def on_double_click(self, event: object):
+        """ Handle double-click events on project items.
 
         Parameters:
             event: The event object containing details of the double-click event.
@@ -134,54 +169,49 @@ class ProjectList(tk.Frame):
         if project:
             self.show_project_page(project)
         else:
-            print(f"No project found for the selected item")
+            print("No project found for the selected item")
 
-    def mock_projects(self):
+    def mock_projects(self) -> None:
+        """ Populate the tree view with mock projects for demonstration purposes.
         """
-        Populate the tree view with mock projects for demonstration purposes.
-        """
-
         self.tree.tag_configure('projectname', font=('Arial', 12, 'bold'))
         self.tree.tag_configure('concluded', foreground='green')
         print(self.user.projects)
         for project in self.user.projects:
             # Use project name or another unique identifier as a tag
             if project.status:
-                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído', open=True, tags=(project.name, 'projectname', 'concluded'))
+                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído',\
+                     open=True, tags=(project.name, 'projectname', 'concluded'))
             else:
-                project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
+                project_id = self.tree.insert('', tk.END, text=project.name, open=True,\
+                     tags=(project.name, 'projectname'))
 
             self.project_map[project.name] = project
             for task in project.tasks:
                 if not task.status:
                     self.tree.insert(project_id, tk.END, text=task.name)
-                
-    def update_main_page(self):
-        """
-        Update the main page by refreshing the project list.
-        """
 
+    def update_main_page(self):
+        """ Update the main page by refreshing the project list.
+        """
         self.tree.delete(*self.tree.get_children())
         self.mock_projects()
 
 class HomePage(tk.Frame):
-    """
-    A custom tkinter Frame that serves as the home page of the application.
+    """ A custom tkinter Frame that serves as the home page of the application.
 
     Attributes:
         parent (tk.Widget): The parent widget of this frame.
         user (User): The user object associated with the home page.
     """
 
-    def __init__(self, parent, user):
-        """
-        Initialize the HomePage.
+    def __init__(self, parent: tk.Widget, user: User):
+        """ Initialize the HomePage.
 
         Parameters:
             parent (tk.Widget): The parent widget of this frame.
             user (User): The user object associated with the home page.
         """
-
         super().__init__(parent)
         self.grid(row=0, column=0, sticky='nsew')
 
@@ -207,7 +237,6 @@ class HomePage(tk.Frame):
         """
         Display the home page layout.
         """
-
         if self.calendar_page:
             self.calendar_page.interface.grid_forget()
         if self.dashboard_page:
@@ -221,24 +250,23 @@ class HomePage(tk.Frame):
         """
         Display the calendar page layout.
         """
-
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
-        self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page, user = self.user)
+        self.calendar_page = CalendarPage(master=self, on_close=self.show_home_page,\
+             user = self.user)
         self.calendar_page.interface.grid(row=1, column=0, sticky='nsew')
 
-    def show_dashboard_page(self):
+    def show_dashboard_page(self) -> None:
         """
         Display the dashboard page layout.
         """
-
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.dashboard_page:
             self.dashboard_page = DashboardPage(master=self, on_close=self.show_home_page)
         self.dashboard_page.grid(row=1, column=0)
 
-    def show_history_page(self):
+    def show_history_page(self) -> None:
         """
         Display the history page layout.
         """
@@ -246,7 +274,8 @@ class HomePage(tk.Frame):
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.history_page:
-            self.history_page = HistoryManagerApp(master=self, on_close=self.show_home_page, controller=self, user = self.user)
+            self.history_page = HistoryManagerApp(master=self, on_close=self.show_home_page,\
+                 controller=self, user = self.user)
         self.history_page.display_completed_tasks()
         self.history_page.grid(row=1, column=0, sticky='nsew')
 
@@ -254,31 +283,28 @@ class HomePage(tk.Frame):
         """
         Display the export page layout.
         """
+        self.export_page = ExportPage(master=self, controller=self, user = self.user,\
+             project_list = self.project_list)
 
-        self.export_page = ExportPage(master=self, controller=self, user = self.user, project_list = self.project_list)
-
-    def show_import_page(self):
+    def show_import_page(self) -> None:
         """
         Display the export page layout.
         """
-
         self.export_page = LoadPage(master=self, controller=self.project_list, user = self.user)
 
-    def show_label_page(self):
+    def show_label_page(self) -> None:
         """
         Display the label page layout.
         """
-
         self.label_page = LabelManager(parent=self, controller=self, user = self.user)
 
-    def navigate(self, destination):
+    def navigate(self, destination: str) -> None:
         """
         Navigate to a specified page in the application.
 
         Parameters:
             destination (str): The key representing the page to navigate to.
         """
-
         print(f"Navigating to {destination}")
         if destination == 'calendario':
             self.show_calendar_page()
@@ -292,4 +318,3 @@ class HomePage(tk.Frame):
             self.show_import_page()
         if destination == 'labels':
             self.show_label_page()
-            
