@@ -5,6 +5,7 @@ import matplotlib.dates as mdates
 class Plot:
     @staticmethod
     def set_style():
+        plt.close()
         plt.gca().spines['top'].set_visible(False)
         plt.gca().spines['right'].set_visible(False)
         plt.gca().spines['left'].set_visible(False)
@@ -20,6 +21,7 @@ class Plot:
     
     @staticmethod
     def make_lineplot(data, title):
+        plt.close()
         x, y = list(data.keys()), list(data.values())
         fig, ax = plt.subplots(figsize=(4, 3))
         ax.plot(x, y)
@@ -30,6 +32,7 @@ class Plot:
 
     @staticmethod
     def make_barplot(data, title):
+        plt.close()
         sorted_ = sorted(data.items(), key=lambda item: item[1], reverse=True)
         labels = [i[0] for i in sorted_]
         values = [i[1] for i in sorted_]
@@ -41,6 +44,7 @@ class Plot:
 
     @staticmethod
     def make_areaplot(data, title):
+        plt.close()
         x, y = list(data.keys()), list(data.values())
         fig, ax = plt.subplots(figsize=(4, 3))
         ax.fill_between(x, y, zorder=4, alpha=0.8)
@@ -53,30 +57,38 @@ class Plot:
 
     @staticmethod
     def make_pieplot(data, title):
+        plt.close()
         labels, values = list(data.keys()), list(data.values())
         fig, ax = plt.subplots(figsize=(4, 3))
-        _, cat_labels, val_labels = ax.pie(values, labels=labels,
-                                           autopct='%1.0f%%')
-        for label in cat_labels:
-            label.set_color('grey')
-        for label in val_labels:
-            label.set_fontsize(8)
-            label.set_color('black')
+        try:
+            _, cat_labels, val_labels = ax.pie(values, labels=labels,
+                                            autopct='%1.0f%%')
+            for label in cat_labels:
+                label.set_color('grey')
+            for label in val_labels:
+                label.set_fontsize(8)
+                label.set_color('black')
+        except:
+            pass
         ax.set_title(title)
         return fig
 
     @staticmethod
     def make_donutplot(data, title):
+        plt.close()
         labels, values = list(data.keys()), list(data.values())
         fig, ax = plt.subplots(figsize=(4, 3))
-        _, cat_labels, val_labels = ax.pie(values, labels=labels,
-                                           startangle=-40,
-                                           wedgeprops=dict(width=0.4),
-                                           autopct='%1.0f%%', pctdistance=0.8)
-        for label in cat_labels:
-            label.set_color('grey')
-        for label in val_labels:
-            label.set_fontsize(8)
-            label.set_color('black')
+        try:
+            _, cat_labels, val_labels = ax.pie(values, labels=labels,
+                                            startangle=-40,
+                                            wedgeprops=dict(width=0.4),
+                                            autopct='%1.0f%%', pctdistance=0.8)
+            for label in cat_labels:
+                label.set_color('grey')
+            for label in val_labels:
+                label.set_fontsize(8)
+                label.set_color('black')
+        except:
+            pass
         ax.set_title(title)
         return fig

@@ -119,21 +119,19 @@ class DashboardData:
         return data
     
     def get_created_tasks(self):
+        today = datetime.datetime.today().date()
         one_month_ago = (datetime.datetime.today() - pd.DateOffset(days=30)).date()
-        created_tasks = self.filter.filter_tasks_by_creation_date(self.projects, one_month_ago)
-        dates = []
-        for task in created_tasks:
-            dates.append(task.creation_date)
-        dates.sort()
+        day = one_month_ago
         data = {}
+        while day <= today:
+            data[day.strftime('%d-%m-%Y')] = 0
+            day = (day + pd.DateOffset(days=1)).date()
+        created_tasks = self.filter.filter_tasks_by_creation_date(self.projects, one_month_ago)
+        dates = [task.creation_date.strftime('%d-%m-%Y') for task in created_tasks]
         total = 0
-        for date in dates:
-            total += 1
-            string_date = date.strftime('%d-%m-%Y')
-            if string_date in data.keys():
-                data[string_date] += 1
-            else:
-                data[string_date] = total
+        for date in data.keys():
+            total += dates.count(date)
+            data[date] = total 
         return data
     
     def get_finished_by_weekday(self):
