@@ -68,7 +68,7 @@ a given month and year.
             dict: A dictionary mapping dates to tasks and their details.
         """
         tasks_dict = {}
-
+        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red", "amarelo": "yellow", "laranja": "orange"}
         for project in self.user.projects:
             if project.label is None:
                 label = ''
@@ -76,7 +76,7 @@ a given month and year.
             else:
                 print('color: ', project.label)
                 label = project.label.name
-                color = project.label.color
+                color = color_dict[project.label.color]
 
             for task in project.tasks:
                 name = task.name
