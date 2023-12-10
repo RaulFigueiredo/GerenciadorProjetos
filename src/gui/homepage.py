@@ -9,10 +9,6 @@ Classes:
     - ProjectList: A custom tkinter Frame to display a list of projects.
     - HomePage: A custom tkinter Frame serving as the home page of the application.
 
-Functions:
-    - instance_user: Converts a UserORM instance to a User instance with associated
-projects, tasks, subtasks, and labels.
-
 Usage:
     - The TopBar class provides navigation buttons for various pages like Dashboard, 
 Calendar, History, Export, Import, and Labels.
@@ -35,6 +31,9 @@ from src.gui.load_page import LoadPage
 from src.gui.labels.labelpage import LabelManager
 from src.gui.filter_by_project import ProjectFilterPage
 from src.gui.filter_by_label import LabelFilterPage
+from src.logic.items.project import Project
+from src.logic.users.user import User
+from .calendar_page import CalendarPage
 
 
 

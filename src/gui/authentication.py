@@ -119,7 +119,41 @@ class Authentication:
         parent.grid_columnconfigure(0, weight=1)
 
         self.show_login()
+    #pylint: disable=pointless-string-statement
+    """
+    - step 1
+    def login_user(self, username, password):
+        pass
 
+    - step 2
+    def login_user(self, username, password):
+        user = LoginLogic.login(username, password)
+
+    - step 3
+    def login_user(self, username, password):
+        user = LoginLogic.login(username, password)
+        if user:
+            pass
+        else:
+            pass
+
+    - step 4
+    def login_user(self, username, password):
+        user = LoginLogic.login(username, password)
+        if user:
+            self.user = user
+        else:
+            print("Login failed")
+
+    - step 5
+    def login_user(self, username, password):
+        user = LoginLogic.login(username, password)
+        if user:
+            self.user = user
+            self.show_homepage()
+        else:
+            print("Login failed")
+    """
     def login_user(self, username, password):
         """
         Attempt to log in a user with the given username and password.
@@ -135,7 +169,41 @@ class Authentication:
             self.show_homepage()
         else:
             print("Login failed")
+    #pylint: disable=pointless-string-statement
+    """
+    - step 1
+    def register_user(self, username, password, email):
+        pass
 
+    - step 2
+    def register_user(self, username, password, email):
+        user = RegisterLogic.register(username, password, email)
+
+    - step 3
+    def register_user(self, username, password, email):
+        user = RegisterLogic.register(username, password, email)
+        if user:
+            pass
+        else:
+            pass
+
+    - step 4
+    def register_user(self, username, password, email):
+        user = RegisterLogic.register(username, password, email)
+        if user:
+            self.user = user
+        else:
+            print("Registration failed")
+
+    - step 5
+    def register_user(self, username, password, email):
+        user = RegisterLogic.register(username, password, email)
+        if user:
+            self.user = user
+            self.show_homepage()
+        else:
+            print("Registration failed")
+    """
     def register_user(self, username, password, email):
         """
         Attempt to register a new user with the given username, password, and email.
