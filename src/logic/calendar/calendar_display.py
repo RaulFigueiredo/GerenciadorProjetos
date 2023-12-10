@@ -49,9 +49,9 @@ class CalendarDisplay(tk.Frame):
         print(master)
         self.config(bg='lightblue')
         self.on_close = on_close
-        
-        self.grid_columnconfigure(0, weight=1)  # Ajusta as colunas para expandir
-        self.grid_rowconfigure(0, weight=1)    
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
 
         # Configurações de layout do Frame
         self.config(bg='lightblue')
@@ -69,11 +69,9 @@ class CalendarDisplay(tk.Frame):
         Close the calendar window and execute the on_close callback if provided.
         """
         self.master.destroy()  # Destruir a janela principal
-        
+
         if self.on_close:
             self.on_close()
-        
-
 
     def create_navigation_frame(self) -> None:
         """

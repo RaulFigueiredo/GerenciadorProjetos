@@ -98,7 +98,7 @@ class MonthView:
                     day_width = int(self.screen_width * 0.008)
                     day_height = int(self.screen_height * 0.004)
 
-                    day_frame = tk.Frame(self.calendar_frame, bd=1, relief='ridge') 
+                    day_frame = tk.Frame(self.calendar_frame, bd=1, relief='ridge')
                     day_frame.grid(row=row + 2, column=column, sticky='nsew', padx=1, pady=1)
                     day_frame.columnconfigure(0, weight=1)
 
