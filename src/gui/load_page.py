@@ -53,26 +53,27 @@ class LoadPage(tk.Toplevel):
         self.file_path = ''
         self.title("Importação de Projetos")
         self.create_widgets()
+        self.center_window(294, 250)
 
 
     def create_widgets(self) -> None:
         """ Creates the widgets for the page.
         """
         self.instruction_label = tk.Label(self, text="Importe novos projetos", font=("Arial", 20))
-        self.instruction_label.grid(row=0, column=0, padx=10, pady=10)
+        self.instruction_label.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.instruction_label =tk.Label(self,text="Escolha um arquivo JSON ou TXT para carregar:",\
+        self.instruction_label =tk.Label(self,text="Escolha um arquivo para carregar:",\
                      font=("Arial", 12))
-        self.instruction_label.grid(row=1, column=0, padx=10, pady=10)
+        self.instruction_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
         self.choose_file_button = tk.Button(self, text="Escolher Arquivo", command=self.choose_file)
-        self.choose_file_button.grid(row=2, column=0, padx=10, pady=2)
+        self.choose_file_button.grid(row=2, column=0, padx=10, pady=2, sticky="nsew")
 
         self.file_name_label = tk.Label(self, text="")
-        self.file_name_label.grid(row=3, column=0, padx=10, pady=10)
+        self.file_name_label.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
         self.load_button = tk.Button(self, text="Carregar Arquivo", command=self.load_file)
-        self.load_button.grid(row=4, column=0, padx=10, pady=10)
+        self.load_button.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
     def choose_file(self) -> None:
         """ Opens a file dialog to choose a file.
