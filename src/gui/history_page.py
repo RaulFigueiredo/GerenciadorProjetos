@@ -53,10 +53,11 @@ class HistoryManagerApp(tk.Frame):
 
         completed_tasks = self.history.tasks_completed()
 
+        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red"}
+
         # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
             task_info = self.get_task_info(task)
-
             if task.project.label is None:
                 project_label = tk.Label(tasks_frame, text=task_info["key"]+": ",\
                      font=("Arial", 12))
@@ -66,8 +67,13 @@ class HistoryManagerApp(tk.Frame):
                 project_label.grid(row=index, column=0, sticky="e", padx=10)
                 task_label.grid(row=index, column=1, sticky="w", padx=10)
                 data_label.grid(row=index, column=2)
-            elif task.project.label is Label:
-                color = task.project.label.color
+
+            elif task.project.label is not None:
+                # Color of the label (Portuguese)
+                cor = task.project.label.color
+                # Respective color in English
+                color = color_dict[cor]
+
                 project_label = tk.Label(tasks_frame, text=task_info["key"]+": ",\
                      font=("Arial", 12), bg=color)
                 task_label = tk.Label(tasks_frame, text=task_info["value"],\
