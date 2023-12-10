@@ -1,14 +1,44 @@
+"""
+Module: project_create_page.py
+
+This module defines the ProjectCreatePage class, used to create a project creation page.
+
+Classes:
+    ProjectCreatePage(BaseCreatePage): Handles the creation of a project creation page.
+
+Attributes:
+    No public attributes.
+
+Methods:
+    __init__(self, master, mediator, parent, labels): Initializes the ProjectCreatePage instance.
+    create_widgets(self): Creates widgets for the project creation page.
+    prepare_data(self): Prepares data to be sent to the server.
+
+"""
+
 import tkinter as tk
 from src.gui.forms_base import EntryField, LabelCombobox, DescriptionText, DateField
 from src.gui.base_CRUD.base_create_page import BaseCreatePage
 
 class ProjectCreatePage(BaseCreatePage):
-    def __init__(self, master, mediator, parent, labels):
+    """ This class will be used to create the project creation page.
+
+    Args:
+        BaseCreatePage (_type_): Base class for the creation page
+    """
+    def __init__(self,
+                master: object,
+                mediator: object,
+                parent: object,
+                labels: object
+            ):
         super().__init__(master,mediator, parent)
-        self.labels = labels  
+        self.labels = labels
         self.create_widgets()
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
+        """ This method will be used to create the widgets.
+        """
         padding = {'padx': 10, 'pady': 5}
         entry_width = 40
 
@@ -16,13 +46,20 @@ class ProjectCreatePage(BaseCreatePage):
         title_label.pack(side="top", fill="x", **padding)
 
         self.name_field = EntryField(self, "Nome:", entry_width, padding, self.mediator)
-        self.label_combobox = LabelCombobox(self, "Etiqueta:", self.labels, entry_width, padding, self.mediator)
+        self.label_combobox = LabelCombobox(self, "Etiqueta:", \
+                         self.labels, entry_width, padding, self.mediator)
         self.date_field = DateField(self, "Data de Entrega:", entry_width, padding, self.mediator)
-        self.description_text = DescriptionText(self, "Descrição:", 6, entry_width, padding, self.mediator)
+        self.description_text = DescriptionText(self, "Descrição:", 6,\
+                         entry_width, padding, self.mediator)
 
         self.get_buttons()
-    
-    def prepare_data(self):
+
+    def prepare_data(self) -> dict:
+        """ Prepares the data to be sent to the server
+
+        Returns:
+            dict: The data to be sent to the server
+        """
         data = {
             "item_type": "project",
             "user": self.parent,

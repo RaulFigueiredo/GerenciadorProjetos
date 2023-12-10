@@ -1,3 +1,24 @@
+"""
+Module: subtask_display_manager.py
+
+This module defines the SubtaskDisplayManager class used to manage subtask display and manipulation.
+
+Classes:
+    SubtaskDisplayManager(BaseDisplayManager): Manages subtask display and manipulation.
+
+Attributes:
+    No public attributes.
+
+Methods:
+    __init__(self, home): Initializes the SubtaskDisplayManager instance.
+    open_page(self, item, parent): Opens a page for a given subtask item.
+    open_update_page(self, item): Opens a page to update a subtask.
+    open_create_page(self, parent): Opens a page for creating a new subtask.
+    refresh_parent_page(self): Refreshes the parent page.
+    refrash_page(self): Refreshes the current page.
+
+"""
+
 from tkinter import messagebox
 import tkinter as tk
 from src.gui.mediator import FormMediator
@@ -7,7 +28,17 @@ from src.gui.subtask.subtask_updata_page import SubtaskUpdatePage
 from src.gui.base_CRUD.base_manager import BaseDisplayManager
 
 class SubtaskDisplayManager(BaseDisplayManager):
+    """ This class will be used to create the subtask display manager.
+
+    Args:
+        BaseDisplayManager (BaseDisplayManager): Base class for the display manager
+    """
     def __init__(self, home):
+        """ Creates the subtask display manager.
+
+        Args:
+            home (object): home page
+        """
         super().__init__(home)
 
     def open_page(self, item, parent):
@@ -19,7 +50,7 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.parent = parent
         task_page = SubtaskPage(master=self.top_window, home=self.home, manager=self, subtask=item)
-        
+
         # Use pack com fill e expand para preencher a janela
         task_page.pack(fill='both', expand=True)
 
@@ -36,7 +67,7 @@ class SubtaskDisplayManager(BaseDisplayManager):
         update_subtask_page = SubtaskUpdatePage(subtask=self.item,
                                                 manager=self,
                                                 parent=self.parent,
-                                                master=self.top_window, 
+                                                master=self.top_window,
                                                 mediator=FormMediator(self.update_item))
         update_subtask_page.pack(fill='both', expand=True)
 
@@ -59,12 +90,15 @@ class SubtaskDisplayManager(BaseDisplayManager):
 
         self.resize_page()
 
-    def refresh_parent_page(self):
+    def refresh_parent_page(self) -> None:
+        """ Refreshes the parent page.
+        """
         self.home.task_manager.top_window.destroy()
         self.home.task_manager.open_page(self.parent, self.parent.project)
 
 
-    def refrash_page(self):
+    def refrash_page(self) -> None:
+        """ Refreshes the page.
+        """
         self.top_window.destroy()
         self.open_page(self.item, self.parent)
-    

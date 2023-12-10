@@ -62,7 +62,7 @@ class TestNotification(unittest.TestCase):
         """ This method will be used to check the due date of the tasks,
         considering the priority of the task
         """
-        self.task.update(end_date=self.today + datetime.timedelta(days=1), priority='Urgente')
+        self.task.update(end_date=self.today + datetime.timedelta(days=1), priority='Alta')
         self.notification.check_due_date()
         self.assertIn(self.task, self.notification.urgent_tasks)
         self.assertNotIn(self.task, self.notification.due_date_tasks)
