@@ -215,13 +215,22 @@ class ProjectList(tk.Frame):
                     self.tree.insert(project_id, tk.END, text=task.name)
 
     def apply_label_filter(self, selected_labels):
+        """
+        Apply a label filter to the project list.
+
+        Parameters:
+            selected_labels (list): A list of labels to filter by.
+        """
         filtered_projects = [project for project in self.user.projects if project.label in selected_labels]
         self.filtered_projects = filtered_projects
         self.update_project_list(filtered_projects)
 
     def remove_filter(self):
-            self.filtered_projects = self.user.projects
-            self.update_project_list(self.user.projects)
+        """
+        Remove any filters applied to the project list.
+        """
+        self.filtered_projects = self.user.projects
+        self.update_project_list(self.user.projects)
 
 class HomePage(tk.Frame):
     """ A custom tkinter Frame that serves as the home page of the application.
@@ -264,14 +273,29 @@ class HomePage(tk.Frame):
         self.label_filter_page =  None
         
     def apply_project_filter(self, selected_projects):
-            self.project_list.apply_filter(selected_projects)
-            tk.messagebox.showinfo("Filtro Aplicado", "Projetos filtrados com sucesso!")
+        """
+        Apply a project filter to the project list.
+
+        Parameters:
+            selected_projects (list): A list of projects to filter by.
+        """
+        self.project_list.apply_filter(selected_projects)
+        tk.messagebox.showinfo("Filtro Aplicado", "Projetos filtrados com sucesso!")
 
     def apply_label_filter(self, selected_labels):
+        """
+        Apply a label filter to the project list.
+
+        Parameters:
+            selected_labels (list): A list of labels to filter by.
+        """
         self.project_list.apply_label_filter(selected_labels)
         tk.messagebox.showinfo("Filtro de Labels Aplicado", "Projetos filtrados por labels com sucesso!")
 
     def remove_project_filter(self):
+        """
+        Remove any filters applied to the project list.
+        """
         self.project_list.remove_filter()
         tk.messagebox.showinfo("Filtro Removido", "Todos os projetos estão agora visíveis.")
 
