@@ -180,12 +180,3 @@ class Load:
                     error_str = "The name of some task to import is blank."
                     raise ItemNameBlank(error_str)
 
-if __name__ == '__main__':
-    user = User('ronaldo')
-    Load.json_reader('/home/raul/Documents/EngSoft/GerenciadorProjetos/src/logic/teste_export.json',
-                 user)
-    print('+'*30)
-    print(user.projects)
-    print('+'*30)
-    print(user.projects[0].tasks)
-    print('+'*30)

@@ -31,12 +31,18 @@ class LabelManager(tk.Toplevel):
             controller: The controller managing this frame.
             user: The user associated with this frame.
         """
+        if hasattr(controller, 'label_page_window') and controller.label_page_window:
+            controller.label_page_window.destroy()
+
         super().__init__(parent)
         self.controller = controller
         self.user = user
         self.title("Gerenciador de Etiquetas")
         self.geometry("425x380+400+50")
         self.create_widgets()
+        self.center_window(425, 380)
+
+        self.controller.label_page_window = self
 
     def create_widgets(self):
         """
@@ -67,7 +73,6 @@ class LabelManager(tk.Toplevel):
 
         self.update_label_list()
 
-        self.center_window(425, 380)
 
 
     """

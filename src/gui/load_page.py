@@ -47,14 +47,19 @@ class LoadPage(tk.Toplevel):
             controller (_type_): Controller for the page.
             user (_type_): Current user.
         """
+        if hasattr(controller, 'load_page_window') and controller.load_page_window:
+            controller.load_page_window.destroy()
+
         super().__init__(master)
         self.controller = controller
         self.user = user
         self.file_path = ''
         self.title("Importação de Projetos")
+
         self.create_widgets()
         self.center_window(294, 250)
-
+        
+        self.controller.load_page_window = self
 
     def create_widgets(self) -> None:
         """ Creates the widgets for the page.

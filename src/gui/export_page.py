@@ -42,15 +42,19 @@ class ExportPage(tk.Toplevel):
             user (User): Current user.
             project_list (list): List of projects.
         """
+        if hasattr(controller, 'export_page_window') and controller.export_page_window:
+            controller.export_page_window.destroy()
         super().__init__(master)
         self.controller = controller
         self.user = user
         self.project_list = project_list
         self.title("Exportação de Projetos")
         self.geometry("402x458")
-        self.create_widgets()
 
+        self.create_widgets()
         self.center_window(402, 458)
+
+        self.controller.export_page_window = self
 
     def create_widgets(self) -> None:
         """ Creates the widgets for the page.
