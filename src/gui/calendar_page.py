@@ -74,22 +74,22 @@ a given month and year.
                 label = ''
                 color = 'gray'
             else:
-                print('color: ', project.label.color)
+                print('color: ', project.label)
                 label = project.label.name
                 color = project.label.color
 
             for task in project.tasks:
                 name = task.name
                 description = task.description
+                task_date = None
                 if task.end_date is not None:
-                    date = task.end_date.strftime("%d/%m/%Y")
-                else:
-                    date = None
+                    task_date = task.end_date.strftime('%Y-%m-%d')
                 project_name = project.name
-                if date in tasks_dict:
-                    tasks_dict[date].append((name, color, label, description, project_name))
+                if task_date in tasks_dict:
+                    tasks_dict[task_date].append((name, color, label, description, project_name))
                 else:
-                    tasks_dict[date] = [(name, color, label, description, project_name)]
+                    tasks_dict[task_date] = [(name, color, label, description, project_name)]
+        print(tasks_dict)
         return tasks_dict
     def update_calendar(self, month: int, year: int) -> None:
         """Updates the calendar view for a given month and year."""
