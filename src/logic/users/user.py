@@ -21,6 +21,7 @@ from src.logic.users.user_interface import IUser
 from src.logic.orms.orm import UserORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 class User(IUser):
     """
@@ -50,7 +51,7 @@ class User(IUser):
     """
     _instance = None
 
-    def __new__(cls, name: str, id_user: int=None) -> IUser:
+    def __new__(cls, name: str, id_user: int=None, session: Session = None) -> IUser:
         """
         Control the instantiation of the User class, ensuring it follows the singleton pattern.
 
@@ -69,7 +70,7 @@ class User(IUser):
             cls._instance._initialized = False
         return cls._instance
 
-    def __init__(self, name: str, id_user: int = None) -> None:
+    def __init__(self, name: str, id_user: int = None, session: Session = None) -> None:
         """
         Initialize the User instance.
 
@@ -88,14 +89,17 @@ class User(IUser):
             self._initialized = True
             self._id_user = id_user
 
-            self.db = Database()
-            self.SessionLocal = sessionmaker(bind=self.db.engine)
+            if session is not None:
+                self.SessionLocal = session
+            else:
+                self.db = Database()
+                self.SessionLocal = sessionmaker(bind=self.db.engine)()
 
             if not self._id_user:
                 self.seve_to_db()
 
     def seve_to_db(self):
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             new_user_orm = UserORM(name=self._name)
             session.add(new_user_orm)
             self._id_user = new_user_orm.id_user
