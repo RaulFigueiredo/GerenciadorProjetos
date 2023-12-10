@@ -29,7 +29,13 @@ Onde foi realizado todos os testes referentes ao trabalho. Cada subpasta é defi
 Para executar o programa, siga as instruções abaixo:
 
 1. Certifique-se de ter o arquivo 'env', enviado em anexo, presente no diretório do projeto.
-2. Utilize o seguinte comando no terminal:
+2. Certifique-se de instalar as dependências do projeto. Para isso, utilize o seguinte comando no terminal:
+
+```bash
+    pip install -r requirements.txt
+```
+
+3. Utilize o seguinte comando no terminal:
 
 ```bash
 python -m src.main
