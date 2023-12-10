@@ -43,6 +43,8 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 from src.gui.dashboard import GridFrame, GridLabel, GridDropdown, GridButton
 from src.gui.dashboard import DashboardUtils, Dashboard, Sidebar, DashboardPage
+from src.logic.authentication.authentication import LoginLogic
+from src.logic.dashboard.dashboard_data import DashboardData
 
 
 class TestDashboardComponents(unittest.TestCase):
@@ -51,10 +53,13 @@ class TestDashboardComponents(unittest.TestCase):
     Args:
         unittest (unittest.TestCase): TestCase
     """
+    user = LoginLogic.login('John Doe', 'pwd123')
+
     def setUp(self) -> None:
         """ Create a root window
         """
         self.root = tk.Tk()
+        self.user = self.user
 
     def tearDown(self) -> None:
         """ Destroy the root window
@@ -117,19 +122,21 @@ class TestDashboardComponents(unittest.TestCase):
     def test_dashboard_creation(self) -> None:
         """ Test if all projects are done
         """
-        dashboard = Dashboard(self.root, 0, 0)
+        dashboard_data = DashboardData(self.user)
+        dashboard = Dashboard(self.root, 0, 0, dashboard_data=dashboard_data)
         self.assertIsInstance(dashboard, Dashboard)
 
     def test_sidebar_creation(self) -> None:
         """ Test if all projects are done
         """
-        sidebar = Sidebar(self.root, 0, 0, lambda: None)
+        dashboard_data = DashboardData(self.user)
+        sidebar = Sidebar(self.root, 0, 0, lambda: None, dashboard_data=dashboard_data)
         self.assertIsInstance(sidebar, Sidebar)
 
     def test_dashboard_page_creation(self) -> None:
         """ Test if all projects are done
         """
-        dashboard_page = DashboardPage(self.root)
+        dashboard_page = DashboardPage(self.root, self.user)
         self.assertIsInstance(dashboard_page, DashboardPage)
 
 
