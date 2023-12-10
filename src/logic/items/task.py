@@ -25,6 +25,8 @@ from src.logic.items.task_memento import TaskMemento
 from src.logic.orms.orm import TaskORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+
 class Task(IItem):
     """
     Represents a task in a project management system.
@@ -59,7 +61,8 @@ class Task(IItem):
 
     def __init__(self,  project: IItem, name: str, id_task: int = None, priority: str = None,
                  end_date: date = None, notification_date: date = None, description: str = None,
-                 conclusion_date:date = None, status: bool = False, creation_date: date = None) -> None:
+                 conclusion_date:date = None, status: bool = False, creation_date: date = None,
+                 session: Session = None) -> None:
         """
         Initializes a new Task object with given parameters.
 
@@ -87,14 +90,17 @@ class Task(IItem):
 
         self._project.add_task(self)
 
-        self.db = Database()
-        self.SessionLocal = sessionmaker(bind=self.db.engine)
+        if session is not None:
+            self.SessionLocal = session
+        else:
+            self.db = Database()
+            self.SessionLocal = sessionmaker(bind=self.db.engine)()
 
         if not self._id_task:
             self.save_to_db()
 
     def save_to_db(self):
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             new_task_orm = TaskORM( id_project=self._project.id_project,
                                     name = self._name,
                                     status = self._status,
@@ -149,7 +155,7 @@ class Task(IItem):
         for subtask in self._subtasks[:]:
             subtask.delete()
         self._project.remove_task(self)
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             task_to_delete = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_delete:
                 session.delete(task_to_delete)
@@ -226,7 +232,7 @@ class Task(IItem):
             raise ItemNameBlank(erro_str)
         
         self.save_to_memento()
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 for key, value in kwargs.items():
@@ -265,7 +271,7 @@ class Task(IItem):
         self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 task_to_update.status = self._status
@@ -281,7 +287,7 @@ class Task(IItem):
         self.save_to_memento()
         self._status = False
         self._conclusion_date = None
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 task_to_update.status = self._status
@@ -311,7 +317,7 @@ class Task(IItem):
         self._notification_date, self._description, \
         self._status, self._conclusion_date = state
 
-        with self.SessionLocal() as session:
+        with self.SessionLocal as session:
             if self._mementos:
                 task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
                 if task_to_update:
