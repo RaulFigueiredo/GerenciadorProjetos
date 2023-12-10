@@ -4,8 +4,8 @@ from src.gui.base_CRUD.base_updata_page import BaseUpdatePage
 
 
 class TaskUpdatePage(BaseUpdatePage):
-    def __init__(self, master, manager, mediator,  task):
-        super().__init__(master, manager, mediator,  task)
+    def __init__(self, master, manager, mediator, task, parent):
+        super().__init__(master, manager, mediator, task, parent)
         self.create_widgets()
 
     def create_widgets(self):

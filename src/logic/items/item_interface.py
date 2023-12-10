@@ -46,5 +46,3 @@ class IItem(ABC):
             **kwargs: Variable keyword arguments representing the attributes and their new values
                       that need to be updated on the item.
         """
-
-    # undo fica aqui, assim controlo esse padrao em todos os items

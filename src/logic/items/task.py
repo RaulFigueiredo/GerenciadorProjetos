@@ -19,6 +19,7 @@ from datetime import date
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty
+from src.logic.items.task_memento import TaskMemento
 from src.logic.orms.orm import TaskORM
 from src.db.database import Database
 from sqlalchemy.orm import sessionmaker
@@ -80,6 +81,7 @@ class Task(IItem):
         self._conclusion_date = conclusion_date
         self._status = status
         self._subtasks: List[IItem] = []
+        self._mementos: List[TaskMemento] = []
 
         self._project.add_task(self)
 
@@ -210,6 +212,7 @@ class Task(IItem):
         if project or creation_date or subtasks:
             raise NonChangeableProperty('You requested an update for a non-changeable property.')
 
+        self.save_to_memento()
         with self.SessionLocal() as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
@@ -246,6 +249,7 @@ class Task(IItem):
 
         Sets the task's status to True and records the conclusion date.
         """
+        self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
         with self.SessionLocal() as session:
@@ -261,6 +265,7 @@ class Task(IItem):
 
         Sets the task's status to False and resets the conclusion date.
         """
+        self.save_to_memento()
         self._status = False
         self._conclusion_date = None
         with self.SessionLocal() as session:
@@ -270,6 +275,43 @@ class Task(IItem):
                 task_to_update.conclusion_date = self._conclusion_date
                 session.commit()
 
+    def save_to_memento(self):
+        memento = TaskMemento(
+            self._name, 
+            self._priority, 
+            self._end_date, 
+            self._notification_date, 
+            self._description, 
+            self._status, 
+            self._conclusion_date
+        )
+        self._mementos.append(memento)
+
+    def has_memento(self):
+        return bool(len(self._mementos) > 0)
+    
+    def restore_from_memento(self):
+        memento = self._mementos.pop()
+        state = memento.get_state()
+
+        self._name, self._priority, self._end_date, \
+        self._notification_date, self._description, \
+        self._status, self._conclusion_date = state
+
+        with self.SessionLocal() as session:
+            if self._mementos:
+                task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+                if task_to_update:
+                    task_to_update.name = self._name
+                    task_to_update.priority = self._priority
+                    task_to_update.end_date = self._end_date
+                    task_to_update.notification_date = self._notification_date
+                    task_to_update.description = self._description
+                    task_to_update.status = self._status
+                    task_to_update.conclusion_date = self._conclusion_date
+                    session.commit()
+            else:
+                print("Sem mementos para restaurar")
     @property
     def subtasks(self) -> List[IItem]:
         """List[IItem]: The list of subtasks associated with this task."""

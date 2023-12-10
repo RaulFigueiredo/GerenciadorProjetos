@@ -9,15 +9,13 @@ from src.logic.items.item_factory import ItemFactory
 from src.gui.base_CRUD.base_manager import BaseDisplayManager
 
 class ProjectDisplayManager(BaseDisplayManager):
-    def __init__(self, home, user):
+    def __init__(self, home, parent):
         super().__init__(home)
-        self.user = user
+        self.parent = parent
 
-    def open_page(self, item):
+    def open_page(self, item, parent=None):
         # deixa apenas 1 janela aberta
         if self.top_window and self.top_window.winfo_exists():
-            if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
-                return
             self.top_window.destroy()
 
         # conf window
@@ -44,7 +42,7 @@ class ProjectDisplayManager(BaseDisplayManager):
 
         labels_mock = ["Pessoal", "Faculdade", "Trabalho", "FreeLancing"]
 
-        parent = self.user
+        parent = self.parent
         create_project_page = ProjectCreatePage(master=self.top_window,
                                                 mediator=FormMediator(self.submit_item),
                                                 parent= parent,
@@ -68,6 +66,7 @@ class ProjectDisplayManager(BaseDisplayManager):
         update_project_page = ProjectUpdatePage(project=self.item,\
                                                 manager=self,\
                                                 master=self.top_window,\
+                                                parent = self.parent,\
                                                 mediator=FormMediator(self.update_item), labels=labels_mock)
         update_project_page.pack(fill='both', expand=True)
 
@@ -75,3 +74,7 @@ class ProjectDisplayManager(BaseDisplayManager):
 
     def refresh_parent_page(self):
         self.home.update_main_page()
+
+    def refrash_page(self):
+        self.top_window.destroy()
+        self.open_page(self.item)

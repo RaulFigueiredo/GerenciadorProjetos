@@ -33,7 +33,10 @@ class SubtaskDisplayManager(BaseDisplayManager):
         self.top_window.title("Editar Tarefa")
 
         self.item = item
-        update_subtask_page = SubtaskUpdatePage(subtask=self.item, manager=self, master=self.top_window, 
+        update_subtask_page = SubtaskUpdatePage(subtask=self.item,
+                                                manager=self,
+                                                parent=self.parent,
+                                                master=self.top_window, 
                                                 mediator=FormMediator(self.update_item))
         update_subtask_page.pack(fill='both', expand=True)
 
@@ -59,4 +62,9 @@ class SubtaskDisplayManager(BaseDisplayManager):
     def refresh_parent_page(self):
         self.home.task_manager.top_window.destroy()
         self.home.task_manager.open_page(self.parent, self.parent.project)
+
+
+    def refrash_page(self):
+        self.top_window.destroy()
+        self.open_page(self.item, self.parent)
     
