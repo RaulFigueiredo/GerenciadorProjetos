@@ -62,7 +62,6 @@ class Login(tk.Frame):
             message (str): The message to display.
             color (str): The color of the message.
         """
-        print("Updating status to ", message)
         self.status_label.config(text=message, fg=color)
 
 class Register(tk.Frame):

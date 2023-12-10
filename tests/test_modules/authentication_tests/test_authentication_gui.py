@@ -9,7 +9,7 @@ class TestAuthentication(unittest.TestCase):
         self.root = Tk()
         # Create a mock user object
         self.mock_user = MagicMock()
-        self.mock_user.projects = []  # Add other necessary attributes and methods as needed
+        self.mock_user.projects = []
         self.auth = Authentication(self.root)
 
     def tearDown(self):
@@ -23,7 +23,6 @@ class TestAuthentication(unittest.TestCase):
         result = self.auth.login_user("test_user", "test_password")
         self.assertTrue(result)
         self.assertIsNotNone(self.auth.user)
-        # Add more assertions as needed to verify correct behavior
 
     @patch('src.logic.authentication.authentication.LoginLogic.login')
     def test_login_user_fail(self, mock_login):
@@ -44,7 +43,6 @@ class TestAuthentication(unittest.TestCase):
         result = self.auth.register_user("new_user", "new_password", "email@example.com")
         self.assertTrue(result)
         self.assertIsNotNone(self.auth.user)
-        # Add more assertions as needed to verify correct behavior
 
     @patch('src.logic.authentication.authentication.RegisterLogic.register')
     def test_register_user_fail(self, mock_register):
