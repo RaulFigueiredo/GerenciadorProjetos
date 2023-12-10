@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 import tkinter as tk
 from src.gui.task.task_create_page import TaskCreatePage
+import datetime
 
 class TestTaskCreatePage(unittest.TestCase):
     def setUp(self):
@@ -23,8 +24,8 @@ class TestTaskCreatePage(unittest.TestCase):
     def test_prepare_data(self):
         test_name = "Task Name"
         test_priority = "Alta"
-        test_end_date = "31/12/2023"  
-        test_notification_date = "01/12/2023" 
+        test_end_date = datetime.datetime.strptime("31/12/2023", "%d/%m/%Y").date()
+        test_notification_date = datetime.datetime.strptime("01/12/2023", "%d/%m/%Y").date()
         test_description = "Task Description"
 
         self.create_page.name_field.set_value(test_name)
@@ -44,6 +45,7 @@ class TestTaskCreatePage(unittest.TestCase):
         }
 
         self.assertEqual(self.create_page.prepare_data(), expected_data)
+
     def tearDown(self):
         self.master.destroy()
 
