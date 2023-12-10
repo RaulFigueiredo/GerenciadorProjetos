@@ -20,4 +20,12 @@ class TaskMemento(IMemento):
         self._conclusion_date = conclusion_date
 
     def get_state(self):
-        return self._name, self._priority, self._end_date, self._notification_date, self._description, self._status, self._conclusion_date
+        return (
+                    self._name, 
+                    self._priority, 
+                    self._end_date, 
+                    self._notification_date, 
+                    self._description, 
+                    self._status, 
+                    self._conclusion_date
+                )
