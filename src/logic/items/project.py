@@ -17,6 +17,9 @@ Exceptions:
 
 from datetime import date
 from typing import List, Any
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+
 from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
@@ -26,8 +29,7 @@ from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
 from src.logic.items.project_memento import ProjectMemento
 from src.logic.orms.orm import ProjectORM
 from src.db.database import Database
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import Session
+
 
 class Project(IItem):
     """
@@ -79,33 +81,35 @@ class Project(IItem):
         self._conclusion_date = conclusion_date
         self._status = status
         self._id_project = id_project
-        
+
         self._tasks: List[IItem] = []
         self._mementos = []
         self._user.add_project(self)
 
         if session is not None:
-            self.SessionLocal = session
+            self.session_local = session
         else:
             self.db = Database()
-            self.SessionLocal = sessionmaker(bind=self.db.engine)()
+            self.session_local = sessionmaker(bind=self.db.engine)()
 
         if not self._id_project:
             self.save_to_db()
-            
 
-    def save_to_db(self):
+
+    def save_to_db(self) -> None:
+        """ Save the project to the database.
+        """
         print(self.label)
-        with self.SessionLocal as session:
+        with self.session_local as session:
             new_project_orm = ProjectORM(id_user=self._user.id_user,
                                         id_label = self._label.id_label if self.label else None,
                                         name = self._name,
                                         status = self._status,
                                         creation_date = self._creation_date,
                                         end_date = self._end_date ,
-                                        description = self._description 
+                                        description = self._description
                                         )
-            
+
             session.add(new_project_orm)
             session.commit()
             self._id_project = new_project_orm.id_project
@@ -120,8 +124,9 @@ class Project(IItem):
             task.delete()
 
         self._user.remove_project(self)
-        with self.SessionLocal as session:
-            project_to_delete = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+        with self.session_local as session:
+            project_to_delete = session.query(ProjectORM).filter\
+                (ProjectORM.id_project == self._id_project).first()
             if project_to_delete:
                 session.delete(project_to_delete)
                 session.commit()
@@ -152,7 +157,7 @@ class Project(IItem):
         tasks = kwargs.get("tasks")
         if user or creation_date or tasks:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
-        
+
         name = kwargs.get('name')
         if name in [project.name for project in self._user.projects] and name != self._name:
             erro_str = "Já existe um projeto com esse nome"
@@ -160,12 +165,13 @@ class Project(IItem):
         if name is None or name == '':
             erro_str = "Campo 'nome' é obrigatório"
             raise ItemNameBlank(erro_str)
-    
+
         label = kwargs.get("label")
         self._id_label = label.id_label if label else None
         self.save_to_memento()
-        with self.SessionLocal as session:
-            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+        with self.session_local as session:
+            project_to_update = session.query(ProjectORM).filter\
+                (ProjectORM.id_project == self._id_project).first()
             if label:
                 project_to_update.id_label = label.id_label
             if project_to_update:
@@ -175,7 +181,8 @@ class Project(IItem):
                         setattr(self, attr_name, value)
                         setattr(project_to_update, key, value)
                     else:
-                        raise ItemDontHaveThisAttribute(f"Project does not have the attribute {key}.")
+                        raise ItemDontHaveThisAttribute(f"Project does not have the\
+                             attribute {key}.")
 
             session.commit()
 
@@ -204,8 +211,9 @@ class Project(IItem):
         self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
-        with self.SessionLocal as session:
-            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+        with self.session_local as session:
+            project_to_update = session.query(ProjectORM).filter\
+                (ProjectORM.id_project == self._id_project).first()
             if project_to_update:
                 project_to_update.status = self._status
                 project_to_update.conclusion_date = self._conclusion_date
@@ -218,28 +226,38 @@ class Project(IItem):
         self.save_to_memento()
         self._status = False
         self._conclusion_date = None
-        with self.SessionLocal as session:
-            project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+        with self.session_local as session:
+            project_to_update = session.query(ProjectORM).filter\
+                (ProjectORM.id_project == self._id_project).first()
             if project_to_update:
                 project_to_update.status = self._status
                 project_to_update.conclusion_date = self._conclusion_date
                 session.commit()
 
-    def save_to_memento(self):
+    def save_to_memento(self) -> None:
+        """ Save the project's attributes to the memento.
+        """
         memento = ProjectMemento(
-            self._name, 
-            self._label, 
-            self._end_date, 
-            self._description, 
-            self._status, 
+            self._name,
+            self._label,
+            self._end_date,
+            self._description,
+            self._status,
             self._conclusion_date
         )
         self._mementos.append(memento)
 
-    def has_memento(self):
+    def has_memento(self) -> bool:
+        """ Check if the project has mementos to restore.
+
+        Returns:
+            bool: True if the project has mementos to restore, False otherwise.
+        """
         return bool(len(self._mementos) > 0)
-    
-    def restore_from_memento(self):
+
+    def restore_from_memento(self) -> None:
+        """ Restore the project's attributes from the memento.
+        """
         if self._mementos:
             memento = self._mementos.pop()
             state = memento.get_state()
@@ -247,8 +265,9 @@ class Project(IItem):
             self._name, self._label, self._end_date, \
             self._description, self._status, self._conclusion_date = state
 
-            with self.SessionLocal as session:
-                project_to_update = session.query(ProjectORM).filter(ProjectORM.id_project == self._id_project).first()
+            with self.session_local as session:
+                project_to_update = session.query(ProjectORM).filter\
+                    (ProjectORM.id_project == self._id_project).first()
                 if project_to_update:
                     project_to_update.name = self._name
                     project_to_update.label = self._label
@@ -258,8 +277,8 @@ class Project(IItem):
                     project_to_update.conclusion_date = self._conclusion_date
                     session.commit()
         else:
-            print("Sem mementos para restaurar")  
-    
+            print("Sem mementos para restaurar")
+
     @property
     def tasks(self) -> List[IItem]:
         """List[IItem]: The list of tasks associated with this project."""
@@ -299,7 +318,7 @@ class Project(IItem):
     def status(self) -> bool:
         """bool: The status of the project, indicating whether it is concluded or not."""
         return self._status
-    
+
     @property
     def id_project(self) -> int:
         """int: The id of the project."""

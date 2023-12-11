@@ -1,56 +1,71 @@
 import unittest
 import tkinter as tk
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock, patch, Mock
 from src.logic.history.task_history import HistorySingleton
 from src.logic.users.user import User
 from src.gui.history_page import HistoryManagerApp
+import unittest
+from src import Subtask,User,Project,Task,Subtask,ItemNameAlreadyExists, ItemNameBlank, NonChangeableProperty
+from sqlalchemy.orm import sessionmaker
+from src.logic.orms.orm import UserORM,SubtaskORM, Base, ProjectORM, TaskORM
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import date
 
 class TestHistoryManagerApp(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = create_engine('sqlite:///:memory:')
+        Base.metadata.create_all(cls.engine)
+        cls.SessionLocal = sessionmaker(bind=cls.engine)
+
+        cls.session = cls.SessionLocal()
+
+        db_test_user = UserORM(name='Test User', email='test@example.com', password='teste')
+        cls.session.add(db_test_user)
+        cls.session.commit()
+
     def setUp(self):
-        self.root_window = tk.Tk()
-        self.previous_window = tk.Tk()
-        self.user = User("TestUser")
-        self.app = HistoryManagerApp(self.root_window, self.user, self.previous_window)
+        self.root = tk.Tk()
+        with patch.object(User, 'seve_to_db') as mock_save:
+            self.user = User("username", self.SessionLocal())
 
-    def tearDown(self):
-        self.root_window.destroy()
-        self.previous_window.destroy()
+        self.controller_mock = Mock()
+        self.on_close_mock = Mock()
+        self.app = HistoryManagerApp(self.root, self.controller_mock, self.on_close_mock, self.user)
 
-    def test_display_completed_tasks(self):
-        # Mocking HistorySingleton and its methods
-        mock_history = MagicMock(spec=HistorySingleton)
-        mock_tasks_completed = [
-            MagicMock(name="Task1", project=MagicMock(label=MagicMock(color="red"))),
-            MagicMock(name="Task2", project=MagicMock(label=MagicMock(color="blue")))
-        ]
-        mock_history.tasks_completed.return_value = mock_tasks_completed
+    def test_initialization(self):
+        """ Tests whether the HistoryManagerApp class is initialized correctly """
+        self.assertIsInstance(self.app, HistoryManagerApp)
+        self.assertEqual(self.app.user, self.user)
+        self.assertIsInstance(self.app.history, HistorySingleton)
 
-        # Patching HistorySingleton instance in the app with the mock
-        with patch.object(self.app, 'history', new=mock_history):
-            self.app.display_completed_tasks()
+    def test_get_task_info(self):
+        """ Tests whether the get_task_info method returns the correct information """
+        fake_task = Mock()
+        fake_task.project.name = "Projeto Exemplo"
+        fake_task.name = "Tarefa Exemplo"
+        fake_task.conclusion_date = date(2021, 3, 3)
 
-            # Assertions for UI elements creation
-            #self.assertEqual(len(self.app.root_window.grid_slaves()), len(mock_tasks_completed) + 2)  # Two extra rows for title and back button
+        result = self.app.get_task_info(fake_task)
+        expected_result = {
+            "key": "Projeto Exemplo",
+            "value": "Tarefa Exemplo",
+            "date": "03/03/2021"
+        }
+        self.assertEqual(result, expected_result)
 
-            # Check if each task's project label has a color string
-            for task in mock_tasks_completed:
-                self.assertTrue(isinstance(task.project, MagicMock))
-                self.assertTrue(isinstance(task.project.label, MagicMock))
-                self.assertTrue(isinstance(task.project.label.color, str))
-                self.assertIn(task.project.label.color.lower(), ["red", "blue"])  # Ensure color is 'red' or 'blue'
 
     def test_go_back(self):
-        # Mocking deiconify and destroy methods
-        self.app.root_window.deiconify = MagicMock()
-        self.app.root_window.destroy = MagicMock()
-
+        """ Testa se o método go_back chama controller.deiconify """
+        self.app.controller.deiconify = Mock()
         self.app.go_back()
+        self.app.controller.deiconify.assert_called_once()
 
-        # Asserting whether the methods were called
-        self.app.root_window.deiconify.assert_called_once()
-        self.app.root_window.destroy.assert_called_once()
 
-    # Add more test cases for other methods as needed...
+    def tearDown(self):
+        self.root.destroy()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

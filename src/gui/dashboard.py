@@ -1,3 +1,25 @@
+"""
+Module for creating dashboard elements using tkinter and matplotlib.
+
+This module includes classes and utilities for constructing a dashboard interface
+using tkinter for the GUI components and matplotlib for plotting visualizations.
+
+Classes:
+- GridFrame: A grid-based frame for organizing GUI elements.
+- GridLabel: A label widget integrated into the grid system.
+- GridDropdown: A dropdown widget in the grid layout.
+- GridButton: A button widget designed to work within a grid.
+- DashboardUtils: Utility functions for managing plots within the dashboard.
+- DashboardPlots: Manage multiple plots for display within the dashboard.
+- Dashboard: Constructs the main dashboard interface.
+- Sidebar: Constructs the sidebar interface for the dashboard.
+- DashboardPage: Organizes the complete dashboard page with components.
+
+Usage:
+This module serves as a collection of tools and components to build a graphical
+dashboard interface with customizable plots, labels, buttons, and sidebar elements.
+"""
+
 import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -6,15 +28,43 @@ from src.logic.dashboard.dashboard_data import DashboardData
 
 
 class GridFrame(tk.Frame):
-    def __init__(self, parent, row, col, rowspan=1, colspan=1):
+    """ Grid frame.
+
+    Args:
+        tk (tk.Frame): tk frame
+    """
+    def __init__(self,parent:callable,row:int,col:int,rowspan:int=1,colspan:int=1) -> None:
+        """ Initialize the grid frame.
+
+        Args:
+            parent (callable): Parent tk object
+            row (int): Row position
+            col (int): Column position
+            rowspan (int, optional): Rowspan. Defaults to 1.
+            colspan (int, optional): Columnspan. Defaults to 1.
+        """
         super().__init__(parent)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.config(bg="#000000")
         self.grid_configure(sticky="nsew")
 
-
 class GridLabel(tk.Label):
-    def __init__(self, parent, row, col, text, rowspan=1, colspan=1):
+    """ Grid label.
+
+    Args:
+        tk (tk.Label): Label
+    """
+    def __init__(self,parent:callable,row:int,col:int,text:str,rowspan:int=1,colspan:int=1) -> None:
+        """ Summary of class here.
+
+        Args:
+            parent (callable): Parent tk object
+            row (int): Row position
+            col (int): Column position
+            text (str): Text to be displayed
+            rowspan (int, optional): Rowspan. Defaults to 1.
+            colspan (int, optional): Columnspan. Defaults to 1.
+        """
         super().__init__(parent, text=text)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.config(bg="#ffffff", font=("Monospace", 12, "bold"), fg="#ffffff")
@@ -22,21 +72,46 @@ class GridLabel(tk.Label):
 
 
 class GridDropdown(ttk.Combobox):
-    def __init__(self, parent, row, col, values, rowspan=1, colspan=1):
+    """ Grid dropdown.
+
+    Args:
+        ttk (ttl.Combobox): Combobox
+    """
+    def __init__(self,parent: callable, row:int, col:int,\
+                  values:object, rowspan:int=1, colspan:int=1) -> None:
         super().__init__(parent, values=values)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.grid_configure(sticky="ew")
 
 
 class GridButton(tk.Button):
-    def __init__(self, parent, row, col, text, command, rowspan=1, colspan=1):
+    """ Grid button.
+
+    Args:
+        tk (tk.Button): Button widget
+    """
+    def __init__(self,parent: callable,row:int,col:int,text:str,\
+                 command:callable,rowspan:int=1,colspan:int=1) -> None:
         super().__init__(parent, text=text, command=command)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
 
 
 class DashboardUtils:
+    """ Utils for the dashboard.
+    """
     @staticmethod
-    def add_plot(parent, plot, row, col, rowspan=1, colspan=1):
+    def add_plot(parent:callable,plot:callable,row:int,col:int,\
+                 rowspan:int=1,colspan:int=1) -> None:
+        """ Add a plot to the dashboard.
+
+        Args:
+            parent (callable): Parent tk object
+            plot (callable): Plot
+            row (int): Row position
+            col (int): Column position
+            rowspan (int, optional): Rowspan. Defaults to 1.
+            colspan (int, optional): Columnspan. Defaults to 1.
+        """
         canvas = FigureCanvasTkAgg(plot, master=parent)
         canvas.get_tk_widget().grid(row=row, column=col, columnspan=colspan,
                                     rowspan=rowspan, padx=5, pady=5,
@@ -46,21 +121,60 @@ class DashboardUtils:
         for i in range(colspan):
             parent.grid_columnconfigure(col + i, weight=1)
 
-
 class DashboardPlots():
-    def __init__(self):
+    """ Plots for the dashboard.
+    """
+    def __init__(self) -> None:
+        """ Initialize the plots. 
+        """
         self.plots = []
 
-    def __iter__(self):
+    def __iter__(self) -> iter:
+        """ Iterator for the plots.
+
+        Returns:
+            iter: Iterator
+        """
         return iter(self.plots)
 
-    def add_plot(self, plot, row, col, rowspan=1, colspan=1):
+    def add_plot(self, plot: callable, row:int, col:int, rowspan:int=1, colspan:int=1) -> None:
+        """ Add a plot to the dashboard.
+        Args:
+            plot (callable): Plot
+            row (int): Row position
+            col (int): Column position
+            rowspan (int, optional): Rowspan. Defaults to 1.
+            colspan (int, optional): Columnspan. Defaults to 1.
+        """
         self.plots.append({'plot': plot, 'row': row, 'col': col,
                            'rowspan': rowspan, 'colspan': colspan})
 
 
 class Dashboard(tk.Frame):
-    def __init__(self, parent, row, col, dashboard_data, rowspan=1, colspan=1):
+    """ Dashboard.
+
+    Args:
+        tk (tk.Frame): tk frame
+    """
+    def __init__(
+            self,
+            parent: tk.Tk,
+            row: int,
+            col: int,
+            dashboard_data: callable,
+            rowspan: int=1,
+            colspan: int =1
+        ) -> None:
+        """ Summary of class here.
+
+        Args:
+            parent (tk.Tk): Parent tk object
+            row (int): Row position
+            col (int): Column position
+            dashboard_data (callable): Dashboard data
+            rowspan (int, optional): Row span. Defaults to 1.
+            colspan (int, optional): Colunm spam . Defaults to 1.
+        """
         super().__init__(parent)
         self.grid(row=row, column=col, rowspan=rowspan, columnspan=colspan)
         self.config(bg="#eaeaea")
@@ -76,8 +190,10 @@ class Dashboard(tk.Frame):
         done = dashboard_data.get_number_of_done_tasks()
         late = dashboard_data.get_number_of_late_tasks()
 
-        texts = [f"Tarefas\n{tasks}", f"Para Hoje\n{for_today}", f"Feitas\n{done}", f"Atrasadas\n{late}"]
-        for i in range(len(texts)):
+        texts = [f"Tarefas\n{tasks}", f"Para Hoje\n{for_today}",\
+                  f"Feitas\n{done}", f"Atrasadas\n{late}"]
+
+        for i, _ in enumerate(texts):
             cards.grid_columnconfigure(i, weight=1)
             label = GridLabel(cards, 0, i, text=texts[i])
             label.config(height=4, fg="#000000")
@@ -110,11 +226,37 @@ class Dashboard(tk.Frame):
         dash_plots.add_plot(plot5, 1, 1, colspan=2)
 
         for plot in dash_plots:
-            DashboardUtils.add_plot(plots, plot['plot'], plot['row'], plot['col'], plot['rowspan'], plot['colspan'])
+            DashboardUtils.add_plot(plots, plot['plot'], plot['row'],\
+                     plot['col'], plot['rowspan'], plot['colspan'])
 
 
 class Sidebar(tk.Frame):
-    def __init__(self, parent, row, col, back, dashboard_data, rowspan=1, colspan=1):
+    """ 
+
+    Args:
+        tk (_type_): 
+    """
+    def __init__(
+            self,
+            parent: tk.Tk,
+            row: int,
+            col: int,
+            back: callable,
+            dashboard_data: callable,
+            rowspan: int=1,
+            colspan: int =1
+        ) -> None:
+        """ Summary of class here.
+
+        Args:
+            parent (tk.Tk): Parent tk object
+            row (int): Row position
+            col (int): Column position
+            back (callable): Back function
+            dashboard_data (callable): Dashboard data
+            rowspan (int, optional): Row span. Defaults to 1.
+            colspan (int, optional): Colunm spam . Defaults to 1.
+        """
         super().__init__(parent)
         self.parent = parent
         self.dashboard_data = dashboard_data
@@ -139,16 +281,24 @@ class Sidebar(tk.Frame):
 
         back_button = GridButton(self, row=5, col=0, text="Voltar", command=back)
         back_button.grid_configure(sticky="sw", padx=10, pady=10)
-    
-    def update_dashboard(self, selected_project):
+
+    def update_dashboard(self, selected_project: callable) -> None:
+        """ Update the dashboard with the selected project.
+
+        Args:
+            selected_project (callable): The selected project.
+        """
         self.dashboard_data.update_data(selected_project)
         self.parent.winfo_children()[1].destroy()
         Dashboard(self.parent, row=0, col=1, dashboard_data=self.dashboard_data, rowspan=2)
 
-
-
 class DashboardPage(tk.Frame):
-    def __init__(self, master, user, on_close=None):
+    """ Summary of class here.
+
+    Args:
+        tk (tk): tk object
+    """
+    def __init__(self, master: tk.Tk, user: callable, on_close: callable=None) -> None:
         super().__init__(master)
         self.configure(bg="#eaeaea")
         self.grid_columnconfigure(1, weight=1)

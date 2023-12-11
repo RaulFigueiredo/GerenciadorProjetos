@@ -45,6 +45,7 @@ class ProjectDisplayManager(BaseDisplayManager):
         """
         super().__init__(home)
         self.parent = parent
+        self.item = None
 
     def open_page(self, item: object, parent=None):
         """ Opens the page.
@@ -67,9 +68,9 @@ class ProjectDisplayManager(BaseDisplayManager):
 
         self.resize_page()
 
-
-
-    def open_create_page(self):
+    def open_create_page(self) -> None:
+        """ Opens the create page.
+        """
         if self.top_window and self.top_window.winfo_exists():
             if not messagebox.askyesno("Confirmar", "Fechar a janela atual?"):
                 return
@@ -99,7 +100,7 @@ class ProjectDisplayManager(BaseDisplayManager):
         self.top_window = tk.Toplevel(self.home)
         self.top_window.title("Editar Projeto")
 
-        self.item  = item
+        self.item = item
 
         update_project_page = ProjectUpdatePage(project=self.item,\
                                                 manager=self,\

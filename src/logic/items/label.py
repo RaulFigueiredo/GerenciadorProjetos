@@ -15,6 +15,7 @@ Exceptions:
                            allowed to be modified.
 """
 
+from sqlalchemy.orm import sessionmaker
 from src.logic.items.item_interface import IItem
 from src.logic.users.user_interface import IUser
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
@@ -64,13 +65,16 @@ class Label(IItem):
         if not self._id_label:
             self.save_to_db()
 
-    def save_to_db(self):
-        with self.SessionLocal as session:
+    def save_to_db(self) -> None:
+        """ Save the label to the database.
+        """
+        with self.session_local() as session:
+
             new_label_orm = LabelORM(  id_user=self._user.id_user,
                                         name = self._name,
                                         color = self._color,
                                         )
-            
+
             session.add(new_label_orm)
             self._id_label = new_label_orm.id_label
             session.commit()
@@ -80,8 +84,10 @@ class Label(IItem):
         Delete the label and remove it from the associated user.
         """
         self._user.remove_label(self)
-        with self.SessionLocal as session:
-            label_to_delete = session.query(LabelORM).filter(LabelORM.id_label == self._id_label).first()
+
+        with self.session_local() as session:
+            label_to_delete = session.query(LabelORM).filter\
+                (LabelORM.id_label == self._id_label).first()
             if label_to_delete:
                 session.delete(label_to_delete)
                 session.commit()
@@ -104,8 +110,9 @@ class Label(IItem):
         if "user" in kwargs:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
-        with self.SessionLocal as session:
-            label_to_update = session.query(LabelORM).filter(LabelORM.id_label == self._id_label).first()
+        with self.session_local() as session:
+            label_to_update = session.query(LabelORM).filter\
+                (LabelORM.id_label == self._id_label).first()
             if label_to_update:
                 for key, value in kwargs.items():
                     attr_name = f"_{key}"
@@ -125,7 +132,7 @@ class Label(IItem):
     def name(self) -> str:
         """str: The name of the label."""
         return self._name
-    
+
     @property
     def color(self) -> str:
         """str: The color of the label."""

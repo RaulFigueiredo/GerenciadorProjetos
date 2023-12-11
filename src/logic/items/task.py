@@ -16,6 +16,9 @@ Exceptions:
 
 from typing import List, Any
 from datetime import date
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+
 from src.logic.items.item_interface import IItem
 from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty,\
@@ -24,8 +27,6 @@ from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
 from src.logic.items.task_memento import TaskMemento
 from src.logic.orms.orm import TaskORM
 from src.db.database import Database
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import Session
 
 class Task(IItem):
     """
@@ -91,16 +92,18 @@ class Task(IItem):
         self._project.add_task(self)
 
         if session is not None:
-            self.SessionLocal = session
+            self.session_local = session
         else:
             self.db = Database()
-            self.SessionLocal = sessionmaker(bind=self.db.engine)()
+            self.session_local = sessionmaker(bind=self.db.engine)()
 
         if not self._id_task:
             self.save_to_db()
 
-    def save_to_db(self):
-        with self.SessionLocal as session:
+    def save_to_db(self) -> None:
+        """ Saves the task to the database.
+        """
+        with self.session_local as session:
             new_task_orm = TaskORM( id_project=self._project.id_project,
                                     name = self._name,
                                     status = self._status,
@@ -110,12 +113,12 @@ class Task(IItem):
                                     notification_date = self._notification_date,
                                     description = self._description
                                     )
-            
+
             session.add(new_task_orm)
             session.commit()
             self._id_task = new_task_orm.id_task
 
-
+    # pylint: disable=pointless-string-statement
     """
     - step 1 
     def delete(self):
@@ -146,7 +149,7 @@ class Task(IItem):
         for subtask in self._subtasks[:]:
             subtask.delete()
         self._project.remove_task(self)
-    """ 
+    """
     # refactor
     def delete(self) -> None:
         """
@@ -155,11 +158,13 @@ class Task(IItem):
         for subtask in self._subtasks[:]:
             subtask.delete()
         self._project.remove_task(self)
-        with self.SessionLocal as session:
+        with self.session_local as session:
             task_to_delete = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_delete:
                 session.delete(task_to_delete)
                 session.commit()
+
+    # pylint: disable=pointless-string-statement
     """
     - step 1
     def update(self) -> None:
@@ -222,7 +227,7 @@ class Task(IItem):
 
         if project or creation_date or subtasks:
             raise NonChangeableProperty('You requested an update for a non-changeable property.')
-        
+
         name = kwargs.get('name')
         if name in [task.name for task in self._project.tasks] and name != self._name:
             erro_str = "Já existe uma task com esse nome"
@@ -230,9 +235,9 @@ class Task(IItem):
         if name is None or name == '':
             erro_str = "Campo 'nome' é obrigatório"
             raise ItemNameBlank(erro_str)
-        
+
         self.save_to_memento()
-        with self.SessionLocal as session:
+        with self.session_local as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 for key, value in kwargs.items():
@@ -271,7 +276,7 @@ class Task(IItem):
         self.save_to_memento()
         self._status = True
         self._conclusion_date = date.today()
-        with self.SessionLocal as session:
+        with self.session_local as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 task_to_update.status = self._status
@@ -287,29 +292,38 @@ class Task(IItem):
         self.save_to_memento()
         self._status = False
         self._conclusion_date = None
-        with self.SessionLocal as session:
+        with self.session_local as session:
             task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
             if task_to_update:
                 task_to_update.status = self._status
                 task_to_update.conclusion_date = self._conclusion_date
                 session.commit()
 
-    def save_to_memento(self):
+    def save_to_memento(self) -> None:
+        """ Saves the current state of the task to a memento.
+        """
         memento = TaskMemento(
-            self._name, 
-            self._priority, 
-            self._end_date, 
-            self._notification_date, 
-            self._description, 
-            self._status, 
+            self._name,
+            self._priority,
+            self._end_date,
+            self._notification_date,
+            self._description,
+            self._status,
             self._conclusion_date
         )
         self._mementos.append(memento)
 
-    def has_memento(self):
+    def has_memento(self) -> bool:
+        """ Checks if the task has a memento to restore.
+
+        Returns:
+            bool: True if the task has a memento to restore, False otherwise.
+        """
         return bool(len(self._mementos) > 0)
-    
-    def restore_from_memento(self):
+
+    def restore_from_memento(self) -> None:
+        """ Restores the task's state from a memento.
+        """
         memento = self._mementos.pop()
         state = memento.get_state()
 
@@ -317,9 +331,10 @@ class Task(IItem):
         self._notification_date, self._description, \
         self._status, self._conclusion_date = state
 
-        with self.SessionLocal as session:
+        with self.session_local as session:
             if self._mementos:
-                task_to_update = session.query(TaskORM).filter(TaskORM.id_task == self._id_task).first()
+                task_to_update = session.query(TaskORM).filter(TaskORM.id_task\
+                                 == self._id_task).first()
                 if task_to_update:
                     task_to_update.name = self._name
                     task_to_update.priority = self._priority
@@ -383,5 +398,6 @@ class Task(IItem):
 
     @property
     def id_task(self) -> int:
-        """int: The id of the task."""
+        """int: The id of the task.
+        """
         return self._id_task

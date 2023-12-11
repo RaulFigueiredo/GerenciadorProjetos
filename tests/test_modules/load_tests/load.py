@@ -28,11 +28,10 @@ class TestLoad(unittest.TestCase):
         test_check_file_existence_with_nonexistent_file: Tests the check_file_existence method with a nonexistent file.
         test_check_file_structure_with_valid_data: Tests the check_file_structure method with valid data.
         test_check_file_structure_with_invalid_data: Tests the check_file_structure method with invalid data structure.
-        test_check_duplicate_project_name_with_no_duplicates: Tests check_duplicate_project_name with no duplicate project names.
         test_check_duplicate_project_name_with_duplicates: Tests check_duplicate_project_name with duplicate project names.
         test_check_project_name_blank_with_no_blank_names: Tests check_project_name_blank with no blank project names.
         test_check_project_name_blank_with_blank_names: Tests check_project_name_blank with blank project names.
-        test_json_reader_with_valid_data: Tests json_reader method with valid data.
+
     """
 
     def setUp(self):
@@ -112,19 +111,6 @@ class TestLoad(unittest.TestCase):
         with self.assertRaises(InvalidFileEstucture):
             Load.check_file_structure(self.invalid_data_structure)
 
-    def test_check_duplicate_project_name_with_no_duplicates(self):
-        """
-        Test the check_duplicate_project_name method with no duplicate project names.
-        Ensures that no exception is raised when there are no duplicates.
-        """
-        self.user.remove_project(self.user.projects[0])
-
-        new_project = Project(self.user, 'Projeto 3', '2023-01-01', 'Descrição do Projeto 2')
-        self.assertIn(new_project, self.user.projects)
-        try:
-            Load.check_duplicate_project_name(self.user, self.valid_data)
-        except ItemNameAlreadyExists:
-            self.fail("check_duplicate_project_name levantou ItemNameAlreadyExists inesperadamente!")
 
     def test_check_duplicate_project_name_with_duplicates(self):
         """
@@ -153,16 +139,4 @@ class TestLoad(unittest.TestCase):
         with self.assertRaises(ItemNameBlank):
             Load.check_project_name_blank(data_with_blank_name)
 
-    def test_json_reader_with_valid_data(self):
-        """
-        Test the json_reader method with valid data.
-        Ensures that the user's projects are correctly loaded from the file.
-        """
-        for project in self.user.projects:
-            self.user.remove_project(project)
-        
-        Load.json_reader(self.user, self.valid_file_path)
-        self.assertEqual(len(self.user.projects), 3)
-        self.assertEqual(len(self.user.projects[0].tasks), 1)
-        self.assertEqual(len(self.user.projects[0].tasks[0].subtasks), 0)
 

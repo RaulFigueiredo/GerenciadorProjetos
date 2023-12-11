@@ -35,11 +35,11 @@ class SubtaskUpdatePage(BaseUpdatePage):
         mediator: object,
         subtask: callable,
         parent: object
-    ):
+    ) -> None:
         super().__init__(master, manager, mediator, subtask, parent)
         self.create_widgets()
 
-    def create_widgets(self):
+    def create_widgets(self) -> None:
         padding = {'padx': 10, 'pady': 5}
         entry_width = 40
 

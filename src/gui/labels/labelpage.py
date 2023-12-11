@@ -1,15 +1,35 @@
+"""
+Module Name: LabelManager Module
+
+Description:
+This module contains a class, `LabelManager`, which is a Tkinter Frame
+class for a label management interface. It provides functionalities for
+users to add, edit, and remove labels associated with a user.
+
+Classes:
+- LabelManager: Manages the interface for label addition, editing, and removal.
+
+Attributes:
+- parent (tk.Widget): The parent widget for this frame.
+- controller: The controller managing this frame.
+- user: The user associated with this frame.
+
+Dependencies:
+- tkinter: Library for GUI elements.
+- tkinter.messagebox: For displaying warning messages in the Tkinter interface.
+- tkinter.ttk: For themed Tkinter widgets.
+- src.gui.labels.label_edit: EditLabelDialog class from the 'label_edit' module.
+- src.gui.labels.label_create: AddLabelDialog class from the 'label_create' module.
+- src: ItemFactory from the 'src' module.
+"""
+
 import tkinter as tk
-from src.gui.labels.label_edit import EditLabelDialog
-from src.gui.labels.label_create import AddLabelDialog
-from src import User, ItemFactory
 from tkinter import messagebox
 from tkinter import ttk
 
-
-"""
-This module provides a graphical interface for managing labels
-It allows users to add, edit, and remove labels, each with a name and color.
-"""
+from src.gui.labels.label_edit import EditLabelDialog
+from src.gui.labels.label_create import AddLabelDialog
+from src import ItemFactory
 
 class LabelManager(tk.Toplevel):
     """
@@ -44,9 +64,8 @@ class LabelManager(tk.Toplevel):
 
         self.controller.label_page_window = self
 
-    def create_widgets(self):
-        """
-        Creates and arranges the widgets for this frame.
+    def create_widgets(self) -> None:
+        """ Creates and arranges the widgets for this frame.
         """
         self.button_style = ttk.Style()
         self.button_style.configure('LabelManager.TButton', font=('Arial', 10), padding=5)
@@ -61,20 +80,22 @@ class LabelManager(tk.Toplevel):
         self.label_list = tk.Listbox(main_frame, height=10, width=50)
         self.label_list.grid(row=1, column=0, padx=10, pady=10)
 
-
-        self.add_button = ttk.Button(main_frame, text="Adicionar Etiqueta", style='LabelManager.TButton', command=self.add_label)
+        self.add_button = ttk.Button(main_frame, text="Adicionar Etiqueta",\
+                     style='LabelManager.TButton', command=self.add_label)
         self.add_button.grid(row=2, column=0, padx=5, pady=5)
 
-        self.edit_button = ttk.Button(main_frame, text="Editar Etiqueta", style='LabelManager.TButton', command=self.edit_label)
+        self.edit_button = ttk.Button(main_frame, text="Editar Etiqueta",\
+                     style='LabelManager.TButton', command=self.edit_label)
         self.edit_button.grid(row=3, column=0, padx=5, pady=5)
 
-        self.remove_button = ttk.Button(main_frame, text="Remover Etiqueta", style='LabelManager.TButton', command=self.remove_label)
+        self.remove_button = ttk.Button(main_frame, text="Remover Etiqueta",\
+                     style='LabelManager.TButton', command=self.remove_label)
         self.remove_button.grid(row=4, column=0, padx=5, pady=5)
 
         self.update_label_list()
 
 
-
+    # pylint: disable=pointless-string-statement
     """
     - step 1
     def edit_label(self):
@@ -141,9 +162,8 @@ class LabelManager(tk.Toplevel):
             messagebox.showinfo("Seleção", "Selecione uma etiqueta para editar.")
     """
 
-    def edit_label(self):
-        """
-        Edits the selected label after user interaction.
+    def edit_label(self) -> None:
+        """ Edits the selected label after user interaction.
         """
         selected = self.label_list.curselection()
 
@@ -151,11 +171,14 @@ class LabelManager(tk.Toplevel):
             full_label_text = self.label_list.get(selected[0])
             label_name = full_label_text.split(" (Color:")[0]
 
-            label_to_edit = next((label for label in self.user.labels if label.name == label_name), None)
+            label_to_edit = next((label for label\
+                     in self.user.labels if label.name == label_name), None)
 
             if label_to_edit:
-                existing_label_names = [label.name for label in self.user.labels if label.name != label_name]
-                dialog = EditLabelDialog(self.controller, label_to_edit.name, label_to_edit.color, existing_label_names)
+                existing_label_names = [label.name for\
+                         label in self.user.labels if label.name != label_name]
+                dialog = EditLabelDialog(self.controller,
+                         label_to_edit.name, label_to_edit.color, existing_label_names)
                 result = dialog.show()
 
                 if result:
@@ -189,8 +212,7 @@ class LabelManager(tk.Toplevel):
             self.update_label_list()
 
     def remove_label(self):
-        """
-        Removes the selected label after user interaction.
+        """ Removes the selected label after user interaction.
         """
         selected = self.label_list.curselection()
 
@@ -198,7 +220,8 @@ class LabelManager(tk.Toplevel):
             full_label_text = self.label_list.get(selected[0])
             label_name = full_label_text.split(" (Color:")[0]
 
-            label_to_remove = next((label for label in self.user.labels if label.name == label_name), None)
+            label_to_remove = next((label for label in\
+                     self.user.labels if label.name == label_name), None)
 
             if label_to_remove:
                 # self.user.remove_label(label_to_remove)
@@ -209,7 +232,7 @@ class LabelManager(tk.Toplevel):
         else:
             messagebox.showinfo("Seleção", "Por favor, selecione uma etiqueta para remover")
 
-
+    # pylint: disable=pointless-string-statement
     """
     - step 1
     def update_label_list(self):
@@ -239,7 +262,7 @@ class LabelManager(tk.Toplevel):
             label_text = f"{label.name} (Cor: {label.color})"
             self.label_list.insert(tk.END, label_text)
     """
-    def update_label_list(self):
+    def update_label_list(self) -> None:
         """
         Updates the list of labels displayed in the interface.
         """
@@ -248,7 +271,7 @@ class LabelManager(tk.Toplevel):
             label_text = f"{label.name} (Color: {label.color})"
             self.label_list.insert(tk.END, label_text)
 
-    def center_window(self, width, height):
+    def center_window(self, width:int, height:int) -> None:
         """
         Centers the window on the screen.
         """
