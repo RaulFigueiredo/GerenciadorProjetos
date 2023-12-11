@@ -57,10 +57,10 @@ class Label(IItem):
         self._user.add_label(self)
 
         if session is not None:
-            self.SessionLocal = session
+            self.session_local = session
         else:
             self.db = Database()
-            self.SessionLocal = sessionmaker(bind=self.db.engine)()
+            self.session_local = sessionmaker(bind=self.db.engine)()
 
         if not self._id_label:
             self.save_to_db()
