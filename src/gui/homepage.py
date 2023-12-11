@@ -33,8 +33,9 @@ from src.gui.filter_by_project import ProjectFilterPage
 from src.gui.filter_by_label import LabelFilterPage
 from src.logic.items.project import Project
 from src.logic.users.user import User
-from .calendar_page import CalendarPage
 from src.gui.notifications_page import NotificationPage
+from .calendar_page import CalendarPage
+
 
 
 
@@ -197,16 +198,26 @@ class ProjectList(tk.Frame):
                 if not task.status:
                     self.tree.insert(project_id, tk.END, text=task.name)
 
-    def update_main_page(self):
+    def update_main_page(self) -> None:
         """ Update the main page by refreshing the project list.
         """
         self.update_project_list(self.filtered_projects)
 
-    def apply_filter(self, selected_projects):
+    def apply_filter(self, selected_projects: list) -> None:
+        """ Apply a project filter to the project list.
+
+        Args:
+            selected_projects (list): A list of projects to filter by.
+        """
         self.filtered_projects = selected_projects
         self.update_project_list(selected_projects)
 
-    def update_project_list(self, projects):
+    def update_project_list(self, projects: list) -> None:
+        """ Update the project list with a new list of projects.
+
+        Args:
+            projects (list): A list of projects to display.
+        """
         self.tree.delete(*self.tree.get_children())
         self.project_map.clear()
 
@@ -285,7 +296,7 @@ class HomePage(tk.Frame):
         self.project_filter_page = None
         self.label_filter_page =  None
 
-    def apply_project_filter(self, selected_projects):
+    def apply_project_filter(self, selected_projects: list) -> None:
         """
         Apply a project filter to the project list.
 
@@ -295,7 +306,7 @@ class HomePage(tk.Frame):
         self.project_list.apply_filter(selected_projects)
         tk.messagebox.showinfo("Filtro Aplicado", "Projetos filtrados com sucesso!")
 
-    def apply_label_filter(self, selected_labels):
+    def apply_label_filter(self, selected_labels: list) -> None:
         """
         Apply a label filter to the project list.
 
@@ -306,14 +317,14 @@ class HomePage(tk.Frame):
         tk.messagebox.showinfo("Filtro de Labels Aplicado",
              "Projetos filtrados por labels com sucesso!")
 
-    def remove_project_filter(self):
+    def remove_project_filter(self) -> None:
         """
         Remove any filters applied to the project list.
         """
         self.project_list.remove_filter()
         tk.messagebox.showinfo("Filtro Removido", "Todos os projetos estão agora visíveis.")
 
-    def show_home_page(self):
+    def show_home_page(self) -> None:
         """
         Display the home page layout.
         """
@@ -360,7 +371,7 @@ class HomePage(tk.Frame):
         self.history_page.display_completed_tasks()
         self.history_page.grid(row=1, column=0, sticky='nsew')
 
-    def show_export_page(self):
+    def show_export_page(self) -> None:
         """
         Display the export page layout.
         """
@@ -379,13 +390,19 @@ class HomePage(tk.Frame):
         """
         self.label_page = LabelManager(parent=self, controller=self, user = self.user)
 
-    def show_filter_project_page(self):
-        self.project_filter_page = ProjectFilterPage(master = self, user = self.user, controller=self, on_confirm=self.apply_project_filter)
+    def show_filter_project_page(self) -> None:
+        """ Display the project filter page layout.
+        """
+        self.project_filter_page = ProjectFilterPage(master = self, user = self.user,
+                     controller=self, on_confirm=self.apply_project_filter)
 
-    def show_label_filter_page(self):
-        self.label_filter_page = LabelFilterPage(master = self, user = self.user, controller=self, on_confirm=self.apply_label_filter)
-        
-    def navigate(self, destination):
+    def show_label_filter_page(self) -> None:
+        """ Display the label filter page layout.
+        """
+        self.label_filter_page = LabelFilterPage(master = self, user = self.user,
+                     controller=self, on_confirm=self.apply_label_filter)
+
+    def navigate(self, destination: str) -> None:
         """
         Navigate to a specified page in the application.
 

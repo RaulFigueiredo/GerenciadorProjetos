@@ -1,17 +1,26 @@
 """
-This module contains classes and methods for managing user authentication in a tkinter-based GUI application. It includes the Login and Register classes, which provide user interfaces for login and registration processes, and the Authentication class, which orchestrates the authentication flow including displaying appropriate interfaces and handling user interactions.
+This module contains classes and methods for managing user authentication
+in a tkinter-based GUI application. It includes the Login and Register classes,
+which provide user interfaces for login and registration processes, and the
+Authentication class, which orchestrates the authentication flow including displaying
+appropriate interfaces and handling user interactions.
 
 Classes:
-- Login: A tkinter Frame for the login interface, allowing users to enter their credentials and submit them for authentication.
-- Register: A tkinter Frame for the user registration interface, enabling new users to create an account by providing necessary details.
-- Authentication: Manages the overall authentication process, including switching between login and registration interfaces and initiating user sessions.
+- Login: A tkinter Frame for the login interface, allowing users to enter their
+credentials and submit them for authentication.
+- Register: A tkinter Frame for the user registration interface, enabling new users
+to create an account by providing necessary details.
+- Authentication: Manages the overall authentication process, including switching
+between login and registration interfaces and initiating user sessions.
 
-Each class is designed to interact with the backend logic for authentication and user management, encapsulating the GUI elements and user interaction logic within a structured application framework.
+Each class is designed to interact with the backend logic for authentication and user
+management, encapsulating the GUI elements and user interaction logic within a structured
+application framework.
 """
 
+import tkinter as tk
 from src.logic.authentication.authentication import LoginLogic, RegisterLogic
 from src.gui.homepage import HomePage
-import tkinter as tk
 
 class Login(tk.Frame):
     """
@@ -30,7 +39,8 @@ class Login(tk.Frame):
         Parameters:
             parent (tk.Widget): The parent widget.
             on_login (function): A callback function invoked when the login button is clicked.
-            on_show_register (function): A callback function to switch to the registration interface.
+            on_show_register (function): A callback function to switch to
+        the registration interface.
         """
 
         super().__init__(parent, bg='#EAEAEA')
@@ -45,8 +55,10 @@ class Login(tk.Frame):
         self.password_entry = tk.Entry(self, show="*", font=('Arial', 18), width=30)
         self.password_entry.pack(pady=10)
 
-        tk.Button(self, text="Login", command=self._on_login, font=('Arial', 18), bg='#7FFF7F', width=20).pack(pady=20)
-        tk.Button(self, text="Registro", command=self.on_show_register, font=('Arial', 18), bg='#FF7F7F', width=20).pack(pady=10)
+        tk.Button(self, text="Login", command=self._on_login, font=('Arial', 18),
+                  bg='#7FFF7F', width=20).pack(pady=20)
+        tk.Button(self, text="Registro", command=self.on_show_register,
+                  font=('Arial', 18), bg='#FF7F7F', width=20).pack(pady=10)
 
         self.status_label = tk.Label(self, text="", font=('Arial', 12), bg='#EAEAEA')
         self.status_label.pack()
@@ -104,10 +116,10 @@ class Register(tk.Frame):
         self.email_entry.pack()
 
         register_button = tk.Button(
-            self, 
-            text="Registrar", 
+            self,
+            text="Registrar",
             command=self._on_register,
-            bg='#7FFF7F', 
+            bg='#7FFF7F',
             font=('Arial', 18)
         )
         register_button.pack(pady=10)
@@ -138,7 +150,8 @@ class Register(tk.Frame):
 
 class Authentication:
     """
-    A class to manage the authentication process including login, registration, and navigation to the homepage.
+    A class to manage the authentication process including login, registration,
+    and navigation to the homepage.
 
     Attributes:
         parent (tk.Widget): The parent widget.
@@ -288,7 +301,7 @@ class Authentication:
         self.homepage_frame = HomePage(self.parent, self.user)
         self.homepage_frame.grid(row=0, column=0, sticky='nsew')
 
-    def navigate(self, destination):
+    def navigate(self, destination: str) -> None:
         """
         Navigate to a specified destination in the application.
 

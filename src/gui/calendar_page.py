@@ -26,7 +26,7 @@ class CalendarPage:
 
     Methods:
         __init__(self, master=None, on_close: Callable = None): Constructor of the class.
-        update_calendar(self, month: int, year: int): Updates the calendar view for 
+        update_calendar(self, month: int, year: int): Updates the calendar view for
 a given month and year.
         run(self): Placeholder method for future functionality.
     """
@@ -69,7 +69,8 @@ a given month and year.
             dict: A dictionary mapping dates to tasks and their details.
         """
         tasks_dict = {}
-        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red", "amarelo": "yellow", "laranja": "orange"}
+        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red",
+                      "amarelo": "yellow", "laranja": "orange"}
         for project in self.user.projects:
             if project.label is None:
                 label = ''

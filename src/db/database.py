@@ -92,7 +92,7 @@ class Database:
             is_select (bool, optional): Is selected. Defaults to True.
 
         Returns:
-            list: 
+            list:
         """
         with self.get_session() as session:
             result = session.execute(text(sql), params)

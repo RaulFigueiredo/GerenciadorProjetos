@@ -58,7 +58,7 @@ class LoadPage(tk.Toplevel):
 
         self.create_widgets()
         self.center_window(294, 250)
-        
+
         self.controller.load_page_window = self
 
     def create_widgets(self) -> None:
@@ -106,16 +106,16 @@ class LoadPage(tk.Toplevel):
             self.controller.update_main_page()
             messagebox.showinfo("Sucesso", "Arquivo carregado com sucesso!")
             self.destroy()
-        except FileNotFoundError as e:
-            messagebox.showerror("Aviso", str(e))
-        except InvalidFileFormat as e:
-            messagebox.showerror("Aviso", str(e))
-        except InvalidFileEstucture as e:
-            messagebox.showerror("Aviso", str(e))
-        except ItemNameBlank as e:
-            messagebox.showerror("Aviso", str(e))
-        except ItemNameAlreadyExists as e:
-            messagebox.showerror("Aviso", str(e))
+        except FileNotFoundError as _:
+            messagebox.showerror("Aviso", str(_))
+        except InvalidFileFormat as _:
+            messagebox.showerror("Aviso", str(_))
+        except InvalidFileEstucture as _:
+            messagebox.showerror("Aviso", str(_))
+        except ItemNameBlank as _:
+            messagebox.showerror("Aviso", str(_))
+        except ItemNameAlreadyExists as _:
+            messagebox.showerror("Aviso", str(_))
 
 
     def center_window(self, width:int, height:int) -> None:
@@ -128,7 +128,7 @@ class LoadPage(tk.Toplevel):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        x = int((screen_width / 2) - (width / 2))
-        y = int((screen_height / 2) - (height / 2))
+        _x = int((screen_width / 2) - (width / 2))
+        _y = int((screen_height / 2) - (height / 2))
 
-        self.geometry(f'{width}x{height}+{x}+{y}')
+        self.geometry(f'{width}x{height}+{_x}+{_y}')
