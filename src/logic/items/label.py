@@ -68,7 +68,7 @@ class Label(IItem):
     def save_to_db(self) -> None:
         """ Save the label to the database.
         """
-        with self.session_local() as session:
+        with self.session_local as session:
 
             new_label_orm = LabelORM(  id_user=self._user.id_user,
                                         name = self._name,
@@ -85,7 +85,7 @@ class Label(IItem):
         """
         self._user.remove_label(self)
 
-        with self.session_local() as session:
+        with self.session_local as session:
             label_to_delete = session.query(LabelORM).filter\
                 (LabelORM.id_label == self._id_label).first()
             if label_to_delete:
@@ -110,7 +110,7 @@ class Label(IItem):
         if "user" in kwargs:
             raise NonChangeableProperty("You requested an update for a non-changeable property.")
 
-        with self.session_local() as session:
+        with self.session_local as session:
             label_to_update = session.query(LabelORM).filter\
                 (LabelORM.id_label == self._id_label).first()
             if label_to_update:
