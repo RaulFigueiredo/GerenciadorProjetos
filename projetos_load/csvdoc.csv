@@ -1,0 +1,9 @@
+type,parent,name,description,end_date,notification_date,priority
+project,,Projeto A,Descrio Projeto A,,,
+task,Projeto A,Tarefa A1,Descrio da Tarefa A1,30/12/2023,28/12/2023,1
+subtask,Tarefa A1,Subtarefa A1-1,,,, 
+subtask,Tarefa A1,Subtarefa A1-2,,,,
+task,Projeto A,Tarefa A2,Descrio da Tarefa A2,31/12/2023,29/12/2023,2
+project,,Projeto B,Descro do Projeto B,10/1/2024,,
+task,Projeto B,Tarefa B1,Descrio da Tarefa B1,15/01/2024,13/01/2024,1
+subtask,Tarefa B1,Subtarefa B1-1,,,,
