@@ -88,3 +88,5 @@ Para aprimorar a legibilidade e a qualidade do nosso código, implementamos vár
 Para assegurar a integridade do código durante o processo de merge e versionamento, implementamos uma política de revisão obrigatória: nenhum push pode ser feito diretamente sem a aprovação de outro membro da equipe.
 
 No que tange aos testes, adotamos o framework unittest. Para complementar, desenvolvemos mocks específicos dentro do próprio unittest, garantindo testes eficientes tanto para a lógica do código quanto para suas interfaces visuais. Como um adicional, utilizamos a ferramenta Sonar para gerar relatórios detalhados sobre a qualidade do nosso código, assegurando continuamente sua excelência. A ferramenta pylint também é utilizada para reforçar a aderência aos padrões de codificação.
+
+Infelizmente tivemos problemas com o sonar de última hora e não conseguimos gerar um último relatório, então subimos um relatório parcial do sonar
