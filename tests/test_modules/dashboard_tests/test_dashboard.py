@@ -59,7 +59,6 @@ class TestDashboardComponents(unittest.TestCase):
         """ Create a root window
         """
         self.root = tk.Tk()
-        self.user = self.user
 
     def tearDown(self) -> None:
         """ Destroy the root window
