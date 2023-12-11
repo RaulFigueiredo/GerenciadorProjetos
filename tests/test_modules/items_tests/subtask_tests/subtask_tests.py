@@ -32,7 +32,7 @@ class TestSubtask(unittest.TestCase):
 
     def setUp(self):
         self.session = TestSubtask.SessionLocal()
-        self.create_test_subtask()
+        self.create_test_items()
 
     def create_test_items(self):
         db_test_task = TaskORM(name='Test Task', id_project=self.test_project.id_project, status=False, creation_date=date(2021, 1, 1)) 

@@ -22,6 +22,9 @@ from src.logic.execeptions.exceptions_items import  ItemDontHaveThisAttribute,\
                                                     NonChangeableProperty
 from src.logic.orms.orm import LabelORM
 from src.db.database import Database
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
+
 class Label(IItem):
     """
     A class to represent a label, implementing the IItem interface.
@@ -37,7 +40,7 @@ class Label(IItem):
         Various property getters and setters for accessing and modifying label attributes.
     """
 
-    def __init__(self, user: IUser, name: str,color: str, id_label: int = None) -> None:
+    def __init__(self, user: IUser, name: str,color: str, id_label: int = None, session: Session = None ) -> None:
         """
         Initialize a new Label object with given parameters.
 
@@ -53,8 +56,11 @@ class Label(IItem):
 
         self._user.add_label(self)
 
-        self.db = Database()
-        self.session_local = sessionmaker(bind=self.db.engine)
+        if session is not None:
+            self.SessionLocal = session
+        else:
+            self.db = Database()
+            self.SessionLocal = sessionmaker(bind=self.db.engine)()
 
         if not self._id_label:
             self.save_to_db()
@@ -63,6 +69,7 @@ class Label(IItem):
         """ Save the label to the database.
         """
         with self.session_local() as session:
+
             new_label_orm = LabelORM(  id_user=self._user.id_user,
                                         name = self._name,
                                         color = self._color,
@@ -77,6 +84,7 @@ class Label(IItem):
         Delete the label and remove it from the associated user.
         """
         self._user.remove_label(self)
+
         with self.session_local() as session:
             label_to_delete = session.query(LabelORM).filter\
                 (LabelORM.id_label == self._id_label).first()
