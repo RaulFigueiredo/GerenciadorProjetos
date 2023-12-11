@@ -31,7 +31,7 @@ class ProjectPage(BasePage):
     def __init__(self, master: tk, home: object, manager: object, project: callable) -> None:
         super().__init__(master, home, manager, project)
         self.create_widgets()
-        self.tasks_listbox = None
+        #self.tasks_listbox
 
     def create_widgets(self) -> None:
         """ Creates the widgets.
