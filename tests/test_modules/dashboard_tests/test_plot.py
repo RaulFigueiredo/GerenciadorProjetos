@@ -70,8 +70,8 @@ class TestPlotFunctions(unittest.TestCase):
     def test_make_areaplot(self) -> None:
         """ Test if make_areaplot() creates an area plot with expected title
         """
-        data = {'2023-01-01': 10, '2023-01-02': 20, '2023-01-03': 15,
-                '2023-01-04': 20, '2023-01-05': 20}
+        data = {'01-01-2023': 10, '02-01-2023': 20, '03-01-2023': 15,
+                '04-01-2023': 20, '05-01-2023': 20}
         title = 'Area Plot Test'
         fig = Plot.make_areaplot(data, title)
 
