@@ -109,16 +109,16 @@ class ExportPage(tk.Toplevel):
             self.destroy()
             messagebox.showinfo("Sucesso", "Projetos exportados com sucesso.")
 
-        except EmptyListProjects as e:
-            messagebox.showerror("Aviso", str(e))
+        except EmptyListProjects as _:
+            messagebox.showerror("Aviso", str(_))
             return
 
-        except FileNameBlank as e:
-            messagebox.showerror("Aviso", str(e))
+        except FileNameBlank as _:
+            messagebox.showerror("Aviso", str(_))
             return
 
-        except DirectoryBlank as e:
-            messagebox.showerror("Aviso", str(e))
+        except DirectoryBlank as _:
+            messagebox.showerror("Aviso", str(_))
             return
 
 
@@ -132,7 +132,7 @@ class ExportPage(tk.Toplevel):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        x = int((screen_width / 2) - (width / 2))
-        y = int((screen_height / 2) - (height / 2))
+        _x = int((screen_width / 2) - (width / 2))
+        _y = int((screen_height / 2) - (height / 2))
 
-        self.geometry(f'{width}x{height}+{x}+{y}')
+        self.geometry(f'{width}x{height}+{_x}+{_y}')

@@ -1,3 +1,13 @@
+"""
+    Import all classes from logic package
+"""
+
+from src.logic.calendar.date_utilities import DateUtilities
+from src.logic.calendar.calendar_display import CalendarDisplay
+from src.logic.calendar.month_view import MonthView
+from src.logic.calendar.month_year_navigation import MonthYearNavigation
+from src.logic.calendar.task_details import TaskDetails
+
 from .items.item_interface import IItem
 from .items.item_factory import ItemFactory
 from .items.project import Project
@@ -13,14 +23,6 @@ from .execeptions.exceptions_items import  ItemNameBlank,\
                                             UnknownItem,\
                                             NonChangeableProperty,\
                                             ItemDontHaveThisAttribute
-
-                                            
-
-from src.logic.calendar.date_utilities import DateUtilities
-from src.logic.calendar.calendar_display import CalendarDisplay
-from src.logic.calendar.month_view import MonthView
-from src.logic.calendar.month_year_navigation import MonthYearNavigation
-from src.logic.calendar.task_details import TaskDetails
 
 from .history.task_history import HistorySingleton
 from .notifications.notification import Notification

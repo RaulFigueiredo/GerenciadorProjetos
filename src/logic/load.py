@@ -40,7 +40,7 @@ class Load:
     @staticmethod
     def date_converter(date_str: str) -> datetime.date:
         """ Converts a date string to a datetime object.
-        
+
         Tries multiple date formats.
 
         Args:

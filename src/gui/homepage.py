@@ -10,9 +10,9 @@ Classes:
     - HomePage: A custom tkinter Frame serving as the home page of the application.
 
 Usage:
-    - The TopBar class provides navigation buttons for various pages like Dashboard, 
+    - The TopBar class provides navigation buttons for various pages like Dashboard,
 Calendar, History, Export, Import, and Labels.
-    - The ProjectList class displays a list of projects and allows users to navigate 
+    - The ProjectList class displays a list of projects and allows users to navigate
 to individual project pages.
     - The HomePage class serves as the main layout displaying the TopBar and ProjectList,
 allowing navigation to different sections of the application.
@@ -73,17 +73,27 @@ class TopBar(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
 
         btn_style = ttk.Style()
-        btn_style.configure('TButton', font=('Arial', 12), padding=10, background=bg_color, foreground=fg_color)
+        btn_style.configure('TButton', font=('Arial', 12), padding=10,
+                             background=bg_color, foreground=fg_color)
 
-        ttk.Button(self, text='Dashboard', style='TButton', command=lambda: on_navigate('dashboard')).grid(row=0, column=1, padx=5)
-        ttk.Button(self, text='Calendário', style='TButton', command=lambda: on_navigate('calendario')).grid(row=0, column=2, padx=5)
-        ttk.Button(self, text='Histórico', style='TButton', command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
-        ttk.Button(self, text='Exportar', style='TButton', command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
-        ttk.Button(self, text='Importar', style='TButton', command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
-        ttk.Button(self, text='Etiquetas', style='TButton', command=lambda: on_navigate('labels')).grid(row=0, column=6, padx=5)
-        ttk.Button(self, text='Filtrar Projetos', style='TButton', command=lambda: on_navigate('filter_by_projects')).grid(row=0, column=7, padx=5)
-        ttk.Button(self, text='Filtrar por Etiqueta', style='TButton', command=lambda: on_navigate('filter_by_labels')).grid(row=0, column=8, padx=5)
-        ttk.Button(self, text='Remover Filtro', style='TButton', command=lambda: on_navigate('remove_filter')).grid(row=0, column=9, padx=5)
+        ttk.Button(self, text='Dashboard', style='TButton',
+                    command=lambda: on_navigate('dashboard')).grid(row=0, column=1, padx=5)
+        ttk.Button(self, text='Calendário', style='TButton',
+                    command=lambda: on_navigate('calendario')).grid(row=0, column=2, padx=5)
+        ttk.Button(self, text='Histórico', style='TButton',
+                    command=lambda: on_navigate('historico')).grid(row=0, column=3, padx=5)
+        ttk.Button(self, text='Exportar', style='TButton',
+                    command=lambda: on_navigate('exportar')).grid(row=0, column=4, padx=5)
+        ttk.Button(self, text='Importar', style='TButton',
+                    command=lambda: on_navigate('importar')).grid(row=0, column=5, padx=5)
+        ttk.Button(self, text='Etiquetas', style='TButton',
+                    command=lambda: on_navigate('labels')).grid(row=0, column=6, padx=5)
+        ttk.Button(self, text='Filtrar Projetos', style='TButton',
+                    command=lambda: on_navigate('filter_by_projects')).grid(row=0, column=7, padx=5)
+        ttk.Button(self, text='Filtrar por Etiqueta', style='TButton',
+                    command=lambda: on_navigate('filter_by_labels')).grid(row=0, column=8, padx=5)
+        ttk.Button(self, text='Remover Filtro', style='TButton',
+                    command=lambda: on_navigate('remove_filter')).grid(row=0, column=9, padx=5)
 
 class ProjectList(tk.Frame):
     """ A custom tkinter Frame to display a list of projects.
@@ -117,7 +127,7 @@ class ProjectList(tk.Frame):
         self.task_manager = TaskDisplayManager(self)
         self.subtask_manager = SubtaskDisplayManager(self)
         self.filtered_projects = self.user.projects
-        
+
         self.tree = ttk.Treeview(self, show='tree')
         self.tree.grid(row=1, column=0, sticky='nsew')
 
@@ -205,9 +215,11 @@ class ProjectList(tk.Frame):
 
         for project in projects:
             if project.status:
-                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído', open=True, tags=(project.name, 'projectname', 'concluded'))
+                project_id = self.tree.insert('', tk.END, text=f'{project.name} - Concluído',
+                     open=True, tags=(project.name, 'projectname', 'concluded'))
             else:
-                project_id = self.tree.insert('', tk.END, text=project.name, open=True, tags=(project.name, 'projectname'))
+                project_id = self.tree.insert('', tk.END, text=project.name, open=True,
+                     tags=(project.name, 'projectname'))
 
             self.project_map[project.name] = project
             for task in project.tasks:
@@ -221,7 +233,8 @@ class ProjectList(tk.Frame):
         Parameters:
             selected_labels (list): A list of labels to filter by.
         """
-        filtered_projects = [project for project in self.user.projects if project.label in selected_labels]
+        filtered_projects = [project for project in self.user.projects\
+                     if project.label in selected_labels]
         self.filtered_projects = filtered_projects
         self.update_project_list(filtered_projects)
 
@@ -271,7 +284,7 @@ class HomePage(tk.Frame):
         self.label_page = None
         self.project_filter_page = None
         self.label_filter_page =  None
-        
+
     def apply_project_filter(self, selected_projects):
         """
         Apply a project filter to the project list.
@@ -290,7 +303,8 @@ class HomePage(tk.Frame):
             selected_labels (list): A list of labels to filter by.
         """
         self.project_list.apply_label_filter(selected_labels)
-        tk.messagebox.showinfo("Filtro de Labels Aplicado", "Projetos filtrados por labels com sucesso!")
+        tk.messagebox.showinfo("Filtro de Labels Aplicado",
+             "Projetos filtrados por labels com sucesso!")
 
     def remove_project_filter(self):
         """
@@ -329,7 +343,8 @@ class HomePage(tk.Frame):
         self.project_list.grid_forget()
         self.top_bar.grid_forget()
         if not self.dashboard_page:
-            self.dashboard_page = DashboardPage(master=self, on_close=self.show_home_page, user=self.user)
+            self.dashboard_page = DashboardPage(master=self,
+                     on_close=self.show_home_page, user=self.user)
         self.dashboard_page.grid(row=1, column=0)
 
     def show_history_page(self) -> None:
