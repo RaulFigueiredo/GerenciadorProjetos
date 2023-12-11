@@ -44,6 +44,11 @@ Para executar o programa, siga as instruções abaixo:
 python -m src.main
 ```
 
+Para logar com uma conta já existente, use as seguintes credenciais:
+
+usuário: Pinho
+senha: 12345
+
 ## Planejamento, análise e design do sistema
 Os casos de uso desse projeto estão detalhadamente documentados na pasta 'docs'. É importante ressaltar que eles foram criados no intuito de ter uma complexidade razoável, por exemplo, agregando tarefas de CRUD em um único caso de uso. Assim, foi possível criar todas as funcionalidades do sistema que desejavamos. Além disso, criamos as estórias de usuários e uma metáfora do sistema denominada "O Jardim de Projetos". Por fim, todos os diagramas solicitados foram criados, inclusive os dois extras - componentes e sequência.
 
