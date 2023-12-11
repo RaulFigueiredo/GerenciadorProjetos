@@ -96,7 +96,6 @@ class Filter:
 
     def filter_projects_by_creation_date(
             self,
-            projects: list,
             lower_limit: date =date(1,1,1),
             upper_limit: date =date(9999,12,31)
         ) -> list:
@@ -118,7 +117,6 @@ class Filter:
 
     def filter_projects_by_end_date(
             self,
-            projects: list,
             lower_limit: date =date(1,1,1),
             upper_limit: date =date(9999,12,31)
         ) -> list:
@@ -140,7 +138,6 @@ class Filter:
 
     def filter_projects_by_conclusion_date(
             self,
-            projects: list,
             lower_limit: date =date(1,1,1),
             upper_limit: date =date(9999,12,31)
         ) -> list:
