@@ -9,6 +9,7 @@ class TestProjectDisplayManager(unittest.TestCase):
         self.home = tk.Tk()
         self.user = Mock()  
         self.home.update_main_page = Mock()
+        self.user.labels = [Mock(name='Label 1'), Mock(name='Label 2')]
         self.manager = ProjectDisplayManager(self.home, self.user)
 
     @patch('tkinter.messagebox')
@@ -21,7 +22,6 @@ class TestProjectDisplayManager(unittest.TestCase):
     def test_open_create_page(self):
         self.manager.open_create_page() 
 
-
     def test_open_update_page(self):
         mock_project = Mock()
         mock_project.end_date = datetime.date(2023, 1, 1)  
@@ -33,7 +33,6 @@ class TestProjectDisplayManager(unittest.TestCase):
 
     def tearDown(self):
         self.home.destroy()
-
 
 if __name__ == '__main__':
     unittest.main()

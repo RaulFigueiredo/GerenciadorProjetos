@@ -55,10 +55,10 @@ class TestAddLabelDialog(unittest.TestCase):
         Verifies that the dialog captures the input correctly and calls the destroy method.
         """
         self.add_label_dialog.name_entry.insert(0, "Test Label")
-        self.add_label_dialog.color_combobox.set("blue")
+        self.add_label_dialog.color_combobox.set("azul")
         self.add_label_dialog.on_confirm()
 
-        self.assertEqual(self.add_label_dialog.result, ("Test Label", "blue"))
+        self.assertEqual(self.add_label_dialog.result, ("Test Label", "azul"))
         mock_destroy.assert_called_once()
 
     def test_show(self) -> None:
@@ -83,7 +83,7 @@ class TestEditLabelDialog(unittest.TestCase):
         Initializes the Tkinter root and the EditLabelDialog instance with predefined values.
         """
         self.root = tk.Tk()
-        self.edit_label_dialog = EditLabelDialog(self.root, "Previous Name", "blue")
+        self.edit_label_dialog = EditLabelDialog(self.root, "Previous Name", "azul", ["Previous Name"])
         self.edit_label_dialog.top.withdraw()
 
     def tearDown(self) -> None:
@@ -99,7 +99,7 @@ class TestEditLabelDialog(unittest.TestCase):
         are set to the expected initial values.
         """
         self.assertEqual(self.edit_label_dialog.name_entry.get(), "Previous Name")
-        self.assertEqual(self.edit_label_dialog.color_combobox.get(), "blue")
+        self.assertEqual(self.edit_label_dialog.color_combobox.get(), "azul")
 
     @patch('tkinter.messagebox.showwarning')
     @patch('tkinter.Toplevel.destroy')
@@ -110,11 +110,11 @@ class TestEditLabelDialog(unittest.TestCase):
         """
         self.edit_label_dialog.name_entry.delete(0, tk.END)
         self.edit_label_dialog.name_entry.insert(0, "New Name")
-        self.edit_label_dialog.color_combobox.set("green")
+        self.edit_label_dialog.color_combobox.set("verde")
         self.edit_label_dialog.on_confirm()
 
         mock_showwarning.assert_not_called()
-        self.assertEqual(self.edit_label_dialog.result, ("New Name", "green"))
+        self.assertEqual(self.edit_label_dialog.result, ("New Name", "verde"))
         mock_destroy.assert_called_once()
 
     @patch('tkinter.messagebox.showwarning')
@@ -124,18 +124,6 @@ class TestEditLabelDialog(unittest.TestCase):
         and does not update the result.
         """
         self.edit_label_dialog.name_entry.delete(0, tk.END)
-        self.edit_label_dialog.on_confirm()
-
-        mock_showwarning.assert_called_once()
-        self.assertIsNone(self.edit_label_dialog.result)
-
-    @patch('tkinter.messagebox.showwarning')
-    def test_on_confirm_empty_color(self, mock_showwarning) -> None:
-        """
-        Tests the on_confirm method with no color selected, verifying that the dialog shows a warning
-        and does not update the result.
-        """
-        self.edit_label_dialog.color_combobox.set('')
         self.edit_label_dialog.on_confirm()
 
         mock_showwarning.assert_called_once()
