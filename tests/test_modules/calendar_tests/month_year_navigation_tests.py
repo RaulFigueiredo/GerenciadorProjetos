@@ -69,7 +69,7 @@ class TestMonthYearNavigationLogic(unittest.TestCase):
         This test checks if the display label is correctly updated for different months and years,
         and verifies if the update callback function is called with the correct parameters.
         """
-        test_cases = [(1, 2023, "January"), (2, 2023, "February"), (12, 2022, "December")]
+        test_cases = [(1, 2023, "Janeiro"), (2, 2023, "Fevereiro"), (12, 2022, "Dezembro")]
         for month, year, expected_month_name in test_cases:
             with self.subTest(month=month, year=year):
                 written_month, returned_year = self.navigation.update_display(month, year)

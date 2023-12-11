@@ -38,7 +38,7 @@ class TestMonthView(unittest.TestCase):
         with patch('tkinter.Label') as mock_label_class:
             self.month_view.create_day_headers()
 
-            expected_day_names = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            expected_day_names = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
             for i, name in enumerate(expected_day_names):
                 mock_label_class.assert_any_call(self.mock_calendar_frame, text=name, fg="black")
 

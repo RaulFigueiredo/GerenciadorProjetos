@@ -28,107 +28,100 @@ Usage:
 import unittest
 from datetime import datetime
 from src import HistorySingleton, Project, Task, User
+import unittest
+from src import Subtask,User,Project,Task,Subtask,ItemNameAlreadyExists, ItemNameBlank, NonChangeableProperty, HistorySingleton
+from sqlalchemy.orm import sessionmaker
+from src.logic.orms.orm import UserORM,SubtaskORM, Base, ProjectORM, TaskORM
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from datetime import date
 
+class TestHistorySingleton(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.engine = create_engine('sqlite:///:memory:')
+        Base.metadata.create_all(cls.engine)
+        cls.SessionLocal = sessionmaker(bind=cls.engine)
 
-class TestHistory(unittest.TestCase):
-    """ This class will be used to test the history module.
+        cls.session = cls.SessionLocal()
 
-    Args:
-        unittest (TestCase): Inherits from TestCase in the unittest module.
-    """
-    def setUp(self) -> None:
-        """ This method will be used to initialize the history module.
-        """
+        db_test_user = UserORM(name='Test User', email='test@example.com', password='teste')
+        cls.session.add(db_test_user)
+        cls.session.commit()
+
+        db_test_project = ProjectORM(name='Test Project', id_user=db_test_user.id_user, status=False, creation_date=datetime.now())
+        cls.session.add(db_test_project)
+        cls.session.commit()
+
+        cls.test_user = User(name=db_test_user.name, id_user=db_test_user.id_user, session=cls.session)
+        cls.test_project = Project(name=db_test_project.name, user=cls.test_user, id_project=db_test_project.id_project, status=db_test_project.status, creation_date=db_test_project.creation_date, session=cls.session)
+
+    def setUp(self):
         self.history_manager = HistorySingleton()
 
-    def test_access_singleton_instance(self) -> None:
-        """ This method will be used to test the access of the singleton instance.
-        """
-        self.assertEqual(self.history_manager, HistorySingleton())
+    def test_access_singleton_instance(self):
+        self.assertIs(self.history_manager, HistorySingleton())
 
-    def test_access_project_list(self) -> None:
-        """ This method will be used to test the access of the project list.
-        """
-        # initialize user and project
+    def test_add_and_retrieve_completed_tasks(self):
         test_user = User("username")
-        project1 = Project(test_user,"test_project","test_label",datetime.now(),"test_description")
-
-        # initialize the tasks
-        task1 = Task(project1, "Task 1", "high", datetime.now(), datetime.now(), "description1")
-
-        # add the tasks to the project
-        project1.add_task(task1)
-
-        # update the status of the task
-        project1.tasks[0].update(status=True)
-
-        # test the addition of a completed task to the list
-        list_of_projects = [project1]
-        self.history_manager.add_completed_task(list_of_projects)
-        self.assertEqual(self.history_manager.tasks_completed(), list_of_projects[0].tasks)
-
-    def test_new_add_completed_task_one_project(self) -> None:
-        """ This method will be used to test the addition of a completed task to the list.
-        It simulates the creation of a project and the addition of a set of completed tasks
-        to the list.
-        """
-        # initialize the user and project
-        test_user = User("username")
-        project1 = Project(test_user,"test_project","test_label",datetime.now(),"test_description")
-
-        # initialize the tasks
-        task1 = Task(project1, "Task 1", "high", datetime.now(), datetime.now(), "description1")
-        task2 = Task(project1, "Task 2", "high", datetime.now(), datetime.now(), "description2")
-
-        # add the tasks to the project
+        project1 = Project(test_user, "test_project", "test_label", datetime.now(), "test_description")
+        task1 = Task(project1, "Task 1", "high", datetime.now(), datetime.now(), "description1", status=True)
+        task2 = Task(project1, "Task 2", "high", datetime.now(), datetime.now(), "description2", status=False)
         project1.add_task(task1)
         project1.add_task(task2)
 
-        # update the status of the task
-        project1.tasks[0].update(status=True)
+        self.history_manager.add_completed_task([project1])
+        completed_tasks = self.history_manager.tasks_completed()
 
-        # test the addition of a completed task to the list
-        list_of_projects = [project1]
-        self.history_manager.add_completed_task(list_of_projects)
-        self.assertIn(project1.tasks[0], self.history_manager.tasks_completed())
-        self.assertNotIn(project1.tasks[1], self.history_manager.tasks_completed())
+        self.assertIn(task1, completed_tasks)
+        self.assertNotIn(task2, completed_tasks)
 
-    def test_add_completed_task_multiple_projects(self) -> None:
-        """ This method will be used to test the addition of a completed task to the list.
-        It simulates the creation of multiple projects and the addition of a set of completed
-        tasks to the list.
-        """
-        # initialize the projects
-        test_user = User("username")
-        project1 = Project(test_user,"test_project","test_label",datetime.now(),"test_description")
-        project2 = Project(test_user,"test_project","test_label",datetime.now(),"test_description")
+    def test_add_multiple_projects_with_mixed_tasks(self):
+        project1 = Project(self.test_user, "project1", "label1", datetime.now(), "description1")
+        project2 = Project(self.test_user, "project2", "label2", datetime.now(), "description2")
+        task1 = Task(project1, "Task 1", "high", datetime.now(), datetime.now(), "description1", status=True)
+        task2 = Task(project1, "Task 2", "medium", datetime.now(), datetime.now(), "description2", status=False)
+        task3 = Task(project2, "Task 3", "low", datetime.now(), datetime.now(), "description3", status=True)
+        task4 = Task(project2, "Task 4", "medium", datetime.now(), datetime.now(), "description4", status=False)
 
-        # initialize the tasks
-        task1 = Task(project1, "Task 1", "high", datetime.now(), datetime.now(), "description1")
-        task2 = Task(project2, "Task 2", "high", datetime.now(), datetime.now(), "description2")
-        task3 = Task(project1, "Task 3", "low", datetime.now(), datetime.now(), "description3")
-        task4 = Task(project2, "Task 4", "low", datetime.now(), datetime.now(), "description4")
-
-        # add the tasks to project1
         project1.add_task(task1)
-        project1.add_task(task3)
-
-        # add the tasks to project2
-        project2.add_task(task2)
+        project1.add_task(task2)
+        project2.add_task(task3)
         project2.add_task(task4)
 
-        # update the status of some tasks
-        project1.tasks[0].update(status=True)
-        project2.tasks[1].update(status=True)
+        self.history_manager.add_completed_task([project1, project2])
+        completed_tasks = self.history_manager.tasks_completed()
 
-        # test the addition of a completed task to the list
-        list_of_projects = [project1, project2]
-        self.history_manager.add_completed_task(list_of_projects)
-        self.assertIn(project1.tasks[0], self.history_manager.tasks_completed())
-        self.assertIn(project2.tasks[1], self.history_manager.tasks_completed())
-        self.assertNotIn(project1.tasks[1], self.history_manager.tasks_completed())
-        self.assertNotIn(project2.tasks[0], self.history_manager.tasks_completed())
+        self.assertIn(task1, completed_tasks)
+        self.assertIn(task3, completed_tasks)
+        self.assertNotIn(task2, completed_tasks)
+        self.assertNotIn(task4, completed_tasks)
 
+    def test_add_project_without_completed_tasks(self):
+        project = Project(self.test_user, "project", "label", datetime.now(), "description")
+        task = Task(project, "Task", "high", datetime.now(), datetime.now(), "description", status=False)
+        project.add_task(task)
+
+        self.history_manager.add_completed_task([project])
+        completed_tasks = self.history_manager.tasks_completed()
+
+        self.assertNotIn(task, completed_tasks)
+
+    def test_add_project_with_duplicate_tasks(self):
+        project = Project(self.test_user, "project", "label", datetime.now(), "description")
+        task = Task(project, "Task", "high", datetime.now(), datetime.now(), "description", status=True)
+        project.add_task(task)
+        project.add_task(task)
+
+        self.history_manager.add_completed_task([project])
+        completed_tasks = self.history_manager.tasks_completed()
+
+        self.assertEqual(len(completed_tasks), 4)
+        self.assertIn(task, completed_tasks)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.session.close()
 
 if __name__ == "__main__":
     unittest.main()
