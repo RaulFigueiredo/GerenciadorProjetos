@@ -52,20 +52,25 @@ Para um melhor desenvolvimento do projeto, todos os commit's criados tentam ser 
 ### Design Patterns
 
 #### Singleton
+Com o Singleton conseguimos nos prevenir que objetos críticos do nosso código, que só devem ser instanciados uma vez por aplicação, sejam completamente protegidos, assim evitando diversos possíveis bugs por criar uma nova instância. Atualmente o objeto "User" e o histórico são singletons.
 
 #### Simple Factory
+Simple Factory ajudou a ter uma maior desacoplamento no código, onde só é preciso chama-lo para conseguir criar qualquer tipo de item. Dessa forma, os itens ficam isolados e só são chamados pela Factory quando necessário for. O restante do código não conhece muito sobre os itens, e nem precisa, apenas precisa entender como a fábrica de itens trabalha. 
 
 #### Mediator
 
+Utilizamos o Mediator para conseguir um maior desacoplamento, reaproveitamento de funções além de ser uma grande ajudar muito a manutenção do código. Com o Mediator conseguir utilizar os mesmos campos de preenchimento para diversos formulários, fazer o link entre o que é capturado nos campos e o que deve ser feito com o mesmo ate chegar no objetivo. 
+
 #### Adapter
 
-Utilizamos adapter para a funcionalidade de importar documentos. Inicialmente, é importado no formato json para o app, e o adapter permitiu a importação também de formatos txt e csv. Assim, o usuário possui uma gama maior de escolhas na hora de importar o seu documento.
+Utilizamos adapter para a funcionalidade de importar documentos. Inicialmente, é importado no formato json para o app, e o adapter permitiu a importação também de formatos txt e csv. Assim, o usuário possui uma gama maior de escolhas na hora de importar o seu documento.A ideia por trás, além de aprender mais um padrão de projeto, seria no contexto do aplicativo ter alguma atualização e com facilidade conseguir continuar importando projetos que eram gerados por outros formatos em versões anteriores. 
 
 #### Memento
+Memento conseguiu resolver muito bem uma dor de nosso projeto. Com ele o usuario consegue desfazer qualquer atualização que o usuário tenha feito em algum projeto, task ou subtask que fez naquela sessão de uso, possibilitando corrigir possíveis erros. 
 
 #### Facade
 
-Empregamos o padrão de design Facade para simplificar a interação com os 10 casos de uso complexos do sistema. Foi uma escolha interessante para encapsular a complexidade operacional, proporcionando uma interface unificada e simplificada. O fachade melhorou a legibilidade e manutenção do código, além de também garantir uma arquitetura robusta e flexível, facilitando futuras expansões e adaptações do projeto.
+Empregamos o padrão de design Facade para simplificar a interação com os 10 casos de uso complexos do sistema. Foi uma escolha interessante para encapsular a complexidade operacional, proporcionando uma interface unificada e simplificada. O fachade melhorou a legibilidade e manutenção do código, além de também garantir uma arquitetura robusta e flexível, facilitando futuras expansões e adaptações do projeto. Sua aplicação pode ser vista facilmente na construção do calendário e do dashboard.
 
 
 ## Testes e qualidade de software
