@@ -24,6 +24,9 @@ Contém a implementação do sistema de maneira geral, dividido em três subpast
 #### tests:
 Onde foi realizado todos os testes referentes ao trabalho. Cada subpasta é definida como a funcionalidade que estamos testando.
 
+#### projetos_load:
+Pasta com projetos necessários para testar a funcionalidade de import do sistema
+
 ### Como Executar:
 
 Para executar o programa, siga as instruções abaixo:
