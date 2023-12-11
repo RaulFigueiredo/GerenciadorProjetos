@@ -13,7 +13,6 @@ import tkinter as tk
 from tkinter import ttk
 from src.logic.history.task_history import HistorySingleton
 from src.logic.users.user import User
-from src.logic.items.label import Label
 
 class HistoryManagerApp(tk.Frame):
     """ This class will be used to create a Tkinter interface to display completed tasks.
@@ -53,7 +52,8 @@ class HistoryManagerApp(tk.Frame):
 
         completed_tasks = self.history.tasks_completed()
 
-        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red", "amarelo": "yellow", "laranja": "orange"}
+        color_dict = {"verde": "green", "azul": "blue", "vermelho": "red",
+                 "amarelo": "yellow", "laranja": "orange"}
 
         # Iterates over the list of completed tasks and displays them
         for index, task in enumerate(completed_tasks):
@@ -114,7 +114,7 @@ class HistoryManagerApp(tk.Frame):
 
         Returns:
             list: List of projects
-        
+
         Obs:
             Alter it to call the list of projects from the database.
         """
