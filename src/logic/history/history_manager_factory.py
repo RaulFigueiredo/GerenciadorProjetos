@@ -40,4 +40,5 @@ class HistoryManagerFactory:
         Returns:
             HistoryManagerApp: HistoryManagerApp instance
         """
-        return HistoryManagerApp(root_window, user, previous_window)
+        return HistoryManagerApp(master=root_window,user=user,
+                    controller=previous_window, on_close=previous_window.destroy)
