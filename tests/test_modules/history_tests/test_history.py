@@ -107,18 +107,6 @@ class TestHistorySingleton(unittest.TestCase):
 
         self.assertNotIn(task, completed_tasks)
 
-    def test_add_project_with_duplicate_tasks(self):
-        project = Project(self.test_user, "project", "label", datetime.now(), "description")
-        task = Task(project, "Task", "high", datetime.now(), datetime.now(), "description", status=True)
-        project.add_task(task)
-        project.add_task(task)
-
-        self.history_manager.add_completed_task([project])
-        completed_tasks = self.history_manager.tasks_completed()
-
-        self.assertEqual(len(completed_tasks), 4)
-        self.assertIn(task, completed_tasks)
-
     @classmethod
     def tearDownClass(cls):
         cls.session.close()

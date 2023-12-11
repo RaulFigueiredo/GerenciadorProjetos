@@ -27,12 +27,12 @@ class TestInstanceUser(unittest.TestCase):
         This test ensures that the user instance is created with the correct attributes matching those of the database user object.
         """
         db_user = Mock()
-        db_user.name = 'test_user'
+        db_user.name = 'John Doe'
         db_user.projects = []
         db_user.labels = []
 
         user = instance_user(db_user)
-        self.assertEqual(user.name, 'test_user')
+        self.assertEqual(user.name, 'John Doe')
 
 if __name__ == '__main__':
     unittest.main()
