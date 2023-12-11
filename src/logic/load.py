@@ -47,7 +47,7 @@ class Load:
             date_str (str): Date string.
 
         Returns:
-            datetime.date: Datetime object representing the date string, or None if conversion fails.
+            datetime.date: Datetime object representing the date string, or None if conversion fails
         """
         if not date_str:
             return None
@@ -88,22 +88,22 @@ class Load:
 
 
         for each_project in data:
-            project_end_date = Load.date_converter(each_project['end_date'])  # Converte para objeto datetime
+            project_end_date = Load.date_converter(each_project['end_date'])
             projet = ItemFactory.create_item(item_type='project',
                                             user=usr,
                                             name=each_project['project'],
-                                            end_date=project_end_date,  # Usa o objeto datetime
+                                            end_date=project_end_date,
                                             description=each_project['description'])
 
             for each_task in each_project['tasks']:
-                task_end_date = Load.date_converter(each_task['end_date'])  # Converte para objeto datetime
-                notification_date = Load.date_converter(each_task['notification_date'])  # Converte para objeto datetime
+                task_end_date = Load.date_converter(each_task['end_date'])
+                notification_date = Load.date_converter(each_task['notification_date'])
                 task = ItemFactory.create_item(item_type='task',
                                             project=projet,
                                             name=each_task['task'],
                                             priority=each_task['priority'],
-                                            end_date=task_end_date,  # Usa o objeto datetime
-                                            notification_date=notification_date,  # Usa o objeto datetime
+                                            end_date=task_end_date,
+                                            notification_date=notification_date,
                                             description=each_task['description'])
 
                 for each_subtask in each_task['subtasks']:
@@ -179,4 +179,3 @@ class Load:
                 if each_task['task'] == '':
                     error_str = "The name of some task to import is blank."
                     raise ItemNameBlank(error_str)
-

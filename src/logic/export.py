@@ -124,7 +124,7 @@ class Export:
             try:
                 new_date = datetime.strptime(date_input, '%d/%m/%Y').date()
                 return new_date.strftime('%d/%m/%Y')
-            except ValueError:
-                raise ValueError("Invalid date format. Expected 'dd/mm/yyyy'.")
+            except ValueError as exc:
+                raise ValueError("Incorrect data format, should be DD/MM/YYYY") from exc
         else:
             return None
