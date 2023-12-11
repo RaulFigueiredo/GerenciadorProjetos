@@ -2,11 +2,11 @@
 Module Name: File Adapter
 
 Description:
-This module provides functionality to read and process data from various file formats 
+This module provides functionality to read and process data from various file formats
 into the application. It contains methods for reading JSON, TXT, and CSV files.
 
 - Imports necessary libraries: 'json', 'tempfile', 'csv', 'os'.
-- Imports specific classes and exceptions: 'User', 'Load', 'InvalidFileFormat', 
+- Imports specific classes and exceptions: 'User', 'Load', 'InvalidFileFormat',
   'InvalidFileEstucture'.
 - Defines the 'FileAdapter' class with methods for reading different file formats.
 

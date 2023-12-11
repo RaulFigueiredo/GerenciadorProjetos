@@ -125,7 +125,7 @@ class DashboardPlots():
     """ Plots for the dashboard.
     """
     def __init__(self) -> None:
-        """ Initialize the plots. 
+        """ Initialize the plots.
         """
         self.plots = []
 
@@ -231,10 +231,10 @@ class Dashboard(tk.Frame):
 
 
 class Sidebar(tk.Frame):
-    """ 
+    """
 
     Args:
-        tk (_type_): 
+        tk (_type_):
     """
     def __init__(
             self,
